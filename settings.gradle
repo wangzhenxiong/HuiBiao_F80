@@ -1,0 +1,2 @@
+include ':opencvSDK3414'
+include ':app', ':arms'

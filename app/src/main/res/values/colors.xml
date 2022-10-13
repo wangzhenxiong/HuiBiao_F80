@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--应用的主要色调，actionBar默认使用该颜色，Toolbar导航栏的底色-->
+    <color name="colorPrimary">#3856FC</color>
+    <!--应用的主要暗色调，statusBarColor默认使用该颜色-->
+    <color name="colorPrimaryDark">#448AFF</color>
+    <!--状态栏颜色，默认使用colorPrimaryDark-->
+    <!-- <color name="statusBarColor">#448AFF</color>-->
+    <!--CheckBox，RadioButton，SwitchCompat等一般控件的选中效果默认采用该颜色-->
+    <color name="colorAccent">#3961fa</color>
+    <color name="coloruploadsuccess_">#3040C546</color>
+    <color name="coloruploadsuccess">#80004803</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="red">#FF0000</color>
+
+    <!--SimpleButton颜色-->
+
+    <!--FloatingActionButton颜色-->
+    <color name="black">#99000000</color>
+    <color name="tm55">#55ffffff</color>
+    <color name="tm00">#00ffffff</color>
+    <color name="bg_main">#C3C3C3</color>
+    <color name="BAC0">#FF2E7AFE</color>
+    <color name="BAC1">#2464d4</color>
+    <color name="BAC2">#1b4b9f</color>
+    <color name="BAC3">#143671</color>
+    <color name="BAC4">#0f264e</color>
+    <color name="BAC5">#02122F</color>
+    <color name="BAC4sa">#3200FF0E</color>
+    <color name="BACa4sa">#54FF0202</color>
+    <color name="BACaa4sa">#50FFD500</color>
+
+    <color name="button_main">#1296eb</color>
+    <color name="button_dark">#0984db</color>
+
+    <color name="lfile_colorPrimary">#92B4F4</color>
+    <color name="lfile_colorPrimaryDark">#92B4F4</color>
+    <color name="lfile_colorAccent">#92B4F4</color>
+    <color name="lfile_gray">#cccccc</color>
+    <color name="lfile_lightgray">#dddddd</color>
+    <color name="lfile_white">#fff</color>
+    <color name="lfile_defaultColor">#92B4F4</color>
+    <drawable name="charIndexColor">#33000000</drawable>
+    <color name="charIndexColor">#33000000</color>
+</resources>

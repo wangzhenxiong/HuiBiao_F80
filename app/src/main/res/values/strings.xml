@@ -1,0 +1,65 @@
+<resources>
+    <string name="app_name">HuiBiao_F80</string>
+
+    <string name="customactivityoncrash_error_activity_error_occurred_explanation" translatable="false">发生意外错误。\n抱歉，给您带来不便。</string>
+    <string name="customactivityoncrash_error_activity_restart_app" translatable="false">重新启动</string>
+    <string name="customactivityoncrash_error_activity_close_app" translatable="false">关闭程序</string>
+    <string name="customactivityoncrash_error_activity_error_details" translatable="false">错误日志</string>
+    <string name="customactivityoncrash_error_activity_error_details_title" translatable="false">错误详情</string>
+    <string name="customactivityoncrash_error_activity_error_details_close" translatable="false">关闭</string>
+    <string name="customactivityoncrash_error_activity_error_details_copy" translatable="false">复制日志</string>
+    <string name="customactivityoncrash_error_activity_error_details_copied" translatable="false">复制日志</string>
+    <string name="customactivityoncrash_error_activity_error_details_clipboard_label" translatable="false">错误信息</string>
+
+    <string name="mothod1" translatable="false">抑制率法</string>
+    <string name="mothod2" translatable="false">标准曲线法</string>
+    <string name="mothod3" translatable="false">动力学法</string>
+    <string name="mothod4" translatable="false">系数法</string>
+
+    <string name="pleacechosefile" translatable="false">请选择文件</string>
+    <string name="lfile_NotFoundBooks" translatable="false">请选择导入的文件</string>
+    <string name="lfile_NotFoundPath" translatable="false">SD 存储卡状态不可用</string>
+    <string name="lfile_UpOneLevel" translatable="false">上一级</string>
+    <string name="lfile_Selected" translatable="false">选中</string>
+    <string name="lfile_LItem" translatable="false">项</string>
+    <string name="lfile_Detail" translatable="false">详情</string>
+    <string name="lfile_FileSize" translatable="false">文件大小 : </string>
+    <string name="lfile_OutSize" translatable="false">已经达到最大选择数量</string>
+    <string name="lfile_SelectAll" translatable="false">全选</string>
+    <string name="lfile_Cancel" translatable="false">取消全选</string>
+    <string name="lfile_OK" translatable="false">确定</string>
+    <string name="lfile_ChooseTip" translatable="false">请选择文件夹</string>
+    <string name="nomoredata" translatable="false">没有更多数据了...</string>
+
+    <string name="yure_tiem" translatable="false">预热时间(S)</string>
+    <string name="test_time" translatable="false">检测时间(S)</string>
+    <string name="unit_input" translatable="false">检测结果单位</string>
+    <string name="yin_from" translatable="false">阴性范围(from)</string>
+    <string name="yin_to" translatable="false">阴性范围(to)</string>
+    <string name="yang_from" translatable="false">阳性范围(from)</string>
+    <string name="yang_to" translatable="false">阳性范围(to)</string>
+    <string name="keyi_from" translatable="false">可疑范围(from)</string>
+    <string name="keyi_to" translatable="false">可疑范围(to)</string>
+    <string name="jiaozhenga" translatable="false">校正A</string>
+    <string name="jiaozhengb" translatable="false">校正B</string>
+    <string name="use_tuise" translatable="false">是否使用褪色法：</string>
+    <string name="jiaozhuna" translatable="false">校准曲线A</string>
+    <string name="jiaozhunb" translatable="false">校准曲线B</string>
+    <string name="jiaozhengc" translatable="false">校正C</string>
+    <string name="jiaozhengd" translatable="false">校正D</string>
+    <string name="contro_ad" translatable="false">对照AD值</string>
+    <string name="now_ad" translatable="false">实时AD值</string>
+    <string name="transmittance" translatable="false">透光率</string>
+    <string name="absorbance" translatable="false">吸光度</string>
+    <string name="ed_projectname" translatable="false">检测项目名称</string>
+    <string name="ed_projectpassword" translatable="false">检测项目密码</string>
+    <string name="ed_serinumber" translatable="false">流水编号</string>
+    <string name="ed_testmethod" translatable="false">检测方法：</string>
+    <string name="ed_waves" translatable="false">波长段：</string>
+    <string name="save">保存</string>
+    <string name="par">参数</string>
+    <string name="range_a">区间A</string>
+    <string name="range_b">区间B</string>
+    <string name="cure_name">曲线名称</string>
+    <string name="standardname">检测标准</string>
+</resources>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.dy.huibiao_f80">
+    <!-- 开机启动权限 -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" /> <!-- 摄像头权限 -->
+    <uses-permission android:name="android.permission.CAMERA" /> <!-- 陀螺仪使用权限 -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW" />
+    <uses-permission android:name="android.permission.VIBRATE" /> <!-- 读扩展存，从扩展卡读数据 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 百度地图权限 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 这个权限用于访问GPS定位 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 获取运营商信息，用于支持提供运营商信息相关的接口 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /> <!-- 用于读取手机当前的状态 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 访问网络，网络定位需要上网 -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- SD卡读取权限，用户写入离线定位数据 -->
+    <uses-permission
+        android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
+        tools:ignore="ProtectedPermissions" /> <!-- sd卡内创建和删除文件权限 -->
+    <!-- 蓝牙连接和通讯权限 -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" /> <!-- 当feature的设置为true时，只能在支持BLE的安卓设备上安装运行该APP；当feature的设置为false时，则所有安卓设备上都能安装运行该APP； -->
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.usb.host"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.hardware.usb.UsbAccessory" />
+
+    <application
+        android:name=".MyAppLocation"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <activity
+            android:name=".mvp.ui.activity.SystemSetActivity"
+            android:label="系统设置"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".mvp.ui.activity.EdtorProjectActivity"
+            android:label="编辑检测项目"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".mvp.ui.activity.SettingLoginActivity"
+            android:label="管理员登录"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".mvp.ui.activity.RecordActivity"
+            android:label="检测记录"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".mvp.ui.activity.StartTestActivity"
+            android:label="选择检测方式和项目"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".mvp.ui.activity.SamplingActivity"
+            android:label="采样管理"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".mvp.ui.activity.SetingActivity"
+            android:label="设置"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".mvp.ui.activity.PracticeActivity"
+            android:label="练习"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".mvp.ui.activity.TrainActivity"
+            android:label="培训"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".mvp.ui.activity.ExamActivity"
+            android:label="考试"
+            android:screenOrientation="landscape" />
+        <activity android:name=".mvp.ui.activity.HomeActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".app.service.SerialDataService"
+            android:enabled="true" />
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true" /> <!-- http://lbsyun.baidu.com/apiconsole/key -->
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="${BaiDuMap_KEY}" />
+        <meta-data
+            android:name="design_width_in_dp"
+            android:value="${DESIGN_WIDTH}" />
+        <meta-data
+            android:name="design_height_in_dp"
+            android:value="${DESIGN_HEIGHT}" />
+        <meta-data
+            android:name="com.dy.huibiao_f80.app.GlobalConfiguration"
+            android:value="ConfigModule" />
+    </application>
+
+</manifest>

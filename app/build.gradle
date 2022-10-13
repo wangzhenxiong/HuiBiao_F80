@@ -1,0 +1,336 @@
+apply plugin: 'com.android.application'
+apply plugin: 'org.greenrobot.greendao'
+//apply plugin: 'kotlin-android'
+//apply plugin: 'kotlin-android-extensions'
+android {
+
+    compileSdkVersion rootProject.ext.android["compileSdkVersion"]
+    buildToolsVersion rootProject.ext.android["buildToolsVersion"]
+    //原来是Android 6.0不再支持 Apache HTTP client， 建议使用 HttpURLConnection 代替。如果还想要继续使用 Apache HTTP client 的，请在build.gradle中添加下面的代码
+    useLibrary 'org.apache.http.legacy'
+    //java8
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
+    }
+
+    //默认配置,所有 productFlavors 都会继承 defaultConfig 中配置的属性
+    defaultConfig {
+        applicationId "com.wangzx.dy.huibiao_f80"
+        //能否编辑平台信息，能不能选择
+        buildConfigField "boolean", "EDIT_PLATFORM_TAG", "false"
+        buildConfigField "String", "DEVICE_UPDATA_URL", "\"http://rj.chinafst.cn:8085\""
+        buildConfigField "String", "PDF_URL_LAWS", "\"http://fst.chinafst.cn:9002\""
+        buildConfigField "String", "PDF_URL_STANDARD", "\"http://fst.chinafst.cn:9002\""
+        minSdkVersion rootProject.ext.android["minSdkVersion"]
+        targetSdkVersion rootProject.ext.android["targetSdkVersion"]
+        versionCode rootProject.ext.android["versionCode"]
+        versionName rootProject.ext.android["versionName"]
+        testInstrumentationRunner rootProject.ext.dependencies["androidJUnitRunner"]
+        multiDexEnabled true
+
+    }
+
+    packagingOptions {
+        exclude 'META-INF/proguard/androidx-annotations.pro'
+    }
+
+    signingConfigs {
+        release {
+            storeFile file('/Users/wangzhenxiong/android_project/wangzhx.jks')
+            storePassword '123456'
+            keyAlias 'key'
+            keyPassword '123456'
+        }
+    }
+
+    buildTypes {
+
+        debug {
+            //buildConfigField "String", "my_app_name", "\"中型一体机debug版本\""
+            buildConfigField "boolean", "LOG_DEBUG", "true"
+            //f配置文件 BuildConfig  public static final boolean LOG_DEBUG = true;
+            buildConfigField "boolean", "USE_CANARY", "true"
+            //f配置文件 BuildConfig  public static final boolean LOG_DEBUG = true;
+            buildConfigField "boolean", "INITCRASH", "false"
+
+            minifyEnabled false  //是否进行混淆
+            //混淆文件位置
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            multiDexKeepProguard file('multidex-config.pro')  //multiDex文件位置
+
+        }
+
+        release {
+            //buildConfigField "String", "my_app_name", "\"中型一体机debug版本\""
+            buildConfigField "boolean", "LOG_DEBUG", "false"
+            buildConfigField "boolean", "USE_CANARY", "false"
+            buildConfigField "boolean", "INITCRASH", "true"
+            //buildConfigField "boolean", "INITCRASH", "false"
+            minifyEnabled true   //是否进行混淆
+            shrinkResources true    //去除无用资源
+            zipAlignEnabled true    //Zipalign优化
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            multiDexKeepProguard file('multidex-config.pro')
+            signingConfig signingConfigs.release
+        }
+
+
+    }
+
+    flavorDimensions "moudle" //多维度打包
+
+    // productFlavors 定义了一个应用的自定义构建版本
+    //一个单一的项目可以同时定义多个不同的 flavor 来改变应用的输出。
+    // productFlavors 这个概念是为了解决不同的版本之间的差异非常小的情况，通常用于区分同一个应用的不同渠道/客户等，可包含少量业务功能差别。
+    // productFlavors 中的 flavor 不能跟 buildType 中的一样,否则会报: "ProductFlavor names cannot collide with BuildType names"
+    productFlavors {
+        productFlavor_default {
+            //versionCode 100
+            //versionName "1.0.0"
+            dimension "moudle"
+            applicationId "com.wangzx.dy.huibiao_f80"
+            buildConfigField "String", "DEVICE_MODEL_NAME", "\"DY7500S\""
+            buildConfigField "String", "DEVICE_UPDATA_NAME", "\"DY7500S\""
+            buildConfigField "String", "VERSIONDESCRIPTION", "\"标准版\""
+            //分光模块 分为6通道 和8 通道 不同通道ad值得算法不一样
+            buildConfigField "int", "FGGD_TYPE", "8"
+            //默认平台编号
+            buildConfigField "int", "DEFAULT_PLATFORM_TAG", "0"
+            //替换百度appkey
+            manifestPlaceholders = [BaiDuMap_KEY: "FmTOZINqtCBG38gQ5vu5G0E567AzP19B", DESIGN_WIDTH: "1280", DESIGN_HEIGHT: "800"]
+        }
+
+
+
+
+    }
+
+
+    greendao {
+        schemaVersion rootProject.ext.android["greendaoVersion"]
+        daoPackage 'com.dy.huibiao_f80.greendao.daos'
+        targetGenDir 'src/main/java'
+    }
+    //移除lint检测error
+    lintOptions {
+        disable 'InvalidPackage'
+        disable "ResourceType"
+        abortOnError false
+    }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+    externalNativeBuild {
+        cmake {
+            path file('src/main/cpp/CMakeLists.txt')
+            version "3.10.2"
+        }
+    }
+
+
+    android.applicationVariants.all {
+        variant ->
+            variant.outputs.all {
+                if (variant.buildType.name.equals("release")) {
+                    def value = getBuildConfigFieldValue(variant,"DEVICE_UPDATA_NAME")
+                    //在这里修改apk文件名
+                    outputFileName = "${variant.name}_${variant.versionName}_${variant.versionCode}_${value}_${new Date().format("yyyyMMddHHmmss")}.apk"
+                }
+            }
+    }
+}
+
+def static String getBuildConfigFieldValue(def variant, def fiedName) {
+    def properties = variant.productFlavors[0].properties
+    def name = properties.get("name")
+    if (name != variant.flavorName) {
+        return ""
+    }
+    def configs = properties.get("buildConfigFields")
+    def address = null
+    for (Map.Entry<String, Object> item : configs) {
+        def key = item.key
+        if (key == fiedName) {
+            address = item.value
+        }
+    }
+    if (address == null) return ""
+    def field = address.getClass().getDeclaredField("value")
+    field.setAccessible(true)
+    return field.get(address)
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation files('libs/BaiduLBS_Android.jar')
+
+    //support
+    implementation rootProject.ext.dependencies["cardview-v7"]
+    implementation rootProject.ext.dependencies["design"]
+
+    // FloatingActionMenu
+    implementation rootProject.ext.dependencies["FloatingActionMenu"]
+
+    //tools
+
+    //注意 Arms 核心库现在并不会依赖某个 EventBus, 要想使用 EventBus, 还请在项目中自行依赖对应的 EventBus
+
+    //现在支持两种 EventBus, greenrobot 的 EventBus 和畅销书 《Android源码设计模式解析与实战》的作者 何红辉 所作的 AndroidEventBus
+
+    //依赖后 Arms 会自动检测您依赖的 EventBus 并自动注册
+
+    //建议使用 AndroidEventBus, 特别是组件化项目, 原因请看 https://github.com/hehonghui/AndroidEventBus/issues/49
+
+    //这种做法可以让使用者有自行选择三方库的权利, 并且还可以减轻 Arms 的体积
+
+    //implementation rootProject.ext.dependencies["androideventbus"]
+    implementation rootProject.ext.dependencies["eventbus"]
+    implementation files('libs/posprinterconnectandsendsdk_1.1.08.jar')
+    implementation project(path: ':opencvSDK3414')
+    implementation files('libs/printerlibs.jar')
+    implementation files('libs/pinyin4j-2.5.0.jar')
+    //implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    //implementation files('libs/posprinterconnectandsendsdk_1.1.13.jar')
+    //implementation files('libs/PosPrinterSDK.jar')
+    annotationProcessor rootProject.ext.dependencies["dagger2-compiler"]
+    implementation rootProject.ext.dependencies["progressmanager"]
+    implementation rootProject.ext.dependencies["retrofit-url-manager"]
+    implementation rootProject.ext.dependencies["lifecyclemodel"]
+
+    //view
+    annotationProcessor(rootProject.ext.dependencies["butterknife-compiler"]) {
+        exclude module: 'support-annotations'
+    }
+    dependencies {
+        annotationProcessor 'com.jakewharton:butterknife-compiler:x.y.z'
+    }
+    implementation rootProject.ext.dependencies["paginate"]
+
+    //arms
+    implementation project(':arms')
+
+    //    implementation 'me.jessyan:arms:2.5.0'
+
+    //Arms 核心库不再包含 AndroidAutoLayout, 现在可自行选择屏幕适配方案, 不想使用 AndroidAutoLayout 就不要依赖 arms-autolayout
+
+    //    implementation 'me.jessyan:arms-autolayout:2.5.0'
+
+    //现在已经将 Demo 中的屏幕适配框架从 AndroidAutoLayout 替换为 AndroidAutoSize, AndroidAutoLayout 和 AndroidAutoSize 可以在项目中共存
+
+    //所以旧项目只要依赖 arms-autolayout 即可兼容之前的旧页面, 新页面可以使用 AndroidAutoSize 进行适配, 等有时间了再将旧页面全部替换为 AndroidAutoSize
+    implementation rootProject.ext.dependencies["autosize"]
+
+    //Arms 核心库不再包含 Glide, 想使用其他图片加载框架或者想自行扩展 ImageLoaderStrategy 就不要依赖 arms-imageloader-glide
+
+    //依赖 arms-imageloader-glide 后还需要在 GlobalConfiguration 中手动注册 GlideImageLoaderStrategy
+    implementation 'me.jessyan:arms-imageloader-glide:2.5.0'
+
+    //test
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    testImplementation rootProject.ext.dependencies["junit"]
+    debugImplementation rootProject.ext.dependencies["canary-debug"]
+    releaseImplementation rootProject.ext.dependencies["canary-release"]
+    testImplementation rootProject.ext.dependencies["canary-release"]
+
+    //greendao
+    implementation rootProject.ext.dependencies["greendao"]
+    implementation rootProject.ext.dependencies["GreenDaoUpgradeHelper"]
+
+    //multidex
+    implementation rootProject.ext.dependencies["multidex"]
+
+    //logutils
+    implementation rootProject.ext.dependencies["logutils"]
+    
+    implementation rootProject.ext.dependencies["rxandroid"]
+    implementation rootProject.ext.dependencies["tinypinyin"]
+
+    //pdf阅读控件
+
+    //implementation 'com.joanzapata.pdfview:android-pdfview:1.0.4@aar'
+
+    //上面的PDF库已经不能满足使用了，简单的加载下可以，但是对PDF的版本有限制，兼容不好，只能用下面这个，但是会导致apk体积增大16M左右
+    implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
+
+    // implementation 'es.voghdev.pdfviewpager:library:1.0.6'
+
+    //implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
+
+    //BaseRecyclerViewAdapterHelper
+    implementation rootProject.ext.dependencies["BaseRecyclerViewAdapterHelper"]
+
+    //圆形控件
+    implementation 'de.hdodenhof:circleimageview:3.0.0'
+
+    //labelsview
+
+    //implementation 'com.github.donkingliang:LabelsView:1.4.7'
+
+    //lfilepickerlibrary 文件选择器
+
+    //implementation 'com.leon:lfilepickerlibrary:1.8.0'
+
+    //jxl
+    implementation 'net.sourceforge.jexcelapi:jxl:2.6.12'
+
+    // PhotoView
+    implementation 'com.github.chrisbanes:PhotoView:2.0.0'
+
+    //MPAndroidChart
+    implementation rootProject.ext.dependencies["MPAndroidChart"]
+
+    //SportDialog
+    implementation rootProject.ext.dependencies["SportDialog"]
+
+    //materialsearchview
+    implementation rootProject.ext.dependencies["materialsearchview"]
+
+    //implementation files('libs/mysql-connector-java-5.1.18.jar')
+
+    //implementation files('libs/jtds-1.3.1.jar')
+
+    // retrofit-url-manager 运行时动态切换url
+    implementation rootProject.ext.dependencies["retrofit-url-manager"]
+
+    //PickerView
+    implementation rootProject.ext.dependencies["PickerView"]
+    implementation files('libs/core-3.2.1.jar')
+
+    //implementation files('libs/bluetoothhelper.jar')
+
+    //swipelayout 侧滑菜单
+    implementation rootProject.ext.dependencies["swipelayout"]
+
+    //bluetooth
+
+    //implementation  rootProject.ext.dependencies["bluetooth"]
+    implementation files('libs/bluetoothkit.jar')
+
+    //USB转串口工具
+
+    //implementation files('libs/usb2serial.jar')
+    implementation rootProject.ext.dependencies["usb-serial-for-android"]
+
+    //implementation 'com.github.mik3y:usb-serial-for-android:Tag'
+
+    //使用第三方jar代替本地自己配置ndk Android studio 更新后ndk抽疯用不了
+    implementation rootProject.ext.dependencies["AndroidSerialPort"]
+
+    //implementation project(path: ':lfilepickerlibrary')
+    // implementation project(':lfilepickerlibrary')
+
+    //implementation rootProject.ext.dependencies["verticalviewpager"]
+    implementation rootProject.ext.dependencies["fastjson"]
+    implementation files('libs/iTextpdf.jar')
+    implementation files('libs/jtds-1.3.0.jar')
+    compile 'com.google.android.gms:play-services-auth:11.8.0'
+    //implementation 'com.github.ArdWang:YModemLib:2.0.0'
+    //implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+
+}

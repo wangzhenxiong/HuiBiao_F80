@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/beijing_img"
+    android:orientation="vertical">
+
+    <include layout="@layout/include_title_home" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+
+        <LinearLayout
+            style="@style/rect_style">
+
+            <TextView
+                style="@style/text_button_style"
+                android:id="@+id/practice"
+                android:drawableTop="@drawable/practice_icn"
+                android:text="练习" />
+            <TextView
+                style="@style/text_button_style"
+                android:id="@+id/train"
+                android:drawableTop="@drawable/train_icn"
+                android:text="培训" />
+            <TextView
+                style="@style/text_button_style"
+                android:id="@+id/exam"
+                android:drawableTop="@drawable/exam_icn"
+                android:text="考试" />
+
+
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>

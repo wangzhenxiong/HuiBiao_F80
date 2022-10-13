@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/beijing_img3"
+    android:orientation="vertical">
+
+    <include layout="@layout/include_title" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+
+        <LinearLayout
+
+            style="@style/rect_style"
+            android:layout_width="600dp">
+
+            <TextView
+                android:id="@+id/systemset"
+                style="@style/text_button_style"
+                android:drawableTop="@drawable/systemset_icn"
+                android:text="系统设置" />
+
+            <TextView
+                android:id="@+id/project"
+                style="@style/text_button_style"
+                android:drawableTop="@drawable/project_icn"
+                android:text="检测项目编辑" />
+
+
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>
