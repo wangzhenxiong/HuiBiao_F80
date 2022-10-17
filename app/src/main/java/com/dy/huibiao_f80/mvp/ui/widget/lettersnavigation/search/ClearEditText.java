@@ -82,6 +82,7 @@ public class ClearEditText extends EditText implements View.OnFocusChangeListene
                         && (event.getX() < ((getWidth() - getPaddingRight())));
                 if (touchable) {
                     this.setText("");
+                    onTextChanged("",0,0,0);
                 }
             }
         }

@@ -15,8 +15,8 @@
 
         <LinearLayout
             android:id="@+id/layout1"
-            android:layout_width="900dp"
-            android:layout_height="500dp"
+            android:layout_width="960dp"
+            android:layout_height="560dp"
             android:layout_centerInParent="true"
             android:orientation="horizontal">
 
@@ -84,18 +84,21 @@
                         android:textColor="@color/black"
                         android:textSize="24dp"
                         android:textStyle="bold" />
-
-                    <EditText
+                    <com.dy.huibiao_f80.mvp.ui.widget.lettersnavigation.search.ClearEditText
                         android:id="@+id/ed_seach"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="48dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:hint="请输入关键字"
                         android:layout_alignParentTop="true"
                         android:layout_alignParentEnd="true"
                         android:background="@drawable/background_item_gray"
-                        android:hint="输入检测项目名称"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        android:textSize="20dp" />
+                        android:maxLines="1"
+                        android:textSize="15dp"/>
+
 
 
                 </RelativeLayout>
@@ -105,12 +108,12 @@
                     android:layout_height="match_parent">
 
                     <android.support.v7.widget.RecyclerView
-                        android:id="@+id/rv_main"
+                        android:id="@+id/recycleview"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
 
                     <com.dy.huibiao_f80.mvp.ui.widget.lettersnavigation.search.CharIndexView
-                        android:id="@+id/iv_main"
+                        android:id="@+id/charIndexView"
                         android:layout_width="30dp"
                         android:layout_height="match_parent"
                         android:layout_alignParentRight="true"

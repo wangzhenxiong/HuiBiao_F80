@@ -1,13 +1,10 @@
 package com.dy.huibiao_f80.greendao;
 
-import com.apkfuns.logutils.LogUtils;
 import com.dy.huibiao_f80.bean.base.BaseProjectMessage;
 
-import net.sourceforge.pinyin4j.PinyinHelper;
-
 import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Generated;
 
 /**
  * 　 ┏┓　  ┏┓+ +
@@ -59,11 +56,8 @@ public class ProjectJTJ extends BaseProjectMessage {
     }
 
     @Override
-    public String getLetters() {
-        char c = projectName.charAt(0);
-        String[] strings = PinyinHelper.toGwoyeuRomatzyhStringArray(c);
-        LogUtils.d(strings);
-        return strings[0];
+    public String getCVName() {
+        return curveName;
     }
 
 
@@ -71,46 +65,63 @@ public class ProjectJTJ extends BaseProjectMessage {
     private Long id;
     private String projectName;
     private String curveName;
+    private int curveOrder;
     //一个项目可能存在多条曲线，需要有一个是默认曲线
     private boolean isdefault;
     private String standardName;
     private int testMethod;
 
 
-    private double c1;
-    private double t1A;
-    private double t1B;
-    private double c1_t1A;
-    private double c1_t1B;
+    private double c;
+    private double tA;
+    private double tB;
+    private double c_tA;
+    private double c_tB;
 
 
     private int testTime;
-    private String version;
+
+    //简要提示
+    private String tips;
+    private String detectionLimit;
+    /**
+     * 检测项目信息完成状态，新建时状态都是未完成，在点击保存时候才改完true
+     */
+    private boolean finishState;
 
 
-    @Generated(hash = 91319645)
+
+
+
+    @Generated(hash = 1369740684)
     public ProjectJTJ(Long id, String projectName, String curveName,
-            boolean isdefault, String standardName, int testMethod, double c1,
-            double t1A, double t1B, double c1_t1A, double c1_t1B, int testTime,
-            String version) {
+            int curveOrder, boolean isdefault, String standardName, int testMethod,
+            double c, double tA, double tB, double c_tA, double c_tB, int testTime,
+            String tips, String detectionLimit, boolean finishState) {
         this.id = id;
         this.projectName = projectName;
         this.curveName = curveName;
+        this.curveOrder = curveOrder;
         this.isdefault = isdefault;
         this.standardName = standardName;
         this.testMethod = testMethod;
-        this.c1 = c1;
-        this.t1A = t1A;
-        this.t1B = t1B;
-        this.c1_t1A = c1_t1A;
-        this.c1_t1B = c1_t1B;
+        this.c = c;
+        this.tA = tA;
+        this.tB = tB;
+        this.c_tA = c_tA;
+        this.c_tB = c_tB;
         this.testTime = testTime;
-        this.version = version;
+        this.tips = tips;
+        this.detectionLimit = detectionLimit;
+        this.finishState = finishState;
     }
 
     @Generated(hash = 984178824)
     public ProjectJTJ() {
     }
+
+
+
 
 
     public Long getId() {
@@ -161,44 +172,44 @@ public class ProjectJTJ extends BaseProjectMessage {
         this.testMethod = testMethod;
     }
 
-    public double getC1() {
-        return c1;
+    public double getC() {
+        return c;
     }
 
-    public void setC1(double c1) {
-        this.c1 = c1;
+    public void setC(double c) {
+        this.c = c;
     }
 
-    public double getT1A() {
-        return t1A;
+    public double gettA() {
+        return tA;
     }
 
-    public void setT1A(double t1A) {
-        this.t1A = t1A;
+    public void settA(double tA) {
+        this.tA = tA;
     }
 
-    public double getT1B() {
-        return t1B;
+    public double gettB() {
+        return tB;
     }
 
-    public void setT1B(double t1B) {
-        this.t1B = t1B;
+    public void settB(double tB) {
+        this.tB = tB;
     }
 
-    public double getC1_t1A() {
-        return c1_t1A;
+    public double getC_tA() {
+        return c_tA;
     }
 
-    public void setC1_t1A(double c1_t1A) {
-        this.c1_t1A = c1_t1A;
+    public void setC_tA(double c_tA) {
+        this.c_tA = c_tA;
     }
 
-    public double getC1_t1B() {
-        return c1_t1B;
+    public double getC_tB() {
+        return c_tB;
     }
 
-    public void setC1_t1B(double c1_t1B) {
-        this.c1_t1B = c1_t1B;
+    public void setC_tB(double c_tB) {
+        this.c_tB = c_tB;
     }
 
     public int getTestTime() {
@@ -209,15 +220,59 @@ public class ProjectJTJ extends BaseProjectMessage {
         this.testTime = testTime;
     }
 
-    public String getVersion() {
-        return version == null ? "" : version;
+    public String getTips() {
+        return tips == null ? "" : tips;
     }
 
-    public void setVersion(String version) {
-        this.version = version == null ? "" : version;
+    public void setTips(String tips) {
+        this.tips = tips == null ? "" : tips;
+    }
+
+    public String getDetectionLimit() {
+        return detectionLimit == null ? "" : detectionLimit;
+    }
+
+    public void setDetectionLimit(String detectionLimit) {
+        this.detectionLimit = detectionLimit == null ? "" : detectionLimit;
+    }
+
+    public boolean isFinishState() {
+        return finishState;
+    }
+
+    public void setFinishState(boolean finishState) {
+        this.finishState = finishState;
+    }
+
+    public boolean getFinishState() {
+        return this.finishState;
+    }
+
+    public double getTB() {
+        return this.tB;
+    }
+
+    public void setTB(double tB) {
+        this.tB = tB;
+    }
+
+    public double getTA() {
+        return this.tA;
+    }
+
+    public void setTA(double tA) {
+        this.tA = tA;
     }
 
     public boolean getIsdefault() {
         return this.isdefault;
+    }
+
+    public int getCurveOrder() {
+        return curveOrder;
+    }
+
+    public void setCurveOrder(int curveOrder) {
+        this.curveOrder = curveOrder;
     }
 }

@@ -23,7 +23,9 @@ import javax.inject.Inject;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
+import io.reactivex.schedulers.Schedulers;
 
 @ActivityScope
 public class EdtorProjectModel extends BaseModel implements EdtorProjectContract.Model {
@@ -50,14 +52,16 @@ public class EdtorProjectModel extends BaseModel implements EdtorProjectContract
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<? extends BaseProjectMessage>> emitter) throws Exception {
                 QueryBuilder<ProjectFGGD> projectFGGDQueryBuilder = DBHelper.getProjectFGGDDao().queryBuilder();
-                if (null!=keyword){
-                    projectFGGDQueryBuilder=projectFGGDQueryBuilder.where(ProjectFGGDDao.Properties.ProjectName.like("%"+keyword+"%"));
+                if (null != keyword) {
+                    projectFGGDQueryBuilder = projectFGGDQueryBuilder.where(ProjectFGGDDao.Properties.ProjectName.like("%" + keyword + "%"));
                 }
-                List<ProjectFGGD> list = projectFGGDQueryBuilder.build().list();
+                List<ProjectFGGD> list = projectFGGDQueryBuilder.where(ProjectFGGDDao.Properties.Isdefault.eq(true)).build().list();
                 emitter.onNext(list);
                 emitter.onComplete();
             }
-        });
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io());
     }
 
     @Override
@@ -66,13 +70,15 @@ public class EdtorProjectModel extends BaseModel implements EdtorProjectContract
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<? extends BaseProjectMessage>> emitter) throws Exception {
                 QueryBuilder<ProjectJTJ> projectJTJQueryBuilder = DBHelper.getProjectJTJDao().queryBuilder();
-                if (null!=keyword){
-                    projectJTJQueryBuilder=projectJTJQueryBuilder.where(ProjectJTJDao.Properties.ProjectName.like("%"+keyword+"%"));
+                if (null != keyword) {
+                    projectJTJQueryBuilder = projectJTJQueryBuilder.where(ProjectJTJDao.Properties.ProjectName.like("%" + keyword + "%"));
                 }
-                List<ProjectJTJ> list = projectJTJQueryBuilder.build().list();
+                List<ProjectJTJ> list = projectJTJQueryBuilder.where(ProjectJTJDao.Properties.Isdefault.eq(true)).build().list();
                 emitter.onNext(list);
                 emitter.onComplete();
             }
-        });
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io());
     }
 }

@@ -1,9 +1,6 @@
 package com.dy.huibiao_f80.greendao;
 
-import com.apkfuns.logutils.LogUtils;
 import com.dy.huibiao_f80.bean.base.BaseProjectMessage;
-
-import net.sourceforge.pinyin4j.PinyinHelper;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
@@ -59,11 +56,8 @@ public class ProjectFGGD extends BaseProjectMessage {
     }
 
     @Override
-    public String getLetters() {
-        char c = projectName.charAt(0);
-        String[] strings = PinyinHelper.toGwoyeuRomatzyhStringArray(c);
-        LogUtils.d(strings);
-        return strings[0];
+    public String getCVName() {
+        return curveName == null ? "" : curveName;
     }
 
 
@@ -71,6 +65,7 @@ public class ProjectFGGD extends BaseProjectMessage {
     private Long id;
     private String projectName;
     private String curveName;
+    private int curveOrder;
     //一个项目可能存在多条曲线，需要有一个是默认曲线
     private boolean isdefault;
 
@@ -87,45 +82,68 @@ public class ProjectFGGD extends BaseProjectMessage {
     private float controValue;//每个检测项目都有一个对照值
     private String controValueLastTime;//产生对照值的时间
 
-    private String a0;
-    private String b0;
-    private String c0;
-    private String d0;
-    private String from0;
-    private String to0;
+    private double a0;
+    private double b0;
+    private double c0;
+    private double d0;
+    private double from0;
+    private double to0;
 
-    private String a1;
-    private String b1;
-    private String c1;
-    private String d1;
-    private String from1;
-    private String to1;
+    private double a1;
+    private double b1;
+    private double c1;
+    private double d1;
+    private double from1;
+    private double to1;
 
     private double a;
     private double b;
     private double c;
     private double d;
-
+    private boolean user_yin;
     private double yin_a;
+    private String yin_a_symbol;
     private double yin_b;
+    private String yin_b_symbol;
+
+    private boolean user_yang;
     private double yang_a;
+    private String yang_a_symbol;
     private double yang_b;
+    private String yang_b_symbol;
+
+    private boolean user_keyi;
     private double keyi_a;
+    private String keyi_a_symbol;
     private double keyi_b;
-    private String version;
+    private String keyi_b_symbol;
+    //简要提示
+    private String tips;
+    private String detectionLimit;
+    /**
+     * 检测项目信息完成状态，新建时状态都是未完成，在点击保存时候才改完true
+     */
+    private boolean finishState;
 
 
-    @Generated(hash = 308348171)
-    public ProjectFGGD(Long id, String projectName, String curveName, boolean isdefault,
-            String standardName, int method, int waveLength, int warmTime, int testTime,
-            String resultUnit, float controValue, String controValueLastTime, String a0,
-            String b0, String c0, String d0, String from0, String to0, String a1, String b1,
-            String c1, String d1, String from1, String to1, double a, double b, double c,
-            double d, double yin_a, double yin_b, double yang_a, double yang_b,
-            double keyi_a, double keyi_b, String version) {
+
+
+
+    @Generated(hash = 516655006)
+    public ProjectFGGD(Long id, String projectName, String curveName, int curveOrder,
+            boolean isdefault, String standardName, int method, int waveLength, int warmTime,
+            int testTime, String resultUnit, float controValue, String controValueLastTime,
+            double a0, double b0, double c0, double d0, double from0, double to0, double a1,
+            double b1, double c1, double d1, double from1, double to1, double a, double b,
+            double c, double d, boolean user_yin, double yin_a, String yin_a_symbol,
+            double yin_b, String yin_b_symbol, boolean user_yang, double yang_a,
+            String yang_a_symbol, double yang_b, String yang_b_symbol, boolean user_keyi,
+            double keyi_a, String keyi_a_symbol, double keyi_b, String keyi_b_symbol,
+            String tips, String detectionLimit, boolean finishState) {
         this.id = id;
         this.projectName = projectName;
         this.curveName = curveName;
+        this.curveOrder = curveOrder;
         this.isdefault = isdefault;
         this.standardName = standardName;
         this.method = method;
@@ -151,18 +169,32 @@ public class ProjectFGGD extends BaseProjectMessage {
         this.b = b;
         this.c = c;
         this.d = d;
+        this.user_yin = user_yin;
         this.yin_a = yin_a;
+        this.yin_a_symbol = yin_a_symbol;
         this.yin_b = yin_b;
+        this.yin_b_symbol = yin_b_symbol;
+        this.user_yang = user_yang;
         this.yang_a = yang_a;
+        this.yang_a_symbol = yang_a_symbol;
         this.yang_b = yang_b;
+        this.yang_b_symbol = yang_b_symbol;
+        this.user_keyi = user_keyi;
         this.keyi_a = keyi_a;
+        this.keyi_a_symbol = keyi_a_symbol;
         this.keyi_b = keyi_b;
-        this.version = version;
+        this.keyi_b_symbol = keyi_b_symbol;
+        this.tips = tips;
+        this.detectionLimit = detectionLimit;
+        this.finishState = finishState;
     }
 
     @Generated(hash = 1476994882)
     public ProjectFGGD() {
     }
+
+
+
 
 
     public Long getId() {
@@ -261,100 +293,100 @@ public class ProjectFGGD extends BaseProjectMessage {
         this.controValueLastTime = controValueLastTime == null ? "" : controValueLastTime;
     }
 
-    public String getA0() {
-        return a0 == null ? "" : a0;
+    public double getA0() {
+        return a0;
     }
 
-    public void setA0(String a0) {
-        this.a0 = a0 == null ? "" : a0;
+    public void setA0(double a0) {
+        this.a0 = a0;
     }
 
-    public String getB0() {
-        return b0 == null ? "" : b0;
+    public double getB0() {
+        return b0;
     }
 
-    public void setB0(String b0) {
-        this.b0 = b0 == null ? "" : b0;
+    public void setB0(double b0) {
+        this.b0 = b0;
     }
 
-    public String getC0() {
-        return c0 == null ? "" : c0;
+    public double getC0() {
+        return c0;
     }
 
-    public void setC0(String c0) {
-        this.c0 = c0 == null ? "" : c0;
+    public void setC0(double c0) {
+        this.c0 = c0;
     }
 
-    public String getD0() {
-        return d0 == null ? "" : d0;
+    public double getD0() {
+        return d0;
     }
 
-    public void setD0(String d0) {
-        this.d0 = d0 == null ? "" : d0;
+    public void setD0(double d0) {
+        this.d0 = d0;
     }
 
-    public String getFrom0() {
-        return from0 == null ? "" : from0;
+    public double getFrom0() {
+        return from0;
     }
 
-    public void setFrom0(String from0) {
-        this.from0 = from0 == null ? "" : from0;
+    public void setFrom0(double from0) {
+        this.from0 = from0;
     }
 
-    public String getTo0() {
-        return to0 == null ? "" : to0;
+    public double getTo0() {
+        return to0;
     }
 
-    public void setTo0(String to0) {
-        this.to0 = to0 == null ? "" : to0;
+    public void setTo0(double to0) {
+        this.to0 = to0;
     }
 
-    public String getA1() {
-        return a1 == null ? "" : a1;
+    public double getA1() {
+        return a1;
     }
 
-    public void setA1(String a1) {
-        this.a1 = a1 == null ? "" : a1;
+    public void setA1(double a1) {
+        this.a1 = a1;
     }
 
-    public String getB1() {
-        return b1 == null ? "" : b1;
+    public double getB1() {
+        return b1;
     }
 
-    public void setB1(String b1) {
-        this.b1 = b1 == null ? "" : b1;
+    public void setB1(double b1) {
+        this.b1 = b1;
     }
 
-    public String getC1() {
-        return c1 == null ? "" : c1;
+    public double getC1() {
+        return c1;
     }
 
-    public void setC1(String c1) {
-        this.c1 = c1 == null ? "" : c1;
+    public void setC1(double c1) {
+        this.c1 = c1;
     }
 
-    public String getD1() {
-        return d1 == null ? "" : d1;
+    public double getD1() {
+        return d1;
     }
 
-    public void setD1(String d1) {
-        this.d1 = d1 == null ? "" : d1;
+    public void setD1(double d1) {
+        this.d1 = d1;
     }
 
-    public String getFrom1() {
-        return from1 == null ? "" : from1;
+    public double getFrom1() {
+        return from1;
     }
 
-    public void setFrom1(String from1) {
-        this.from1 = from1 == null ? "" : from1;
+    public void setFrom1(double from1) {
+        this.from1 = from1;
     }
 
-    public String getTo1() {
-        return to1 == null ? "" : to1;
+    public double getTo1() {
+        return to1;
     }
 
-    public void setTo1(String to1) {
-        this.to1 = to1 == null ? "" : to1;
+    public void setTo1(double to1) {
+        this.to1 = to1;
     }
 
     public double getA() {
@@ -389,12 +421,28 @@ public class ProjectFGGD extends BaseProjectMessage {
         this.d = d;
     }
 
+    public boolean isUser_yin() {
+        return user_yin;
+    }
+
+    public void setUser_yin(boolean user_yin) {
+        this.user_yin = user_yin;
+    }
+
     public double getYin_a() {
         return yin_a;
     }
 
     public void setYin_a(double yin_a) {
         this.yin_a = yin_a;
+    }
+
+    public String getYin_a_symbol() {
+        return yin_a_symbol == null ? "" : yin_a_symbol;
+    }
+
+    public void setYin_a_symbol(String yin_a_symbol) {
+        this.yin_a_symbol = yin_a_symbol == null ? "" : yin_a_symbol;
     }
 
     public double getYin_b() {
@@ -405,12 +453,36 @@ public class ProjectFGGD extends BaseProjectMessage {
         this.yin_b = yin_b;
     }
 
+    public String getYin_b_symbol() {
+        return yin_b_symbol == null ? "" : yin_b_symbol;
+    }
+
+    public void setYin_b_symbol(String yin_b_symbol) {
+        this.yin_b_symbol = yin_b_symbol == null ? "" : yin_b_symbol;
+    }
+
+    public boolean isUser_yang() {
+        return user_yang;
+    }
+
+    public void setUser_yang(boolean user_yang) {
+        this.user_yang = user_yang;
+    }
+
     public double getYang_a() {
         return yang_a;
     }
 
     public void setYang_a(double yang_a) {
         this.yang_a = yang_a;
+    }
+
+    public String getYang_a_symbol() {
+        return yang_a_symbol == null ? "" : yang_a_symbol;
+    }
+
+    public void setYang_a_symbol(String yang_a_symbol) {
+        this.yang_a_symbol = yang_a_symbol == null ? "" : yang_a_symbol;
     }
 
     public double getYang_b() {
@@ -421,12 +493,36 @@ public class ProjectFGGD extends BaseProjectMessage {
         this.yang_b = yang_b;
     }
 
+    public String getYang_b_symbol() {
+        return yang_b_symbol == null ? "" : yang_b_symbol;
+    }
+
+    public void setYang_b_symbol(String yang_b_symbol) {
+        this.yang_b_symbol = yang_b_symbol == null ? "" : yang_b_symbol;
+    }
+
+    public boolean isUser_keyi() {
+        return user_keyi;
+    }
+
+    public void setUser_keyi(boolean user_keyi) {
+        this.user_keyi = user_keyi;
+    }
+
     public double getKeyi_a() {
         return keyi_a;
     }
 
     public void setKeyi_a(double keyi_a) {
         this.keyi_a = keyi_a;
+    }
+
+    public String getKeyi_a_symbol() {
+        return keyi_a_symbol == null ? "" : keyi_a_symbol;
+    }
+
+    public void setKeyi_a_symbol(String keyi_a_symbol) {
+        this.keyi_a_symbol = keyi_a_symbol == null ? "" : keyi_a_symbol;
     }
 
     public double getKeyi_b() {
@@ -437,15 +533,63 @@ public class ProjectFGGD extends BaseProjectMessage {
         this.keyi_b = keyi_b;
     }
 
-    public String getVersion() {
-        return version == null ? "" : version;
+    public String getKeyi_b_symbol() {
+        return keyi_b_symbol == null ? "" : keyi_b_symbol;
     }
 
-    public void setVersion(String version) {
-        this.version = version == null ? "" : version;
+    public void setKeyi_b_symbol(String keyi_b_symbol) {
+        this.keyi_b_symbol = keyi_b_symbol == null ? "" : keyi_b_symbol;
+    }
+
+    public String getTips() {
+        return tips == null ? "" : tips;
+    }
+
+    public void setTips(String tips) {
+        this.tips = tips == null ? "" : tips;
+    }
+
+    public String getDetectionLimit() {
+        return detectionLimit == null ? "" : detectionLimit;
+    }
+
+    public void setDetectionLimit(String detectionLimit) {
+        this.detectionLimit = detectionLimit == null ? "" : detectionLimit;
+    }
+
+    public boolean isFinishState() {
+        return finishState;
+    }
+
+    public void setFinishState(boolean finishState) {
+        this.finishState = finishState;
+    }
+
+    public boolean getFinishState() {
+        return this.finishState;
+    }
+
+    public boolean getUser_keyi() {
+        return this.user_keyi;
+    }
+
+    public boolean getUser_yang() {
+        return this.user_yang;
+    }
+
+    public boolean getUser_yin() {
+        return this.user_yin;
     }
 
     public boolean getIsdefault() {
         return this.isdefault;
+    }
+
+    public int getCurveOrder() {
+        return curveOrder;
+    }
+
+    public void setCurveOrder(int curveOrder) {
+        this.curveOrder = curveOrder;
     }
 }

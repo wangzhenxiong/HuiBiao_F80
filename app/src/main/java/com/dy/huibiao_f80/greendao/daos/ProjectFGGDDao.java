@@ -27,38 +27,50 @@ public class ProjectFGGDDao extends AbstractDao<ProjectFGGD, Long> {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property ProjectName = new Property(1, String.class, "projectName", false, "PROJECT_NAME");
         public final static Property CurveName = new Property(2, String.class, "curveName", false, "CURVE_NAME");
-        public final static Property Isdefault = new Property(3, boolean.class, "isdefault", false, "ISDEFAULT");
-        public final static Property StandardName = new Property(4, String.class, "standardName", false, "STANDARD_NAME");
-        public final static Property Method = new Property(5, int.class, "method", false, "METHOD");
-        public final static Property WaveLength = new Property(6, int.class, "waveLength", false, "WAVE_LENGTH");
-        public final static Property WarmTime = new Property(7, int.class, "warmTime", false, "WARM_TIME");
-        public final static Property TestTime = new Property(8, int.class, "testTime", false, "TEST_TIME");
-        public final static Property ResultUnit = new Property(9, String.class, "resultUnit", false, "RESULT_UNIT");
-        public final static Property ControValue = new Property(10, float.class, "controValue", false, "CONTRO_VALUE");
-        public final static Property ControValueLastTime = new Property(11, String.class, "controValueLastTime", false, "CONTRO_VALUE_LAST_TIME");
-        public final static Property A0 = new Property(12, String.class, "a0", false, "A0");
-        public final static Property B0 = new Property(13, String.class, "b0", false, "B0");
-        public final static Property C0 = new Property(14, String.class, "c0", false, "C0");
-        public final static Property D0 = new Property(15, String.class, "d0", false, "D0");
-        public final static Property From0 = new Property(16, String.class, "from0", false, "FROM0");
-        public final static Property To0 = new Property(17, String.class, "to0", false, "TO0");
-        public final static Property A1 = new Property(18, String.class, "a1", false, "A1");
-        public final static Property B1 = new Property(19, String.class, "b1", false, "B1");
-        public final static Property C1 = new Property(20, String.class, "c1", false, "C1");
-        public final static Property D1 = new Property(21, String.class, "d1", false, "D1");
-        public final static Property From1 = new Property(22, String.class, "from1", false, "FROM1");
-        public final static Property To1 = new Property(23, String.class, "to1", false, "TO1");
-        public final static Property A = new Property(24, double.class, "a", false, "A");
-        public final static Property B = new Property(25, double.class, "b", false, "B");
-        public final static Property C = new Property(26, double.class, "c", false, "C");
-        public final static Property D = new Property(27, double.class, "d", false, "D");
-        public final static Property Yin_a = new Property(28, double.class, "yin_a", false, "YIN_A");
-        public final static Property Yin_b = new Property(29, double.class, "yin_b", false, "YIN_B");
-        public final static Property Yang_a = new Property(30, double.class, "yang_a", false, "YANG_A");
-        public final static Property Yang_b = new Property(31, double.class, "yang_b", false, "YANG_B");
-        public final static Property Keyi_a = new Property(32, double.class, "keyi_a", false, "KEYI_A");
-        public final static Property Keyi_b = new Property(33, double.class, "keyi_b", false, "KEYI_B");
-        public final static Property Version = new Property(34, String.class, "version", false, "VERSION");
+        public final static Property CurveOrder = new Property(3, int.class, "curveOrder", false, "CURVE_ORDER");
+        public final static Property Isdefault = new Property(4, boolean.class, "isdefault", false, "ISDEFAULT");
+        public final static Property StandardName = new Property(5, String.class, "standardName", false, "STANDARD_NAME");
+        public final static Property Method = new Property(6, int.class, "method", false, "METHOD");
+        public final static Property WaveLength = new Property(7, int.class, "waveLength", false, "WAVE_LENGTH");
+        public final static Property WarmTime = new Property(8, int.class, "warmTime", false, "WARM_TIME");
+        public final static Property TestTime = new Property(9, int.class, "testTime", false, "TEST_TIME");
+        public final static Property ResultUnit = new Property(10, String.class, "resultUnit", false, "RESULT_UNIT");
+        public final static Property ControValue = new Property(11, float.class, "controValue", false, "CONTRO_VALUE");
+        public final static Property ControValueLastTime = new Property(12, String.class, "controValueLastTime", false, "CONTRO_VALUE_LAST_TIME");
+        public final static Property A0 = new Property(13, double.class, "a0", false, "A0");
+        public final static Property B0 = new Property(14, double.class, "b0", false, "B0");
+        public final static Property C0 = new Property(15, double.class, "c0", false, "C0");
+        public final static Property D0 = new Property(16, double.class, "d0", false, "D0");
+        public final static Property From0 = new Property(17, double.class, "from0", false, "FROM0");
+        public final static Property To0 = new Property(18, double.class, "to0", false, "TO0");
+        public final static Property A1 = new Property(19, double.class, "a1", false, "A1");
+        public final static Property B1 = new Property(20, double.class, "b1", false, "B1");
+        public final static Property C1 = new Property(21, double.class, "c1", false, "C1");
+        public final static Property D1 = new Property(22, double.class, "d1", false, "D1");
+        public final static Property From1 = new Property(23, double.class, "from1", false, "FROM1");
+        public final static Property To1 = new Property(24, double.class, "to1", false, "TO1");
+        public final static Property A = new Property(25, double.class, "a", false, "A");
+        public final static Property B = new Property(26, double.class, "b", false, "B");
+        public final static Property C = new Property(27, double.class, "c", false, "C");
+        public final static Property D = new Property(28, double.class, "d", false, "D");
+        public final static Property User_yin = new Property(29, boolean.class, "user_yin", false, "USER_YIN");
+        public final static Property Yin_a = new Property(30, double.class, "yin_a", false, "YIN_A");
+        public final static Property Yin_a_symbol = new Property(31, String.class, "yin_a_symbol", false, "YIN_A_SYMBOL");
+        public final static Property Yin_b = new Property(32, double.class, "yin_b", false, "YIN_B");
+        public final static Property Yin_b_symbol = new Property(33, String.class, "yin_b_symbol", false, "YIN_B_SYMBOL");
+        public final static Property User_yang = new Property(34, boolean.class, "user_yang", false, "USER_YANG");
+        public final static Property Yang_a = new Property(35, double.class, "yang_a", false, "YANG_A");
+        public final static Property Yang_a_symbol = new Property(36, String.class, "yang_a_symbol", false, "YANG_A_SYMBOL");
+        public final static Property Yang_b = new Property(37, double.class, "yang_b", false, "YANG_B");
+        public final static Property Yang_b_symbol = new Property(38, String.class, "yang_b_symbol", false, "YANG_B_SYMBOL");
+        public final static Property User_keyi = new Property(39, boolean.class, "user_keyi", false, "USER_KEYI");
+        public final static Property Keyi_a = new Property(40, double.class, "keyi_a", false, "KEYI_A");
+        public final static Property Keyi_a_symbol = new Property(41, String.class, "keyi_a_symbol", false, "KEYI_A_SYMBOL");
+        public final static Property Keyi_b = new Property(42, double.class, "keyi_b", false, "KEYI_B");
+        public final static Property Keyi_b_symbol = new Property(43, String.class, "keyi_b_symbol", false, "KEYI_B_SYMBOL");
+        public final static Property Tips = new Property(44, String.class, "tips", false, "TIPS");
+        public final static Property DetectionLimit = new Property(45, String.class, "detectionLimit", false, "DETECTION_LIMIT");
+        public final static Property FinishState = new Property(46, boolean.class, "finishState", false, "FINISH_STATE");
     }
 
 
@@ -77,38 +89,50 @@ public class ProjectFGGDDao extends AbstractDao<ProjectFGGD, Long> {
                 "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
                 "\"PROJECT_NAME\" TEXT," + // 1: projectName
                 "\"CURVE_NAME\" TEXT," + // 2: curveName
-                "\"ISDEFAULT\" INTEGER NOT NULL ," + // 3: isdefault
-                "\"STANDARD_NAME\" TEXT," + // 4: standardName
-                "\"METHOD\" INTEGER NOT NULL ," + // 5: method
-                "\"WAVE_LENGTH\" INTEGER NOT NULL ," + // 6: waveLength
-                "\"WARM_TIME\" INTEGER NOT NULL ," + // 7: warmTime
-                "\"TEST_TIME\" INTEGER NOT NULL ," + // 8: testTime
-                "\"RESULT_UNIT\" TEXT," + // 9: resultUnit
-                "\"CONTRO_VALUE\" REAL NOT NULL ," + // 10: controValue
-                "\"CONTRO_VALUE_LAST_TIME\" TEXT," + // 11: controValueLastTime
-                "\"A0\" TEXT," + // 12: a0
-                "\"B0\" TEXT," + // 13: b0
-                "\"C0\" TEXT," + // 14: c0
-                "\"D0\" TEXT," + // 15: d0
-                "\"FROM0\" TEXT," + // 16: from0
-                "\"TO0\" TEXT," + // 17: to0
-                "\"A1\" TEXT," + // 18: a1
-                "\"B1\" TEXT," + // 19: b1
-                "\"C1\" TEXT," + // 20: c1
-                "\"D1\" TEXT," + // 21: d1
-                "\"FROM1\" TEXT," + // 22: from1
-                "\"TO1\" TEXT," + // 23: to1
-                "\"A\" REAL NOT NULL ," + // 24: a
-                "\"B\" REAL NOT NULL ," + // 25: b
-                "\"C\" REAL NOT NULL ," + // 26: c
-                "\"D\" REAL NOT NULL ," + // 27: d
-                "\"YIN_A\" REAL NOT NULL ," + // 28: yin_a
-                "\"YIN_B\" REAL NOT NULL ," + // 29: yin_b
-                "\"YANG_A\" REAL NOT NULL ," + // 30: yang_a
-                "\"YANG_B\" REAL NOT NULL ," + // 31: yang_b
-                "\"KEYI_A\" REAL NOT NULL ," + // 32: keyi_a
-                "\"KEYI_B\" REAL NOT NULL ," + // 33: keyi_b
-                "\"VERSION\" TEXT);"); // 34: version
+                "\"CURVE_ORDER\" INTEGER NOT NULL ," + // 3: curveOrder
+                "\"ISDEFAULT\" INTEGER NOT NULL ," + // 4: isdefault
+                "\"STANDARD_NAME\" TEXT," + // 5: standardName
+                "\"METHOD\" INTEGER NOT NULL ," + // 6: method
+                "\"WAVE_LENGTH\" INTEGER NOT NULL ," + // 7: waveLength
+                "\"WARM_TIME\" INTEGER NOT NULL ," + // 8: warmTime
+                "\"TEST_TIME\" INTEGER NOT NULL ," + // 9: testTime
+                "\"RESULT_UNIT\" TEXT," + // 10: resultUnit
+                "\"CONTRO_VALUE\" REAL NOT NULL ," + // 11: controValue
+                "\"CONTRO_VALUE_LAST_TIME\" TEXT," + // 12: controValueLastTime
+                "\"A0\" REAL NOT NULL ," + // 13: a0
+                "\"B0\" REAL NOT NULL ," + // 14: b0
+                "\"C0\" REAL NOT NULL ," + // 15: c0
+                "\"D0\" REAL NOT NULL ," + // 16: d0
+                "\"FROM0\" REAL NOT NULL ," + // 17: from0
+                "\"TO0\" REAL NOT NULL ," + // 18: to0
+                "\"A1\" REAL NOT NULL ," + // 19: a1
+                "\"B1\" REAL NOT NULL ," + // 20: b1
+                "\"C1\" REAL NOT NULL ," + // 21: c1
+                "\"D1\" REAL NOT NULL ," + // 22: d1
+                "\"FROM1\" REAL NOT NULL ," + // 23: from1
+                "\"TO1\" REAL NOT NULL ," + // 24: to1
+                "\"A\" REAL NOT NULL ," + // 25: a
+                "\"B\" REAL NOT NULL ," + // 26: b
+                "\"C\" REAL NOT NULL ," + // 27: c
+                "\"D\" REAL NOT NULL ," + // 28: d
+                "\"USER_YIN\" INTEGER NOT NULL ," + // 29: user_yin
+                "\"YIN_A\" REAL NOT NULL ," + // 30: yin_a
+                "\"YIN_A_SYMBOL\" TEXT," + // 31: yin_a_symbol
+                "\"YIN_B\" REAL NOT NULL ," + // 32: yin_b
+                "\"YIN_B_SYMBOL\" TEXT," + // 33: yin_b_symbol
+                "\"USER_YANG\" INTEGER NOT NULL ," + // 34: user_yang
+                "\"YANG_A\" REAL NOT NULL ," + // 35: yang_a
+                "\"YANG_A_SYMBOL\" TEXT," + // 36: yang_a_symbol
+                "\"YANG_B\" REAL NOT NULL ," + // 37: yang_b
+                "\"YANG_B_SYMBOL\" TEXT," + // 38: yang_b_symbol
+                "\"USER_KEYI\" INTEGER NOT NULL ," + // 39: user_keyi
+                "\"KEYI_A\" REAL NOT NULL ," + // 40: keyi_a
+                "\"KEYI_A_SYMBOL\" TEXT," + // 41: keyi_a_symbol
+                "\"KEYI_B\" REAL NOT NULL ," + // 42: keyi_b
+                "\"KEYI_B_SYMBOL\" TEXT," + // 43: keyi_b_symbol
+                "\"TIPS\" TEXT," + // 44: tips
+                "\"DETECTION_LIMIT\" TEXT," + // 45: detectionLimit
+                "\"FINISH_STATE\" INTEGER NOT NULL );"); // 46: finishState
     }
 
     /** Drops the underlying database table. */
@@ -135,102 +159,94 @@ public class ProjectFGGDDao extends AbstractDao<ProjectFGGD, Long> {
         if (curveName != null) {
             stmt.bindString(3, curveName);
         }
-        stmt.bindLong(4, entity.getIsdefault() ? 1L: 0L);
+        stmt.bindLong(4, entity.getCurveOrder());
+        stmt.bindLong(5, entity.getIsdefault() ? 1L: 0L);
  
         String standardName = entity.getStandardName();
         if (standardName != null) {
-            stmt.bindString(5, standardName);
+            stmt.bindString(6, standardName);
         }
-        stmt.bindLong(6, entity.getMethod());
-        stmt.bindLong(7, entity.getWaveLength());
-        stmt.bindLong(8, entity.getWarmTime());
-        stmt.bindLong(9, entity.getTestTime());
+        stmt.bindLong(7, entity.getMethod());
+        stmt.bindLong(8, entity.getWaveLength());
+        stmt.bindLong(9, entity.getWarmTime());
+        stmt.bindLong(10, entity.getTestTime());
  
         String resultUnit = entity.getResultUnit();
         if (resultUnit != null) {
-            stmt.bindString(10, resultUnit);
+            stmt.bindString(11, resultUnit);
         }
-        stmt.bindDouble(11, entity.getControValue());
+        stmt.bindDouble(12, entity.getControValue());
  
         String controValueLastTime = entity.getControValueLastTime();
         if (controValueLastTime != null) {
-            stmt.bindString(12, controValueLastTime);
+            stmt.bindString(13, controValueLastTime);
+        }
+        stmt.bindDouble(14, entity.getA0());
+        stmt.bindDouble(15, entity.getB0());
+        stmt.bindDouble(16, entity.getC0());
+        stmt.bindDouble(17, entity.getD0());
+        stmt.bindDouble(18, entity.getFrom0());
+        stmt.bindDouble(19, entity.getTo0());
+        stmt.bindDouble(20, entity.getA1());
+        stmt.bindDouble(21, entity.getB1());
+        stmt.bindDouble(22, entity.getC1());
+        stmt.bindDouble(23, entity.getD1());
+        stmt.bindDouble(24, entity.getFrom1());
+        stmt.bindDouble(25, entity.getTo1());
+        stmt.bindDouble(26, entity.getA());
+        stmt.bindDouble(27, entity.getB());
+        stmt.bindDouble(28, entity.getC());
+        stmt.bindDouble(29, entity.getD());
+        stmt.bindLong(30, entity.getUser_yin() ? 1L: 0L);
+        stmt.bindDouble(31, entity.getYin_a());
+ 
+        String yin_a_symbol = entity.getYin_a_symbol();
+        if (yin_a_symbol != null) {
+            stmt.bindString(32, yin_a_symbol);
+        }
+        stmt.bindDouble(33, entity.getYin_b());
+ 
+        String yin_b_symbol = entity.getYin_b_symbol();
+        if (yin_b_symbol != null) {
+            stmt.bindString(34, yin_b_symbol);
+        }
+        stmt.bindLong(35, entity.getUser_yang() ? 1L: 0L);
+        stmt.bindDouble(36, entity.getYang_a());
+ 
+        String yang_a_symbol = entity.getYang_a_symbol();
+        if (yang_a_symbol != null) {
+            stmt.bindString(37, yang_a_symbol);
+        }
+        stmt.bindDouble(38, entity.getYang_b());
+ 
+        String yang_b_symbol = entity.getYang_b_symbol();
+        if (yang_b_symbol != null) {
+            stmt.bindString(39, yang_b_symbol);
+        }
+        stmt.bindLong(40, entity.getUser_keyi() ? 1L: 0L);
+        stmt.bindDouble(41, entity.getKeyi_a());
+ 
+        String keyi_a_symbol = entity.getKeyi_a_symbol();
+        if (keyi_a_symbol != null) {
+            stmt.bindString(42, keyi_a_symbol);
+        }
+        stmt.bindDouble(43, entity.getKeyi_b());
+ 
+        String keyi_b_symbol = entity.getKeyi_b_symbol();
+        if (keyi_b_symbol != null) {
+            stmt.bindString(44, keyi_b_symbol);
         }
  
-        String a0 = entity.getA0();
-        if (a0 != null) {
-            stmt.bindString(13, a0);
+        String tips = entity.getTips();
+        if (tips != null) {
+            stmt.bindString(45, tips);
         }
  
-        String b0 = entity.getB0();
-        if (b0 != null) {
-            stmt.bindString(14, b0);
+        String detectionLimit = entity.getDetectionLimit();
+        if (detectionLimit != null) {
+            stmt.bindString(46, detectionLimit);
         }
- 
-        String c0 = entity.getC0();
-        if (c0 != null) {
-            stmt.bindString(15, c0);
-        }
- 
-        String d0 = entity.getD0();
-        if (d0 != null) {
-            stmt.bindString(16, d0);
-        }
- 
-        String from0 = entity.getFrom0();
-        if (from0 != null) {
-            stmt.bindString(17, from0);
-        }
- 
-        String to0 = entity.getTo0();
-        if (to0 != null) {
-            stmt.bindString(18, to0);
-        }
- 
-        String a1 = entity.getA1();
-        if (a1 != null) {
-            stmt.bindString(19, a1);
-        }
- 
-        String b1 = entity.getB1();
-        if (b1 != null) {
-            stmt.bindString(20, b1);
-        }
- 
-        String c1 = entity.getC1();
-        if (c1 != null) {
-            stmt.bindString(21, c1);
-        }
- 
-        String d1 = entity.getD1();
-        if (d1 != null) {
-            stmt.bindString(22, d1);
-        }
- 
-        String from1 = entity.getFrom1();
-        if (from1 != null) {
-            stmt.bindString(23, from1);
-        }
- 
-        String to1 = entity.getTo1();
-        if (to1 != null) {
-            stmt.bindString(24, to1);
-        }
-        stmt.bindDouble(25, entity.getA());
-        stmt.bindDouble(26, entity.getB());
-        stmt.bindDouble(27, entity.getC());
-        stmt.bindDouble(28, entity.getD());
-        stmt.bindDouble(29, entity.getYin_a());
-        stmt.bindDouble(30, entity.getYin_b());
-        stmt.bindDouble(31, entity.getYang_a());
-        stmt.bindDouble(32, entity.getYang_b());
-        stmt.bindDouble(33, entity.getKeyi_a());
-        stmt.bindDouble(34, entity.getKeyi_b());
- 
-        String version = entity.getVersion();
-        if (version != null) {
-            stmt.bindString(35, version);
-        }
+        stmt.bindLong(47, entity.getFinishState() ? 1L: 0L);
     }
 
     @Override
@@ -251,102 +267,94 @@ public class ProjectFGGDDao extends AbstractDao<ProjectFGGD, Long> {
         if (curveName != null) {
             stmt.bindString(3, curveName);
         }
-        stmt.bindLong(4, entity.getIsdefault() ? 1L: 0L);
+        stmt.bindLong(4, entity.getCurveOrder());
+        stmt.bindLong(5, entity.getIsdefault() ? 1L: 0L);
  
         String standardName = entity.getStandardName();
         if (standardName != null) {
-            stmt.bindString(5, standardName);
+            stmt.bindString(6, standardName);
         }
-        stmt.bindLong(6, entity.getMethod());
-        stmt.bindLong(7, entity.getWaveLength());
-        stmt.bindLong(8, entity.getWarmTime());
-        stmt.bindLong(9, entity.getTestTime());
+        stmt.bindLong(7, entity.getMethod());
+        stmt.bindLong(8, entity.getWaveLength());
+        stmt.bindLong(9, entity.getWarmTime());
+        stmt.bindLong(10, entity.getTestTime());
  
         String resultUnit = entity.getResultUnit();
         if (resultUnit != null) {
-            stmt.bindString(10, resultUnit);
+            stmt.bindString(11, resultUnit);
         }
-        stmt.bindDouble(11, entity.getControValue());
+        stmt.bindDouble(12, entity.getControValue());
  
         String controValueLastTime = entity.getControValueLastTime();
         if (controValueLastTime != null) {
-            stmt.bindString(12, controValueLastTime);
+            stmt.bindString(13, controValueLastTime);
+        }
+        stmt.bindDouble(14, entity.getA0());
+        stmt.bindDouble(15, entity.getB0());
+        stmt.bindDouble(16, entity.getC0());
+        stmt.bindDouble(17, entity.getD0());
+        stmt.bindDouble(18, entity.getFrom0());
+        stmt.bindDouble(19, entity.getTo0());
+        stmt.bindDouble(20, entity.getA1());
+        stmt.bindDouble(21, entity.getB1());
+        stmt.bindDouble(22, entity.getC1());
+        stmt.bindDouble(23, entity.getD1());
+        stmt.bindDouble(24, entity.getFrom1());
+        stmt.bindDouble(25, entity.getTo1());
+        stmt.bindDouble(26, entity.getA());
+        stmt.bindDouble(27, entity.getB());
+        stmt.bindDouble(28, entity.getC());
+        stmt.bindDouble(29, entity.getD());
+        stmt.bindLong(30, entity.getUser_yin() ? 1L: 0L);
+        stmt.bindDouble(31, entity.getYin_a());
+ 
+        String yin_a_symbol = entity.getYin_a_symbol();
+        if (yin_a_symbol != null) {
+            stmt.bindString(32, yin_a_symbol);
+        }
+        stmt.bindDouble(33, entity.getYin_b());
+ 
+        String yin_b_symbol = entity.getYin_b_symbol();
+        if (yin_b_symbol != null) {
+            stmt.bindString(34, yin_b_symbol);
+        }
+        stmt.bindLong(35, entity.getUser_yang() ? 1L: 0L);
+        stmt.bindDouble(36, entity.getYang_a());
+ 
+        String yang_a_symbol = entity.getYang_a_symbol();
+        if (yang_a_symbol != null) {
+            stmt.bindString(37, yang_a_symbol);
+        }
+        stmt.bindDouble(38, entity.getYang_b());
+ 
+        String yang_b_symbol = entity.getYang_b_symbol();
+        if (yang_b_symbol != null) {
+            stmt.bindString(39, yang_b_symbol);
+        }
+        stmt.bindLong(40, entity.getUser_keyi() ? 1L: 0L);
+        stmt.bindDouble(41, entity.getKeyi_a());
+ 
+        String keyi_a_symbol = entity.getKeyi_a_symbol();
+        if (keyi_a_symbol != null) {
+            stmt.bindString(42, keyi_a_symbol);
+        }
+        stmt.bindDouble(43, entity.getKeyi_b());
+ 
+        String keyi_b_symbol = entity.getKeyi_b_symbol();
+        if (keyi_b_symbol != null) {
+            stmt.bindString(44, keyi_b_symbol);
         }
  
-        String a0 = entity.getA0();
-        if (a0 != null) {
-            stmt.bindString(13, a0);
+        String tips = entity.getTips();
+        if (tips != null) {
+            stmt.bindString(45, tips);
         }
  
-        String b0 = entity.getB0();
-        if (b0 != null) {
-            stmt.bindString(14, b0);
+        String detectionLimit = entity.getDetectionLimit();
+        if (detectionLimit != null) {
+            stmt.bindString(46, detectionLimit);
         }
- 
-        String c0 = entity.getC0();
-        if (c0 != null) {
-            stmt.bindString(15, c0);
-        }
- 
-        String d0 = entity.getD0();
-        if (d0 != null) {
-            stmt.bindString(16, d0);
-        }
- 
-        String from0 = entity.getFrom0();
-        if (from0 != null) {
-            stmt.bindString(17, from0);
-        }
- 
-        String to0 = entity.getTo0();
-        if (to0 != null) {
-            stmt.bindString(18, to0);
-        }
- 
-        String a1 = entity.getA1();
-        if (a1 != null) {
-            stmt.bindString(19, a1);
-        }
- 
-        String b1 = entity.getB1();
-        if (b1 != null) {
-            stmt.bindString(20, b1);
-        }
- 
-        String c1 = entity.getC1();
-        if (c1 != null) {
-            stmt.bindString(21, c1);
-        }
- 
-        String d1 = entity.getD1();
-        if (d1 != null) {
-            stmt.bindString(22, d1);
-        }
- 
-        String from1 = entity.getFrom1();
-        if (from1 != null) {
-            stmt.bindString(23, from1);
-        }
- 
-        String to1 = entity.getTo1();
-        if (to1 != null) {
-            stmt.bindString(24, to1);
-        }
-        stmt.bindDouble(25, entity.getA());
-        stmt.bindDouble(26, entity.getB());
-        stmt.bindDouble(27, entity.getC());
-        stmt.bindDouble(28, entity.getD());
-        stmt.bindDouble(29, entity.getYin_a());
-        stmt.bindDouble(30, entity.getYin_b());
-        stmt.bindDouble(31, entity.getYang_a());
-        stmt.bindDouble(32, entity.getYang_b());
-        stmt.bindDouble(33, entity.getKeyi_a());
-        stmt.bindDouble(34, entity.getKeyi_b());
- 
-        String version = entity.getVersion();
-        if (version != null) {
-            stmt.bindString(35, version);
-        }
+        stmt.bindLong(47, entity.getFinishState() ? 1L: 0L);
     }
 
     @Override
@@ -360,38 +368,50 @@ public class ProjectFGGDDao extends AbstractDao<ProjectFGGD, Long> {
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // projectName
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // curveName
-            cursor.getShort(offset + 3) != 0, // isdefault
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // standardName
-            cursor.getInt(offset + 5), // method
-            cursor.getInt(offset + 6), // waveLength
-            cursor.getInt(offset + 7), // warmTime
-            cursor.getInt(offset + 8), // testTime
-            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // resultUnit
-            cursor.getFloat(offset + 10), // controValue
-            cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11), // controValueLastTime
-            cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12), // a0
-            cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13), // b0
-            cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14), // c0
-            cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15), // d0
-            cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16), // from0
-            cursor.isNull(offset + 17) ? null : cursor.getString(offset + 17), // to0
-            cursor.isNull(offset + 18) ? null : cursor.getString(offset + 18), // a1
-            cursor.isNull(offset + 19) ? null : cursor.getString(offset + 19), // b1
-            cursor.isNull(offset + 20) ? null : cursor.getString(offset + 20), // c1
-            cursor.isNull(offset + 21) ? null : cursor.getString(offset + 21), // d1
-            cursor.isNull(offset + 22) ? null : cursor.getString(offset + 22), // from1
-            cursor.isNull(offset + 23) ? null : cursor.getString(offset + 23), // to1
-            cursor.getDouble(offset + 24), // a
-            cursor.getDouble(offset + 25), // b
-            cursor.getDouble(offset + 26), // c
-            cursor.getDouble(offset + 27), // d
-            cursor.getDouble(offset + 28), // yin_a
-            cursor.getDouble(offset + 29), // yin_b
-            cursor.getDouble(offset + 30), // yang_a
-            cursor.getDouble(offset + 31), // yang_b
-            cursor.getDouble(offset + 32), // keyi_a
-            cursor.getDouble(offset + 33), // keyi_b
-            cursor.isNull(offset + 34) ? null : cursor.getString(offset + 34) // version
+            cursor.getInt(offset + 3), // curveOrder
+            cursor.getShort(offset + 4) != 0, // isdefault
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // standardName
+            cursor.getInt(offset + 6), // method
+            cursor.getInt(offset + 7), // waveLength
+            cursor.getInt(offset + 8), // warmTime
+            cursor.getInt(offset + 9), // testTime
+            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // resultUnit
+            cursor.getFloat(offset + 11), // controValue
+            cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12), // controValueLastTime
+            cursor.getDouble(offset + 13), // a0
+            cursor.getDouble(offset + 14), // b0
+            cursor.getDouble(offset + 15), // c0
+            cursor.getDouble(offset + 16), // d0
+            cursor.getDouble(offset + 17), // from0
+            cursor.getDouble(offset + 18), // to0
+            cursor.getDouble(offset + 19), // a1
+            cursor.getDouble(offset + 20), // b1
+            cursor.getDouble(offset + 21), // c1
+            cursor.getDouble(offset + 22), // d1
+            cursor.getDouble(offset + 23), // from1
+            cursor.getDouble(offset + 24), // to1
+            cursor.getDouble(offset + 25), // a
+            cursor.getDouble(offset + 26), // b
+            cursor.getDouble(offset + 27), // c
+            cursor.getDouble(offset + 28), // d
+            cursor.getShort(offset + 29) != 0, // user_yin
+            cursor.getDouble(offset + 30), // yin_a
+            cursor.isNull(offset + 31) ? null : cursor.getString(offset + 31), // yin_a_symbol
+            cursor.getDouble(offset + 32), // yin_b
+            cursor.isNull(offset + 33) ? null : cursor.getString(offset + 33), // yin_b_symbol
+            cursor.getShort(offset + 34) != 0, // user_yang
+            cursor.getDouble(offset + 35), // yang_a
+            cursor.isNull(offset + 36) ? null : cursor.getString(offset + 36), // yang_a_symbol
+            cursor.getDouble(offset + 37), // yang_b
+            cursor.isNull(offset + 38) ? null : cursor.getString(offset + 38), // yang_b_symbol
+            cursor.getShort(offset + 39) != 0, // user_keyi
+            cursor.getDouble(offset + 40), // keyi_a
+            cursor.isNull(offset + 41) ? null : cursor.getString(offset + 41), // keyi_a_symbol
+            cursor.getDouble(offset + 42), // keyi_b
+            cursor.isNull(offset + 43) ? null : cursor.getString(offset + 43), // keyi_b_symbol
+            cursor.isNull(offset + 44) ? null : cursor.getString(offset + 44), // tips
+            cursor.isNull(offset + 45) ? null : cursor.getString(offset + 45), // detectionLimit
+            cursor.getShort(offset + 46) != 0 // finishState
         );
         return entity;
     }
@@ -401,38 +421,50 @@ public class ProjectFGGDDao extends AbstractDao<ProjectFGGD, Long> {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setProjectName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setCurveName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setIsdefault(cursor.getShort(offset + 3) != 0);
-        entity.setStandardName(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setMethod(cursor.getInt(offset + 5));
-        entity.setWaveLength(cursor.getInt(offset + 6));
-        entity.setWarmTime(cursor.getInt(offset + 7));
-        entity.setTestTime(cursor.getInt(offset + 8));
-        entity.setResultUnit(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
-        entity.setControValue(cursor.getFloat(offset + 10));
-        entity.setControValueLastTime(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
-        entity.setA0(cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12));
-        entity.setB0(cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13));
-        entity.setC0(cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14));
-        entity.setD0(cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15));
-        entity.setFrom0(cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16));
-        entity.setTo0(cursor.isNull(offset + 17) ? null : cursor.getString(offset + 17));
-        entity.setA1(cursor.isNull(offset + 18) ? null : cursor.getString(offset + 18));
-        entity.setB1(cursor.isNull(offset + 19) ? null : cursor.getString(offset + 19));
-        entity.setC1(cursor.isNull(offset + 20) ? null : cursor.getString(offset + 20));
-        entity.setD1(cursor.isNull(offset + 21) ? null : cursor.getString(offset + 21));
-        entity.setFrom1(cursor.isNull(offset + 22) ? null : cursor.getString(offset + 22));
-        entity.setTo1(cursor.isNull(offset + 23) ? null : cursor.getString(offset + 23));
-        entity.setA(cursor.getDouble(offset + 24));
-        entity.setB(cursor.getDouble(offset + 25));
-        entity.setC(cursor.getDouble(offset + 26));
-        entity.setD(cursor.getDouble(offset + 27));
-        entity.setYin_a(cursor.getDouble(offset + 28));
-        entity.setYin_b(cursor.getDouble(offset + 29));
-        entity.setYang_a(cursor.getDouble(offset + 30));
-        entity.setYang_b(cursor.getDouble(offset + 31));
-        entity.setKeyi_a(cursor.getDouble(offset + 32));
-        entity.setKeyi_b(cursor.getDouble(offset + 33));
-        entity.setVersion(cursor.isNull(offset + 34) ? null : cursor.getString(offset + 34));
+        entity.setCurveOrder(cursor.getInt(offset + 3));
+        entity.setIsdefault(cursor.getShort(offset + 4) != 0);
+        entity.setStandardName(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setMethod(cursor.getInt(offset + 6));
+        entity.setWaveLength(cursor.getInt(offset + 7));
+        entity.setWarmTime(cursor.getInt(offset + 8));
+        entity.setTestTime(cursor.getInt(offset + 9));
+        entity.setResultUnit(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
+        entity.setControValue(cursor.getFloat(offset + 11));
+        entity.setControValueLastTime(cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12));
+        entity.setA0(cursor.getDouble(offset + 13));
+        entity.setB0(cursor.getDouble(offset + 14));
+        entity.setC0(cursor.getDouble(offset + 15));
+        entity.setD0(cursor.getDouble(offset + 16));
+        entity.setFrom0(cursor.getDouble(offset + 17));
+        entity.setTo0(cursor.getDouble(offset + 18));
+        entity.setA1(cursor.getDouble(offset + 19));
+        entity.setB1(cursor.getDouble(offset + 20));
+        entity.setC1(cursor.getDouble(offset + 21));
+        entity.setD1(cursor.getDouble(offset + 22));
+        entity.setFrom1(cursor.getDouble(offset + 23));
+        entity.setTo1(cursor.getDouble(offset + 24));
+        entity.setA(cursor.getDouble(offset + 25));
+        entity.setB(cursor.getDouble(offset + 26));
+        entity.setC(cursor.getDouble(offset + 27));
+        entity.setD(cursor.getDouble(offset + 28));
+        entity.setUser_yin(cursor.getShort(offset + 29) != 0);
+        entity.setYin_a(cursor.getDouble(offset + 30));
+        entity.setYin_a_symbol(cursor.isNull(offset + 31) ? null : cursor.getString(offset + 31));
+        entity.setYin_b(cursor.getDouble(offset + 32));
+        entity.setYin_b_symbol(cursor.isNull(offset + 33) ? null : cursor.getString(offset + 33));
+        entity.setUser_yang(cursor.getShort(offset + 34) != 0);
+        entity.setYang_a(cursor.getDouble(offset + 35));
+        entity.setYang_a_symbol(cursor.isNull(offset + 36) ? null : cursor.getString(offset + 36));
+        entity.setYang_b(cursor.getDouble(offset + 37));
+        entity.setYang_b_symbol(cursor.isNull(offset + 38) ? null : cursor.getString(offset + 38));
+        entity.setUser_keyi(cursor.getShort(offset + 39) != 0);
+        entity.setKeyi_a(cursor.getDouble(offset + 40));
+        entity.setKeyi_a_symbol(cursor.isNull(offset + 41) ? null : cursor.getString(offset + 41));
+        entity.setKeyi_b(cursor.getDouble(offset + 42));
+        entity.setKeyi_b_symbol(cursor.isNull(offset + 43) ? null : cursor.getString(offset + 43));
+        entity.setTips(cursor.isNull(offset + 44) ? null : cursor.getString(offset + 44));
+        entity.setDetectionLimit(cursor.isNull(offset + 45) ? null : cursor.getString(offset + 45));
+        entity.setFinishState(cursor.getShort(offset + 46) != 0);
      }
     
     @Override

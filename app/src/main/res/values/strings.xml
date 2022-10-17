@@ -62,4 +62,6 @@
     <string name="range_b">区间B</string>
     <string name="cure_name">曲线名称</string>
     <string name="standardname">检测标准</string>
+    <string name="detectionLimit">方法检出限</string>
+    <string name="tips">简要提示</string>
 </resources>

@@ -14,8 +14,8 @@
     </string-array>
 
     <string-array name="methods_jtj">
-        <item>比色法</item>
         <item>消线法</item>
+        <item>比色法</item>
     </string-array>
     <string-array name="names">
         <item>游小陈</item>

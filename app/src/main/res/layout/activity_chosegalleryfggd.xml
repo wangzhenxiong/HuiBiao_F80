@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/beijing_img"
+    android:orientation="vertical">
+
+    <include layout="@layout/include_title" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/layout1"
+            android:layout_width="960dp"
+            android:layout_height="600dp"
+            android:layout_centerInParent="true"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/beijng_radius"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#E6E2E2"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="选择检测孔"
+                    android:textColor="@color/black"
+                    android:textSize="24dp"
+                    android:textStyle="bold" />
+                 <LinearLayout
+                     android:layout_width="match_parent"
+                     android:layout_height="match_parent"
+                     android:orientation="horizontal">
+                     <LinearLayout
+                         android:layout_width="0dp"
+                         android:layout_height="match_parent"
+                         android:layout_weight="1"
+                         android:orientation="vertical"
+                         android:gravity="center_horizontal">
+
+                        <LinearLayout
+                            android:id="@+id/background1"
+                            style="@style/chosegallery_linearlayout"
+                            >
+                            <CheckBox
+                                android:id="@+id/checkbox1"
+                                style="@style/chosegallery_checkbox"
+                                android:text="1" />
+                        </LinearLayout>
+
+                         <LinearLayout
+                             android:id="@+id/background2"
+                             style="@style/chosegallery_linearlayout">
+                             <CheckBox
+                                 android:id="@+id/checkbox2"
+                                 style="@style/chosegallery_checkbox"
+                                 android:text="2" />
+                         </LinearLayout>
+                         <LinearLayout
+                             android:id="@+id/background3"
+                             style="@style/chosegallery_linearlayout">
+                             <CheckBox
+                                 android:id="@+id/checkbox3"
+                                 style="@style/chosegallery_checkbox"
+                                 android:text="3" />
+                         </LinearLayout>
+                         <LinearLayout
+                             android:id="@+id/background4"
+                             style="@style/chosegallery_linearlayout">
+                             <CheckBox
+                                 android:id="@+id/checkbox4"
+                                 style="@style/chosegallery_checkbox"
+                                 android:text="4" />
+                         </LinearLayout>
+                         <LinearLayout
+                             android:id="@+id/background5"
+                             style="@style/chosegallery_linearlayout">
+                             <CheckBox
+                                 android:id="@+id/checkbox5"
+                                 style="@style/chosegallery_checkbox"
+                                 android:text="5" />
+                         </LinearLayout>
+                         <LinearLayout
+                             android:id="@+id/background6"
+                             style="@style/chosegallery_linearlayout">
+                             <CheckBox
+                                 android:id="@+id/checkbox6"
+                                 style="@style/chosegallery_checkbox"
+                                 android:text="6" />
+                         </LinearLayout>
+                         <LinearLayout
+                             android:id="@+id/background7"
+                             style="@style/chosegallery_linearlayout">
+                             <CheckBox
+                                 android:id="@+id/checkbox7"
+                                 style="@style/chosegallery_checkbox"
+                                 android:text="7" />
+                         </LinearLayout>
+                         <LinearLayout
+                             android:id="@+id/background8"
+                             style="@style/chosegallery_linearlayout">
+                             <CheckBox
+                                 android:id="@+id/checkbox8"
+                                 style="@style/chosegallery_checkbox"
+                                 android:text="8" />
+                         </LinearLayout>
+
+                         <LinearLayout
+                             android:layout_marginTop="20dp"
+                             android:layout_width="150dp"
+                             android:layout_height="46dp"
+                             android:gravity="center">
+                             <CheckBox
+                                 android:id="@+id/checkall1"
+                                 style="@style/chosegallery_checkbox"
+                                 android:text="全选" />
+                         </LinearLayout>
+
+                     </LinearLayout>
+
+                     <LinearLayout
+                         android:layout_width="0dp"
+                         android:layout_height="match_parent"
+                         android:layout_weight="1"
+                         android:orientation="vertical">
+
+
+                         <LinearLayout
+                             android:id="@+id/background9"
+                             style="@style/chosegallery_linearlayout">
+                             <CheckBox
+                                 android:id="@+id/checkbox9"
+                                 style="@style/chosegallery_checkbox"
+                                 android:text=" 9" />
+                         </LinearLayout>
+
+                         <LinearLayout
+                             android:id="@+id/background10"
+                             style="@style/chosegallery_linearlayout">
+                             <CheckBox
+                                 android:id="@+id/checkbox10"
+                                 style="@style/chosegallery_checkbox"
+                                 android:text="10" />
+                         </LinearLayout>
+                         <LinearLayout
+                             android:id="@+id/background11"
+                             style="@style/chosegallery_linearlayout">
+                             <CheckBox
+                                 android:id="@+id/checkbox11"
+                                 style="@style/chosegallery_checkbox"
+                                 android:text="11" />
+                         </LinearLayout>
+                         <LinearLayout
+                             android:id="@+id/background12"
+                             style="@style/chosegallery_linearlayout">
+                             <CheckBox
+                                 android:id="@+id/checkbox12"
+                                 style="@style/chosegallery_checkbox"
+                                 android:text="12" />
+                         </LinearLayout>
+                         <LinearLayout
+                             android:id="@+id/background13"
+                             style="@style/chosegallery_linearlayout">
+                             <CheckBox
+                                 android:id="@+id/checkbox13"
+                                 style="@style/chosegallery_checkbox"
+                                 android:text="13" />
+                         </LinearLayout>
+                         <LinearLayout
+                             android:id="@+id/background14"
+                             style="@style/chosegallery_linearlayout">
+                             <CheckBox
+                                 android:id="@+id/checkbox14"
+                                 style="@style/chosegallery_checkbox"
+                                 android:text="14" />
+                         </LinearLayout>
+                         <LinearLayout
+                             android:id="@+id/background15"
+                             style="@style/chosegallery_linearlayout">
+                             <CheckBox
+                                 android:id="@+id/checkbox15"
+                                 style="@style/chosegallery_checkbox"
+                                 android:text="15" />
+                         </LinearLayout>
+                         <LinearLayout
+                             android:id="@+id/background16"
+                             style="@style/chosegallery_linearlayout">
+                             <CheckBox
+                                 android:id="@+id/checkbox16"
+                                 style="@style/chosegallery_checkbox"
+                                 android:text="16" />
+                         </LinearLayout>
+                         <LinearLayout
+                             android:layout_marginTop="20dp"
+                             android:layout_width="150dp"
+                             android:layout_height="46dp"
+                             android:gravity="center">
+                             <CheckBox
+                                 android:id="@+id/checkall2"
+                                 style="@style/chosegallery_checkbox"
+                                 android:text="全选" />
+                         </LinearLayout>
+
+                     </LinearLayout>
+
+
+                 </LinearLayout>
+
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="40dp"
+                android:layout_weight="1"
+                android:background="@drawable/beijng_radius"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#E6E2E2"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="检测孔：1"
+                    android:textColor="@color/black"
+                    android:textSize="24dp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_marginTop="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="left">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="60dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="设为对照 "/>
+                        <CheckBox
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            />
+                    </LinearLayout>
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="300dp"
+                        android:layout_height="60dp"
+                        android:textColorHint="#626161">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/sampleserial"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="样品编号"
+                            android:maxLines="1"
+                            android:singleLine="true"/>
+
+
+                    </android.support.design.widget.TextInputLayout>
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="300dp"
+                        android:layout_height="60dp"
+                        android:textColorHint="#626161">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/samplename"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="样品名称"
+                            android:maxLines="1"
+                            android:singleLine="true"/>
+
+
+                    </android.support.design.widget.TextInputLayout>
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="300dp"
+                        android:layout_height="60dp"
+                        android:textColorHint="#626161">
+
+                        <AutoCompleteTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="稀释倍数/稀释倍数"
+                            android:maxLines="1"
+                            android:singleLine="true"/>
+
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <TextView
+                        android:layout_marginTop="40dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="*选择后请在对应的测试孔放置对照品"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="30dp"
+            android:gravity="right"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_clean"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+
+                android:background="@drawable/btn_background_rad"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="清空"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:layout_marginRight="20dp"/>
+
+            <Button
+                android:id="@+id/btn_nextstep"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+
+                android:background="@drawable/btn_background_blue"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="下一步>>"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:layout_marginRight="40dp"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+</LinearLayout>

@@ -27,16 +27,19 @@ public class ProjectJTJDao extends AbstractDao<ProjectJTJ, Long> {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property ProjectName = new Property(1, String.class, "projectName", false, "PROJECT_NAME");
         public final static Property CurveName = new Property(2, String.class, "curveName", false, "CURVE_NAME");
-        public final static Property Isdefault = new Property(3, boolean.class, "isdefault", false, "ISDEFAULT");
-        public final static Property StandardName = new Property(4, String.class, "standardName", false, "STANDARD_NAME");
-        public final static Property TestMethod = new Property(5, int.class, "testMethod", false, "TEST_METHOD");
-        public final static Property C1 = new Property(6, double.class, "c1", false, "C1");
-        public final static Property T1A = new Property(7, double.class, "t1A", false, "T1_A");
-        public final static Property T1B = new Property(8, double.class, "t1B", false, "T1_B");
-        public final static Property C1_t1A = new Property(9, double.class, "c1_t1A", false, "C1_T1_A");
-        public final static Property C1_t1B = new Property(10, double.class, "c1_t1B", false, "C1_T1_B");
-        public final static Property TestTime = new Property(11, int.class, "testTime", false, "TEST_TIME");
-        public final static Property Version = new Property(12, String.class, "version", false, "VERSION");
+        public final static Property CurveOrder = new Property(3, int.class, "curveOrder", false, "CURVE_ORDER");
+        public final static Property Isdefault = new Property(4, boolean.class, "isdefault", false, "ISDEFAULT");
+        public final static Property StandardName = new Property(5, String.class, "standardName", false, "STANDARD_NAME");
+        public final static Property TestMethod = new Property(6, int.class, "testMethod", false, "TEST_METHOD");
+        public final static Property C = new Property(7, double.class, "c", false, "C");
+        public final static Property TA = new Property(8, double.class, "tA", false, "T_A");
+        public final static Property TB = new Property(9, double.class, "tB", false, "T_B");
+        public final static Property C_tA = new Property(10, double.class, "c_tA", false, "C_T_A");
+        public final static Property C_tB = new Property(11, double.class, "c_tB", false, "C_T_B");
+        public final static Property TestTime = new Property(12, int.class, "testTime", false, "TEST_TIME");
+        public final static Property Tips = new Property(13, String.class, "tips", false, "TIPS");
+        public final static Property DetectionLimit = new Property(14, String.class, "detectionLimit", false, "DETECTION_LIMIT");
+        public final static Property FinishState = new Property(15, boolean.class, "finishState", false, "FINISH_STATE");
     }
 
 
@@ -55,16 +58,19 @@ public class ProjectJTJDao extends AbstractDao<ProjectJTJ, Long> {
                 "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
                 "\"PROJECT_NAME\" TEXT," + // 1: projectName
                 "\"CURVE_NAME\" TEXT," + // 2: curveName
-                "\"ISDEFAULT\" INTEGER NOT NULL ," + // 3: isdefault
-                "\"STANDARD_NAME\" TEXT," + // 4: standardName
-                "\"TEST_METHOD\" INTEGER NOT NULL ," + // 5: testMethod
-                "\"C1\" REAL NOT NULL ," + // 6: c1
-                "\"T1_A\" REAL NOT NULL ," + // 7: t1A
-                "\"T1_B\" REAL NOT NULL ," + // 8: t1B
-                "\"C1_T1_A\" REAL NOT NULL ," + // 9: c1_t1A
-                "\"C1_T1_B\" REAL NOT NULL ," + // 10: c1_t1B
-                "\"TEST_TIME\" INTEGER NOT NULL ," + // 11: testTime
-                "\"VERSION\" TEXT);"); // 12: version
+                "\"CURVE_ORDER\" INTEGER NOT NULL ," + // 3: curveOrder
+                "\"ISDEFAULT\" INTEGER NOT NULL ," + // 4: isdefault
+                "\"STANDARD_NAME\" TEXT," + // 5: standardName
+                "\"TEST_METHOD\" INTEGER NOT NULL ," + // 6: testMethod
+                "\"C\" REAL NOT NULL ," + // 7: c
+                "\"T_A\" REAL NOT NULL ," + // 8: tA
+                "\"T_B\" REAL NOT NULL ," + // 9: tB
+                "\"C_T_A\" REAL NOT NULL ," + // 10: c_tA
+                "\"C_T_B\" REAL NOT NULL ," + // 11: c_tB
+                "\"TEST_TIME\" INTEGER NOT NULL ," + // 12: testTime
+                "\"TIPS\" TEXT," + // 13: tips
+                "\"DETECTION_LIMIT\" TEXT," + // 14: detectionLimit
+                "\"FINISH_STATE\" INTEGER NOT NULL );"); // 15: finishState
     }
 
     /** Drops the underlying database table. */
@@ -91,24 +97,31 @@ public class ProjectJTJDao extends AbstractDao<ProjectJTJ, Long> {
         if (curveName != null) {
             stmt.bindString(3, curveName);
         }
-        stmt.bindLong(4, entity.getIsdefault() ? 1L: 0L);
+        stmt.bindLong(4, entity.getCurveOrder());
+        stmt.bindLong(5, entity.getIsdefault() ? 1L: 0L);
  
         String standardName = entity.getStandardName();
         if (standardName != null) {
-            stmt.bindString(5, standardName);
+            stmt.bindString(6, standardName);
         }
-        stmt.bindLong(6, entity.getTestMethod());
-        stmt.bindDouble(7, entity.getC1());
-        stmt.bindDouble(8, entity.getT1A());
-        stmt.bindDouble(9, entity.getT1B());
-        stmt.bindDouble(10, entity.getC1_t1A());
-        stmt.bindDouble(11, entity.getC1_t1B());
-        stmt.bindLong(12, entity.getTestTime());
+        stmt.bindLong(7, entity.getTestMethod());
+        stmt.bindDouble(8, entity.getC());
+        stmt.bindDouble(9, entity.getTA());
+        stmt.bindDouble(10, entity.getTB());
+        stmt.bindDouble(11, entity.getC_tA());
+        stmt.bindDouble(12, entity.getC_tB());
+        stmt.bindLong(13, entity.getTestTime());
  
-        String version = entity.getVersion();
-        if (version != null) {
-            stmt.bindString(13, version);
+        String tips = entity.getTips();
+        if (tips != null) {
+            stmt.bindString(14, tips);
         }
+ 
+        String detectionLimit = entity.getDetectionLimit();
+        if (detectionLimit != null) {
+            stmt.bindString(15, detectionLimit);
+        }
+        stmt.bindLong(16, entity.getFinishState() ? 1L: 0L);
     }
 
     @Override
@@ -129,24 +142,31 @@ public class ProjectJTJDao extends AbstractDao<ProjectJTJ, Long> {
         if (curveName != null) {
             stmt.bindString(3, curveName);
         }
-        stmt.bindLong(4, entity.getIsdefault() ? 1L: 0L);
+        stmt.bindLong(4, entity.getCurveOrder());
+        stmt.bindLong(5, entity.getIsdefault() ? 1L: 0L);
  
         String standardName = entity.getStandardName();
         if (standardName != null) {
-            stmt.bindString(5, standardName);
+            stmt.bindString(6, standardName);
         }
-        stmt.bindLong(6, entity.getTestMethod());
-        stmt.bindDouble(7, entity.getC1());
-        stmt.bindDouble(8, entity.getT1A());
-        stmt.bindDouble(9, entity.getT1B());
-        stmt.bindDouble(10, entity.getC1_t1A());
-        stmt.bindDouble(11, entity.getC1_t1B());
-        stmt.bindLong(12, entity.getTestTime());
+        stmt.bindLong(7, entity.getTestMethod());
+        stmt.bindDouble(8, entity.getC());
+        stmt.bindDouble(9, entity.getTA());
+        stmt.bindDouble(10, entity.getTB());
+        stmt.bindDouble(11, entity.getC_tA());
+        stmt.bindDouble(12, entity.getC_tB());
+        stmt.bindLong(13, entity.getTestTime());
  
-        String version = entity.getVersion();
-        if (version != null) {
-            stmt.bindString(13, version);
+        String tips = entity.getTips();
+        if (tips != null) {
+            stmt.bindString(14, tips);
         }
+ 
+        String detectionLimit = entity.getDetectionLimit();
+        if (detectionLimit != null) {
+            stmt.bindString(15, detectionLimit);
+        }
+        stmt.bindLong(16, entity.getFinishState() ? 1L: 0L);
     }
 
     @Override
@@ -160,16 +180,19 @@ public class ProjectJTJDao extends AbstractDao<ProjectJTJ, Long> {
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // projectName
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // curveName
-            cursor.getShort(offset + 3) != 0, // isdefault
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // standardName
-            cursor.getInt(offset + 5), // testMethod
-            cursor.getDouble(offset + 6), // c1
-            cursor.getDouble(offset + 7), // t1A
-            cursor.getDouble(offset + 8), // t1B
-            cursor.getDouble(offset + 9), // c1_t1A
-            cursor.getDouble(offset + 10), // c1_t1B
-            cursor.getInt(offset + 11), // testTime
-            cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12) // version
+            cursor.getInt(offset + 3), // curveOrder
+            cursor.getShort(offset + 4) != 0, // isdefault
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // standardName
+            cursor.getInt(offset + 6), // testMethod
+            cursor.getDouble(offset + 7), // c
+            cursor.getDouble(offset + 8), // tA
+            cursor.getDouble(offset + 9), // tB
+            cursor.getDouble(offset + 10), // c_tA
+            cursor.getDouble(offset + 11), // c_tB
+            cursor.getInt(offset + 12), // testTime
+            cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13), // tips
+            cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14), // detectionLimit
+            cursor.getShort(offset + 15) != 0 // finishState
         );
         return entity;
     }
@@ -179,16 +202,19 @@ public class ProjectJTJDao extends AbstractDao<ProjectJTJ, Long> {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setProjectName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setCurveName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setIsdefault(cursor.getShort(offset + 3) != 0);
-        entity.setStandardName(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setTestMethod(cursor.getInt(offset + 5));
-        entity.setC1(cursor.getDouble(offset + 6));
-        entity.setT1A(cursor.getDouble(offset + 7));
-        entity.setT1B(cursor.getDouble(offset + 8));
-        entity.setC1_t1A(cursor.getDouble(offset + 9));
-        entity.setC1_t1B(cursor.getDouble(offset + 10));
-        entity.setTestTime(cursor.getInt(offset + 11));
-        entity.setVersion(cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12));
+        entity.setCurveOrder(cursor.getInt(offset + 3));
+        entity.setIsdefault(cursor.getShort(offset + 4) != 0);
+        entity.setStandardName(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setTestMethod(cursor.getInt(offset + 6));
+        entity.setC(cursor.getDouble(offset + 7));
+        entity.setTA(cursor.getDouble(offset + 8));
+        entity.setTB(cursor.getDouble(offset + 9));
+        entity.setC_tA(cursor.getDouble(offset + 10));
+        entity.setC_tB(cursor.getDouble(offset + 11));
+        entity.setTestTime(cursor.getInt(offset + 12));
+        entity.setTips(cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13));
+        entity.setDetectionLimit(cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14));
+        entity.setFinishState(cursor.getShort(offset + 15) != 0);
      }
     
     @Override

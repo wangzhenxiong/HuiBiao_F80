@@ -1,147 +1,390 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
+
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_margin="5dp"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_weight="1">
-
-            <AutoCompleteTextView
-                android:id="@+id/testprojectname"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/ed_projectname"
-                android:maxLines="1"
-                android:singleLine="true" />
-
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_weight="1">
-
-            <AutoCompleteTextView
-                android:id="@+id/cure_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/cure_name"
-                android:maxLines="1"
-                android:singleLine="true" />
-
-        </android.support.design.widget.TextInputLayout>
-
-
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_margin="5dp"
-        android:gravity="center"
-        android:orientation="horizontal">
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_weight="1">
-
-            <AutoCompleteTextView
-                android:id="@+id/standardname"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/standardname"
-                android:maxLines="1"
-                android:singleLine="true" />
-
-        </android.support.design.widget.TextInputLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/ed_testmethod"
-                android:textColor="#1a1a1a"
-                android:textSize="18dp" />
-
-            <Spinner
-                android:id="@+id/chosemethod"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:enabled="false"
-                android:entries="@array/methods_fggd" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/ed_waves"
-                android:textColor="#1a1a1a"
-                android:textSize="18dp" />
-
-            <Spinner
-                android:id="@+id/chosewavalength"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:enabled="false"
-                android:entries="@array/lengths" />
-        </LinearLayout>
-    </LinearLayout>
-
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/vp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="60dp"
-            android:focusable="false"
-            android:focusableInTouchMode="false"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="0dp"
+            android:layout_margin="5dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1">
+
+                <AutoCompleteTextView
+                    android:editable="false"
+                    android:id="@+id/testprojectname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/ed_projectname"
+                    android:maxLines="1"
+                    android:singleLine="true" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1">
+
+                <AutoCompleteTextView
+                    android:id="@+id/standardname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/standardname"
+                    android:maxLines="1"
+                    android:singleLine="true" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1">
+
+                <AutoCompleteTextView
+                    android:id="@+id/cure_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/cure_name"
+                    android:maxLines="1"
+                    android:singleLine="true" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <CheckBox
+                android:id="@+id/df_curve"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="默认曲线" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_margin="5dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ed_testmethod"
+                    android:textColor="#1a1a1a"
+                    android:textSize="18dp" />
+
+                <Spinner
+                    android:id="@+id/chosemethod"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:enabled="false"
+                    android:entries="@array/methods_fggd" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ed_waves"
+                    android:textColor="#1a1a1a"
+                    android:textSize="18dp" />
+
+                <Spinner
+                    android:id="@+id/chosewavalength"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:enabled="false"
+                    android:entries="@array/lengths" />
+            </LinearLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1">
+
+                <AutoCompleteTextView
+                    android:id="@+id/detectionLimit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/detectionLimit"
+                    android:maxLines="1"
+                    android:singleLine="true" />
+
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_margin="5dp"
+
+            android:orientation="horizontal">
+
+            <android.support.design.widget.TextInputLayout
+                style="@style/TextInputLayoutStyle"
+                android:hint="@string/yure_tiem">
+
+                <AutoCompleteTextView
+                    android:id="@+id/yrsj"
+                    style="@style/AutoCompleteTextViewStyle"
+                    android:inputType="number" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                style="@style/TextInputLayoutStyle"
+                android:hint="@string/test_time">
+
+                <AutoCompleteTextView
+                    android:id="@+id/jcsj"
+                    style="@style/AutoCompleteTextViewStyle"
+                    android:inputType="number" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                style="@style/TextInputLayoutStyle"
+                android:hint="@string/unit_input">
+
+                <AutoCompleteTextView
+                    android:id="@+id/unit_input"
+                    style="@style/AutoCompleteTextViewStyle" />
+
+            </android.support.design.widget.TextInputLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:gravity="center"
+            android:minHeight="60dp"
+            android:orientation="horizontal">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1">
+
+                <AutoCompleteTextView
+                    android:id="@+id/tips"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/tips"
+                    android:inputType="textMultiLine"
+                    android:singleLine="true" />
+
+            </android.support.design.widget.TextInputLayout>
+
+
+        </LinearLayout>
+         <LinearLayout
+             android:id="@+id/method_layout"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:orientation="vertical">
+
+         </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/checkbox_ok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="合格"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/ok_a_demarcate"
+                android:layout_width="100dp"
+                android:layout_height="match_parent" />
+
+            <android.support.design.widget.TextInputLayout
+                style="@style/TextInputLayoutStyle"
+                android:hint="@string/range_a">
+
+                <AutoCompleteTextView
+                    android:id="@+id/ok_a"
+                    style="@style/AutoCompleteTextViewStyle"
+                    android:inputType="numberDecimal" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <Spinner
+                android:id="@+id/ok_b_demarcate"
+                android:layout_width="100dp"
+                android:layout_height="match_parent" />
+
+            <android.support.design.widget.TextInputLayout
+                style="@style/TextInputLayoutStyle"
+                android:hint="@string/range_b">
+
+                <AutoCompleteTextView
+                    android:id="@+id/ok_b"
+                    style="@style/AutoCompleteTextViewStyle"
+                    android:inputType="numberDecimal" />
+
+            </android.support.design.widget.TextInputLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/checkbox_ng"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="不合格"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/ng_a_demarcate"
+                android:layout_width="100dp"
+                android:layout_height="fill_parent" />
+
+            <android.support.design.widget.TextInputLayout
+                style="@style/TextInputLayoutStyle"
+                android:hint="@string/range_a">
+
+                <AutoCompleteTextView
+                    android:id="@+id/ng_a"
+                    style="@style/AutoCompleteTextViewStyle"
+                    android:inputType="numberDecimal" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <Spinner
+                android:id="@+id/ng_b_demarcate"
+                android:layout_width="100dp"
+                android:layout_height="fill_parent" />
+
+            <android.support.design.widget.TextInputLayout
+                style="@style/TextInputLayoutStyle"
+                android:hint="@string/range_b">
+
+                <AutoCompleteTextView
+                    android:id="@+id/ng_b"
+                    style="@style/AutoCompleteTextViewStyle"
+                    android:inputType="numberDecimal" />
+
+            </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/checkbox_df"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="可疑"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/df_a_demarcate"
+                android:layout_width="100dp"
+                android:layout_height="fill_parent" />
+
+            <android.support.design.widget.TextInputLayout
+                style="@style/TextInputLayoutStyle"
+                android:hint="@string/range_a">
+
+                <AutoCompleteTextView
+                    android:id="@+id/df_a"
+                    style="@style/AutoCompleteTextViewStyle"
+                    android:inputType="numberDecimal" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <Spinner
+                android:id="@+id/df_b_demarcate"
+                android:layout_width="100dp"
+                android:layout_height="fill_parent" />
+
+            <android.support.design.widget.TextInputLayout
+                style="@style/TextInputLayoutStyle"
+                android:hint="@string/range_b">
+
+                <AutoCompleteTextView
+                    android:id="@+id/df_b"
+                    style="@style/AutoCompleteTextViewStyle"
+                    android:inputType="numberDecimal" />
+
+            </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -165,5 +408,9 @@
                 android:textSize="18dp"
                 android:visibility="visible" />
         </LinearLayout>
-    </RelativeLayout>
-</LinearLayout>
+
+
+    </LinearLayout>
+
+
+</ScrollView>

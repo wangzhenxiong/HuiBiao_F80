@@ -105,7 +105,18 @@ public class SettingLoginActivity extends BaseActivity<SettingLoginPresenter> im
             case R.id.password:
                 break;
             case R.id.btn_login:
-                ArmsUtils.startActivity(new Intent(this,SetingActivity.class));
+                String username = mUsername.getText().toString();
+                String password = mPassword.getText().toString();
+                if (username.isEmpty()||password.isEmpty()){
+                    ArmsUtils.snackbarText("请输入用户名密码");
+                    return;
+                }
+                if (username.equals("admin")&&password.equals("123456")){
+
+                    ArmsUtils.startActivity(new Intent(this,SetingActivity.class));
+                }else {
+                    ArmsUtils.snackbarText("用户名密码错误");
+                }
                 break;
         }
     }

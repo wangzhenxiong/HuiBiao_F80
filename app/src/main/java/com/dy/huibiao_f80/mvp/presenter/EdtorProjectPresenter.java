@@ -8,12 +8,15 @@ import android.support.v4.app.FragmentTransaction;
 import com.apkfuns.logutils.LogUtils;
 import com.dy.huibiao_f80.bean.base.BaseProjectMessage;
 import com.dy.huibiao_f80.mvp.contract.EdtorProjectContract;
+import com.dy.huibiao_f80.mvp.ui.widget.lettersnavigation.search.PinyinComparator;
+import com.dy.huibiao_f80.mvp.ui.widget.lettersnavigation.search.adapter.SortAdapter;
 import com.jess.arms.di.scope.ActivityScope;
 import com.jess.arms.http.imageloader.ImageLoader;
 import com.jess.arms.integration.AppManager;
 import com.jess.arms.mvp.BasePresenter;
 import com.jess.arms.utils.RxLifecycleUtils;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -35,6 +38,13 @@ public class EdtorProjectPresenter extends BasePresenter<EdtorProjectContract.Mo
     @Inject
     AppManager mAppManager;
     @Inject
+    List<BaseProjectMessage> mDateList;
+    @Inject
+    SortAdapter mAdapter;
+    @Inject
+    PinyinComparator mComparator;
+
+    @Inject
     public EdtorProjectPresenter(EdtorProjectContract.Model model, EdtorProjectContract.View rootView) {
         super(model, rootView);
     }
@@ -55,17 +65,23 @@ public class EdtorProjectPresenter extends BasePresenter<EdtorProjectContract.Mo
                 }).subscribeOn(AndroidSchedulers.mainThread())
                 .doFinally(() -> {
                     mRootView.hideLoading();
-                }).compose(RxLifecycleUtils.bindToLifecycle(mRootView))
+                })
+                .compose(RxLifecycleUtils.bindToLifecycle(mRootView))
                 .subscribe(new ErrorHandleSubscriber<List<? extends BaseProjectMessage>>(mErrorHandler) {
                     @Override
                     public void onNext(@NonNull List<? extends BaseProjectMessage> list) {
+
+
+                        Collections.sort(list, mComparator);
                         LogUtils.d(list);
+                        mDateList.clear();
+                        mDateList.addAll(list);
+                        mAdapter.notifyDataSetChanged();
 
 
                     }
                 });
     }
-
 
 
     public void getJTJProject(String keyword) {
@@ -74,11 +90,17 @@ public class EdtorProjectPresenter extends BasePresenter<EdtorProjectContract.Mo
         }).subscribeOn(AndroidSchedulers.mainThread())
                 .doFinally(() -> {
                     mRootView.hideLoading();
-                }).compose(RxLifecycleUtils.bindToLifecycle(mRootView))
+                })
+                .compose(RxLifecycleUtils.bindToLifecycle(mRootView))
                 .subscribe(new ErrorHandleSubscriber<List<? extends BaseProjectMessage>>(mErrorHandler) {
                     @Override
                     public void onNext(@NonNull List<? extends BaseProjectMessage> list) {
+
+                        Collections.sort(list, mComparator);
                         LogUtils.d(list);
+                        mDateList.clear();
+                        mDateList.addAll(list);
+                        mAdapter.notifyDataSetChanged();
 
 
                     }
