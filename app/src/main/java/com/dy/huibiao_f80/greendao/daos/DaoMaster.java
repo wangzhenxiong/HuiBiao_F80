@@ -24,6 +24,7 @@ public class DaoMaster extends AbstractDaoMaster {
         ProjectFGGDDao.createTable(db, ifNotExists);
         ProjectJTJDao.createTable(db, ifNotExists);
         TestRecordDao.createTable(db, ifNotExists);
+        SamplingDao.createTable(db, ifNotExists);
     }
 
     /** Drops underlying database table using DAOs. */
@@ -31,6 +32,7 @@ public class DaoMaster extends AbstractDaoMaster {
         ProjectFGGDDao.dropTable(db, ifExists);
         ProjectJTJDao.dropTable(db, ifExists);
         TestRecordDao.dropTable(db, ifExists);
+        SamplingDao.dropTable(db, ifExists);
     }
 
     /**
@@ -52,6 +54,7 @@ public class DaoMaster extends AbstractDaoMaster {
         registerDaoClass(ProjectFGGDDao.class);
         registerDaoClass(ProjectJTJDao.class);
         registerDaoClass(TestRecordDao.class);
+        registerDaoClass(SamplingDao.class);
     }
 
     public DaoSession newSession() {

@@ -1,7 +1,229 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/beijing_img"
+    android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <include layout="@layout/include_title" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/layout1"
+            android:layout_width="960dp"
+            android:layout_height="600dp"
+            android:layout_centerInParent="true"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/beijng_radius"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#E6E2E2"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="选择检测孔"
+                    android:textColor="@color/black"
+                    android:textSize="24dp"
+                    android:textStyle="bold" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center_horizontal">
+
+                        <LinearLayout
+                            android:layout_marginTop="40dp"
+                            android:id="@+id/background1"
+                            style="@style/chosegallery_linearlayout"
+                            >
+                            <CheckBox
+                                android:id="@+id/checkbox1"
+                                style="@style/chosegallery_checkbox"
+                                android:text="通道1" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/background2"
+                            style="@style/chosegallery_linearlayout">
+                            <CheckBox
+                                android:id="@+id/checkbox2"
+                                style="@style/chosegallery_checkbox"
+                                android:text="通道2" />
+                        </LinearLayout>
+
+
+
+                        <LinearLayout
+                            android:layout_marginTop="20dp"
+                            android:layout_width="150dp"
+                            android:layout_height="46dp"
+                            android:gravity="center">
+                            <CheckBox
+                                android:id="@+id/checkall1"
+                                style="@style/chosegallery_checkbox"
+                                android:text="全选" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="40dp"
+                android:layout_weight="1"
+                android:background="@drawable/beijng_radius"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+
+
+                <TextView
+                    android:id="@+id/title_gallery"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#E6E2E2"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="检测孔：1"
+                    android:textColor="@color/black"
+                    android:textSize="24dp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_marginTop="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="left">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="300dp"
+                        android:layout_height="60dp"
+                        android:textColorHint="#626161">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/sampleserial"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="样品编号"
+                            android:maxLines="1"
+                            android:singleLine="true"/>
+
+
+                    </android.support.design.widget.TextInputLayout>
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="300dp"
+                        android:layout_height="60dp"
+                        android:textColorHint="#626161">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/samplename"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="样品名称"
+                            android:maxLines="1"
+                            android:singleLine="true"/>
+
+
+                    </android.support.design.widget.TextInputLayout>
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="300dp"
+                        android:layout_height="60dp"
+                        android:textColorHint="#626161">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/dr"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="稀释倍数/稀释倍数"
+                            android:maxLines="1"
+                            android:singleLine="true"/>
+
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <Button
+                        android:id="@+id/camerasetting"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="摄像头设置"
+                        android:textColor="@color/white"
+                        android:background="@drawable/background_item_blue"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="30dp"
+            android:gravity="right"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_clean"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+
+                android:background="@drawable/btn_background_rad"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="清空"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:layout_marginRight="20dp"/>
+            <Button
+                android:id="@+id/btn_gallerychange"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_background_blue"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="通道切换"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:layout_marginRight="20dp"/>
+            <Button
+                android:id="@+id/btn_starttest"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+
+                android:background="@drawable/btn_background_blue"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="开始检测"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:layout_marginRight="40dp"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+</LinearLayout>

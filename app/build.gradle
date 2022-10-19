@@ -98,7 +98,7 @@ android {
             //默认平台编号
             buildConfigField "int", "DEFAULT_PLATFORM_TAG", "0"
             //替换百度appkey
-            manifestPlaceholders = [BaiDuMap_KEY: "FmTOZINqtCBG38gQ5vu5G0E567AzP19B", DESIGN_WIDTH: "1280", DESIGN_HEIGHT: "800"]
+            manifestPlaceholders = [BaiDuMap_KEY: "FmTOZINqtCBG38gQ5vu5G0E567AzP19B", DESIGN_WIDTH: "1024", DESIGN_HEIGHT: "768"]
         }
 
 

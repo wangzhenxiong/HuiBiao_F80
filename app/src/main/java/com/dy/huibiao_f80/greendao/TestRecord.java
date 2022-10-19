@@ -12,7 +12,6 @@ import com.dy.huibiao_f80.MyAppLocation;
 import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.bean.DetectionDetail;
 import com.dy.huibiao_f80.bean.GalleryBean;
-import com.dy.huibiao_f80.bean.OutMoudle;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
@@ -446,14 +445,9 @@ public class TestRecord extends GalleryBean implements Parcelable, IExpandable, 
     private String sn;
 
 
-
-
-
-
-
     @Override
     public String toString() {
-        return "Detection_Record_FGGD_NC{" +
+        return "TestRecord{" +
                 "id=" + id +
                 ", sysCode='" + sysCode + '\'' +
                 ", gallery=" + gallery +
@@ -525,7 +519,6 @@ public class TestRecord extends GalleryBean implements Parcelable, IExpandable, 
                 ", mSubItems=" + mSubItems +
                 '}';
     }
-
 
     /**
      * 0 正常数据

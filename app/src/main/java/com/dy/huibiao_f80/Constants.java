@@ -59,6 +59,38 @@ public class Constants {
         }
     }
 
+    public static float getControValue1() {
+        LogUtils.d("getControValue1");
+        Object controValue1 = SPUtils.get(MyAppLocation.myAppLocation, "controValue1", "0");
+        LogUtils.d(controValue1);
+        float v = Float.parseFloat((String) controValue1);
+        controvalue1=v;
+        return v;
+    }
+
+    public static float controvalue1;
+
+    public static void setControValue1(float value) {
+        controvalue1 = value;
+        SPUtils.put(MyAppLocation.myAppLocation, "controValue1", String.valueOf(value));
+    }
+
+    public static float getControValue0() {
+        LogUtils.d("getControValue0");
+        Object o = SPUtils.get(MyAppLocation.myAppLocation, "controValue0", "0");
+        LogUtils.d(o);
+        float v = Float.parseFloat((String) o);
+        controvalue0=v;
+        return v;
+    }
+
+    public static float controvalue0;
+
+    public static void setControValue0(float value) {
+        controvalue0 = value;
+        SPUtils.put(MyAppLocation.myAppLocation, "controValue0", String.valueOf(value));
+    }
+
     //重金属检测项目表名称
     public static String KEY_ZJSLINK = "KEY_ZJSLINK";
     public static String ZJSLINK = "";
@@ -220,49 +252,6 @@ public class Constants {
     /**
      * 0 使用本地默认基础数据库<p>
      * 1 仪器物联网 <p>
-     * 2 使用快检云平台 <p>
-     * 3 安徽省级平台 <p>
-     * 4 洪江市（浙江甲骨文超级码科技股份有限公司）<p>
-     * 5 镇江 智慧农贸平台 <p>
-     * 6 新疆农产品质量安全追溯信息平台 <p>
-     * 7 广西农产品质量安全监管与追溯信息平台 <p>
-     * 8 精讯云平台 <p>
-     * 9 重庆市市场监督管理局食品安全快速检测信息系统 <p>
-     * 10 广西快检车平台 <p>
-     * 11 江苏越城平台 <p>
-     * 12 安徽省食品安全快速检测信息共享平台 <p>
-     * 13 中机中联工程有限公司 <p>
-     * 14 三台县农业局 <p>
-     * 15 山东农业局 改版接口（以前曹县费县） <p>
-     * 16 杭州健鹭科技有限公司  <p>
-     * 17 雨湖区智慧监管平台  <p>
-     * 18 广东省食药监企业云平台版本  <p>
-     * 19 云南航凌科技有限公司版本  <p>
-     * 20 锐帆食品检测版本  <p>
-     * 21 南京农口版本  <p>
-     * 22 襄阳市竹叶山农产品批发市场版本  <p>
-     * 23 南普检察院管理平台版本  <p>
-     * 24 江苏瘦肉精监管系统版本  <p>
-     * 25 浙江深圳计量局版本  <p>
-     * 26 衢州市中检浙江质量管理平台版  <p>
-     * 27 苏州市市场局食用农产品系统平台版本(苏州亿通科技)  <p>
-     * 28 三水区食品抽检管理平台  <p>
-     * 29 中仑智慧市场溯源平台  <p>
-     * 30 新疆田园信息系统  <p>
-     * 31 食品安全快速检测信息共享平台  <p>
-     * 32 福建宏泰博思  <p>
-     * 33 北京和为永泰版本  <p>
-     * 34 赣州快检智慧监管平台  <p>
-     * 35 农安云电子合格证平台  <p>
-     * 36 佛山市高明区市场监管信息平台版本  <p>
-     * 37 DBQT快检数据服务云平台  <p>
-     * 38 嵊州校食安监管平台  <p>
-     * 39 农安云电子合格证平台 （新接口） <p>
-     * 40 山东菜市场  <p>
-     * 41 福州宏泰分析技术有限年公司  <p>
-     * 42 京喜拼拼  <p>
-     * 43 慧管家  <p>
-     * 44 甘肃农委  <p>
      */
     public static int PLATFORM_TAG;
     /**

@@ -60,6 +60,16 @@ public class ProjectFGGD extends BaseProjectMessage {
         return curveName == null ? "" : curveName;
     }
 
+    @Override
+    public int getMethod_sp() {
+        return method;
+    }
+
+    @Override
+    public String getUnit_input() {
+        return "";
+    }
+
 
     @Id(autoincrement = true)
     private Long id;

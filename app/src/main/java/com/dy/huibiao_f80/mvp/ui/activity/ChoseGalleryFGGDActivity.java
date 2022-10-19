@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -15,16 +17,16 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.apkfuns.logutils.LogUtils;
+import com.dy.huibiao_f80.MyAppLocation;
 import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.di.component.DaggerChoseGalleryFGGDComponent;
+import com.dy.huibiao_f80.greendao.TestRecord;
 import com.dy.huibiao_f80.mvp.contract.ChoseGalleryFGGDContract;
 import com.dy.huibiao_f80.mvp.presenter.ChoseGalleryFGGDPresenter;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -120,7 +122,17 @@ public class ChoseGalleryFGGDActivity extends BaseActivity<ChoseGalleryFGGDPrese
     Button mBtnClean;
     @BindView(R.id.btn_nextstep)
     Button mBtnNextstep;
-    Map<Integer, Boolean> layoutMap = new HashMap<>();
+    @BindView(R.id.title_gallery)
+    TextView mTitleGallery;
+    @BindView(R.id.checkbox_duizhao)
+    CheckBox mCheckboxDuizhao;
+    @BindView(R.id.dr)
+    AutoCompleteTextView mDr;
+
+    private int nowCheckId = R.id.background1;
+    private int nowCheckindex = 1;
+    private TestRecord nowCheckGallery;
+    private String projectname;
 
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
@@ -139,22 +151,8 @@ public class ChoseGalleryFGGDActivity extends BaseActivity<ChoseGalleryFGGDPrese
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
-        layoutMap.put(R.id.background1, false);
-        layoutMap.put(R.id.background2, false);
-        layoutMap.put(R.id.background3, false);
-        layoutMap.put(R.id.background4, false);
-        layoutMap.put(R.id.background5, false);
-        layoutMap.put(R.id.background6, false);
-        layoutMap.put(R.id.background7, false);
-        layoutMap.put(R.id.background8, false);
-        layoutMap.put(R.id.background9, false);
-        layoutMap.put(R.id.background10, false);
-        layoutMap.put(R.id.background11, false);
-        layoutMap.put(R.id.background12, false);
-        layoutMap.put(R.id.background13, false);
-        layoutMap.put(R.id.background14, false);
-        layoutMap.put(R.id.background15, false);
-        layoutMap.put(R.id.background16, false);
+        Intent intent = getIntent();
+        projectname = intent.getStringExtra("projectname");
         mCheckall1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -167,83 +165,88 @@ public class ChoseGalleryFGGDActivity extends BaseActivity<ChoseGalleryFGGDPrese
                 check02(isChecked);
             }
         });
+        mCheckboxDuizhao.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    nowCheckGallery.setDowhat(2);
+                } else {
+                    nowCheckGallery.setDowhat(1);
+                }
+
+            }
+        });
+        mSampleserial.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                LogUtils.d(s);
+                String sampleserial = s.toString();
+                nowCheckGallery.setSamplenum(sampleserial);
+            }
+        });
+        mSamplename.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                LogUtils.d(s);
+                String samplename = s.toString();
+                nowCheckGallery.setSamplename(samplename);
+            }
+        });
+        mDr.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                LogUtils.d(s);
+                String dr = s.toString();
+                nowCheckGallery.setDilutionratio(Double.parseDouble(dr));
+            }
+        });
+        refishMessage(1, R.id.background1);
     }
 
     private void check01(boolean isChecked) {
-        if (isChecked) {
-            mBackground1.setBackground(getResources().getDrawable(R.drawable.background_item_blue));
-            mBackground2.setBackground(getResources().getDrawable(R.drawable.background_item_blue));
-            mBackground3.setBackground(getResources().getDrawable(R.drawable.background_item_blue));
-            mBackground4.setBackground(getResources().getDrawable(R.drawable.background_item_blue));
-            mBackground5.setBackground(getResources().getDrawable(R.drawable.background_item_blue));
-            mBackground6.setBackground(getResources().getDrawable(R.drawable.background_item_blue));
-            mBackground7.setBackground(getResources().getDrawable(R.drawable.background_item_blue));
-            mBackground8.setBackground(getResources().getDrawable(R.drawable.background_item_blue));
-            layoutMap.put(R.id.background1, true);
-            layoutMap.put(R.id.background2, true);
-            layoutMap.put(R.id.background3, true);
-            layoutMap.put(R.id.background4, true);
-            layoutMap.put(R.id.background5, true);
-            layoutMap.put(R.id.background6, true);
-            layoutMap.put(R.id.background7, true);
-            layoutMap.put(R.id.background8, true);
-
-        } else {
-            mBackground1.setBackground(getResources().getDrawable(R.drawable.background_item_gray));
-            mBackground2.setBackground(getResources().getDrawable(R.drawable.background_item_gray));
-            mBackground3.setBackground(getResources().getDrawable(R.drawable.background_item_gray));
-            mBackground4.setBackground(getResources().getDrawable(R.drawable.background_item_gray));
-            mBackground5.setBackground(getResources().getDrawable(R.drawable.background_item_gray));
-            mBackground6.setBackground(getResources().getDrawable(R.drawable.background_item_gray));
-            mBackground7.setBackground(getResources().getDrawable(R.drawable.background_item_gray));
-            mBackground8.setBackground(getResources().getDrawable(R.drawable.background_item_gray));
-            layoutMap.put(R.id.background1, false);
-            layoutMap.put(R.id.background2, false);
-            layoutMap.put(R.id.background3, false);
-            layoutMap.put(R.id.background4, false);
-            layoutMap.put(R.id.background5, false);
-            layoutMap.put(R.id.background6, false);
-            layoutMap.put(R.id.background7, false);
-            layoutMap.put(R.id.background8, false);
-        }
+        mCheckbox1.setChecked(isChecked);
+        mCheckbox2.setChecked(isChecked);
+        mCheckbox3.setChecked(isChecked);
+        mCheckbox4.setChecked(isChecked);
+        mCheckbox5.setChecked(isChecked);
+        mCheckbox6.setChecked(isChecked);
+        mCheckbox7.setChecked(isChecked);
+        mCheckbox8.setChecked(isChecked);
     }
 
     private void check02(boolean isChecked) {
-        if (isChecked) {
-            mBackground9.setBackground(getResources().getDrawable(R.drawable.background_item_blue));
-            mBackground10.setBackground(getResources().getDrawable(R.drawable.background_item_blue));
-            mBackground11.setBackground(getResources().getDrawable(R.drawable.background_item_blue));
-            mBackground12.setBackground(getResources().getDrawable(R.drawable.background_item_blue));
-            mBackground13.setBackground(getResources().getDrawable(R.drawable.background_item_blue));
-            mBackground14.setBackground(getResources().getDrawable(R.drawable.background_item_blue));
-            mBackground15.setBackground(getResources().getDrawable(R.drawable.background_item_blue));
-            mBackground16.setBackground(getResources().getDrawable(R.drawable.background_item_blue));
-            layoutMap.put(R.id.background9, true);
-            layoutMap.put(R.id.background10, true);
-            layoutMap.put(R.id.background11, true);
-            layoutMap.put(R.id.background12, true);
-            layoutMap.put(R.id.background13, true);
-            layoutMap.put(R.id.background14, true);
-            layoutMap.put(R.id.background15, true);
-            layoutMap.put(R.id.background16, true);
-        } else {
-            mBackground9.setBackground(getResources().getDrawable(R.drawable.background_item_gray));
-            mBackground10.setBackground(getResources().getDrawable(R.drawable.background_item_gray));
-            mBackground11.setBackground(getResources().getDrawable(R.drawable.background_item_gray));
-            mBackground12.setBackground(getResources().getDrawable(R.drawable.background_item_gray));
-            mBackground13.setBackground(getResources().getDrawable(R.drawable.background_item_gray));
-            mBackground14.setBackground(getResources().getDrawable(R.drawable.background_item_gray));
-            mBackground15.setBackground(getResources().getDrawable(R.drawable.background_item_gray));
-            mBackground16.setBackground(getResources().getDrawable(R.drawable.background_item_gray));
-            layoutMap.put(R.id.background9, false);
-            layoutMap.put(R.id.background10, false);
-            layoutMap.put(R.id.background11, false);
-            layoutMap.put(R.id.background12, false);
-            layoutMap.put(R.id.background13, false);
-            layoutMap.put(R.id.background14, false);
-            layoutMap.put(R.id.background15, false);
-            layoutMap.put(R.id.background16, false);
-        }
+        mCheckbox9.setChecked(isChecked);
+        mCheckbox10.setChecked(isChecked);
+        mCheckbox11.setChecked(isChecked);
+        mCheckbox12.setChecked(isChecked);
+        mCheckbox13.setChecked(isChecked);
+        mCheckbox14.setChecked(isChecked);
+        mCheckbox15.setChecked(isChecked);
+        mCheckbox16.setChecked(isChecked);
     }
 
     @Override
@@ -280,42 +283,108 @@ public class ChoseGalleryFGGDActivity extends BaseActivity<ChoseGalleryFGGDPrese
         ButterKnife.bind(this);
     }
 
+
     @OnClick({R.id.background1, R.id.background2, R.id.background3, R.id.background4, R.id.background5, R.id.background6, R.id.background7, R.id.background8, R.id.background9, R.id.background10, R.id.background11, R.id.background12, R.id.background13, R.id.background14, R.id.background15, R.id.background16, R.id.btn_clean, R.id.btn_nextstep})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.background1:
-                refishMessage();
+                refishMessage(1, view.getId());
+                break;
             case R.id.background2:
+                refishMessage(2, view.getId());
+                break;
             case R.id.background3:
+                refishMessage(3, view.getId());
+                break;
             case R.id.background4:
+                refishMessage(4, view.getId());
+                break;
             case R.id.background5:
+                refishMessage(5, view.getId());
+                break;
             case R.id.background6:
+                refishMessage(6, view.getId());
+                break;
             case R.id.background7:
+                refishMessage(7, view.getId());
+                break;
             case R.id.background8:
+                refishMessage(8, view.getId());
+                break;
             case R.id.background9:
+                refishMessage(9, view.getId());
+                break;
             case R.id.background10:
+                refishMessage(10, view.getId());
+                break;
             case R.id.background11:
+                refishMessage(11, view.getId());
+                break;
             case R.id.background12:
+                refishMessage(12, view.getId());
+                break;
             case R.id.background13:
+                refishMessage(13, view.getId());
+                break;
             case R.id.background14:
+                refishMessage(14, view.getId());
+                break;
             case R.id.background15:
+                refishMessage(15, view.getId());
+                break;
             case R.id.background16:
-                if (layoutMap.get(view.getId())){
-                    findViewById(view.getId()).setBackground(getResources().getDrawable(R.drawable.background_item_gray));
-                    layoutMap.put(view.getId(),false);
-                }else {
-                    findViewById(view.getId()).setBackground(getResources().getDrawable(R.drawable.background_item_blue));
-                    layoutMap.put(view.getId(),true);
-                }
+                refishMessage(16, view.getId());
                 break;
             case R.id.btn_clean:
+                clean();
                 break;
             case R.id.btn_nextstep:
+                nextStep();
                 break;
         }
     }
 
-    private void refishMessage() {
+    private void nextStep() {
+        MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(0).setCheckd(mCheckbox1.isChecked());
+        MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(1).setCheckd(mCheckbox2.isChecked());
+        MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(2).setCheckd(mCheckbox3.isChecked());
+        MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(3).setCheckd(mCheckbox4.isChecked());
+        MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(4).setCheckd(mCheckbox5.isChecked());
+        MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(5).setCheckd(mCheckbox6.isChecked());
+        MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(6).setCheckd(mCheckbox7.isChecked());
+        MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(7).setCheckd(mCheckbox8.isChecked());
+        MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(8).setCheckd(mCheckbox9.isChecked());
+        MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(9).setCheckd(mCheckbox10.isChecked());
+        MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(10).setCheckd(mCheckbox11.isChecked());
+        MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(11).setCheckd(mCheckbox12.isChecked());
+        MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(12).setCheckd(mCheckbox13.isChecked());
+        MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(13).setCheckd(mCheckbox14.isChecked());
+        MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(14).setCheckd(mCheckbox15.isChecked());
+        MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(15).setCheckd(mCheckbox16.isChecked());
+        Intent content = new Intent(this, TestFGGDActivity.class);
+        content.putExtra("projectname",projectname);
+        ArmsUtils.startActivity(content);
+    }
 
+    private void clean() {
+        for (int i = 0; i < MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.size(); i++) {
+            MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(i).removedata();
+        }
+        refishMessage(nowCheckindex, nowCheckId);
+    }
+
+    private void refishMessage(int i, int id) {
+
+        findViewById(nowCheckId).setBackground(getResources().getDrawable(R.drawable.background_item_gray));
+        findViewById(id).setBackground(getResources().getDrawable(R.drawable.background_item_blue));
+        nowCheckId = id;
+        nowCheckindex = i;
+        mTitleGallery.setText("检测孔：" + i);
+
+        nowCheckGallery = (TestRecord) MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(i - 1);
+        mSampleserial.setText(nowCheckGallery.getSamplenum());
+        mSamplename.setText(nowCheckGallery.getSamplename());
+        mDr.setText(nowCheckGallery.getDilutionratio() + "");
+        mCheckboxDuizhao.setChecked(nowCheckGallery.getDowhat() == 2 ? true : false);
     }
 }

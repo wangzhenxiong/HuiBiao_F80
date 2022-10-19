@@ -2,18 +2,19 @@ package com.dy.huibiao_f80.mvp.presenter;
 
 import android.app.Application;
 
-import com.dy.huibiao_f80.mvp.contract.RecordContract;
-import com.jess.arms.di.scope.ActivityScope;
-import com.jess.arms.http.imageloader.ImageLoader;
 import com.jess.arms.integration.AppManager;
+import com.jess.arms.di.scope.ActivityScope;
 import com.jess.arms.mvp.BasePresenter;
-
-import javax.inject.Inject;
+import com.jess.arms.http.imageloader.ImageLoader;
 
 import me.jessyan.rxerrorhandler.core.RxErrorHandler;
 
+import javax.inject.Inject;
+
+import com.dy.huibiao_f80.mvp.contract.TestJTJContract;
+
 @ActivityScope
-public class RecordPresenter extends BasePresenter<RecordContract.Model, RecordContract.View> {
+public class TestJTJPresenter extends BasePresenter<TestJTJContract.Model, TestJTJContract.View> {
     @Inject
     RxErrorHandler mErrorHandler;
     @Inject
@@ -24,7 +25,7 @@ public class RecordPresenter extends BasePresenter<RecordContract.Model, RecordC
     AppManager mAppManager;
 
     @Inject
-    public RecordPresenter(RecordContract.Model model, RecordContract.View rootView) {
+    public TestJTJPresenter(TestJTJContract.Model model, TestJTJContract.View rootView) {
         super(model, rootView);
     }
 
@@ -36,6 +37,4 @@ public class RecordPresenter extends BasePresenter<RecordContract.Model, RecordC
         this.mImageLoader = null;
         this.mApplication = null;
     }
-
-
 }

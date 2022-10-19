@@ -505,7 +505,9 @@ public class EdtorProjectActivity extends BaseActivity<EdtorProjectPresenter> im
                 }
 
                 if (checkmoudle == 1) {
-                    if (projectFGGDDao.queryBuilder().where(ProjectFGGDDao.Properties.ProjectName.eq(projectname)).count() > 0) {
+                    List<ProjectFGGD> list = projectFGGDDao.queryBuilder().where(ProjectFGGDDao.Properties.ProjectName.eq(projectname)).list();
+                    LogUtils.d(list);
+                    if (list.size() > 0) {
                         ArmsUtils.snackbarText("该检测项目已经存在，请勿重复新建");
                         return;
                     }

@@ -8,6 +8,7 @@ import com.dy.huibiao_f80.greendao.daos.DaoMaster;
 import com.dy.huibiao_f80.greendao.daos.DaoSession;
 import com.dy.huibiao_f80.greendao.daos.ProjectFGGDDao;
 import com.dy.huibiao_f80.greendao.daos.ProjectJTJDao;
+import com.dy.huibiao_f80.greendao.daos.SamplingDao;
 import com.dy.huibiao_f80.greendao.daos.TestRecordDao;
 import com.github.yuweiguocn.library.greendao.MigrationHelper;
 
@@ -62,6 +63,7 @@ public class DBHelper extends DaoMaster.OpenHelper{
         , TestRecordDao.class
         , ProjectJTJDao.class
         , ProjectFGGDDao.class
+        , SamplingDao.class
         );
     }
 
@@ -91,6 +93,15 @@ public class DBHelper extends DaoMaster.OpenHelper{
         DaoMaster daoMaster = new DaoMaster(helper.getWritableDatabase());
         DaoSession daoSession = daoMaster.newSession();
         return daoSession.getProjectFGGDDao();
+    }
+
+    public static SamplingDao getSamplingDao() {
+        if (null == helper) {
+            helper= new DBHelper(MyAppLocation.myAppLocation, "f80.db", null);
+        }
+        DaoMaster daoMaster = new DaoMaster(helper.getWritableDatabase());
+        DaoSession daoSession = daoMaster.newSession();
+        return daoSession.getSamplingDao();
     }
 
 }

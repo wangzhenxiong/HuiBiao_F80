@@ -54,4 +54,9 @@ public abstract class BaseProjectMessage {
     public boolean check = false;
 
     public abstract String getCVName();
+
+
+    public abstract int getMethod_sp();
+
+    public abstract String getUnit_input();
 }

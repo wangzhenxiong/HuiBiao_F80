@@ -191,6 +191,7 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
         mItems.add(">");
         mItems.add("≤");
         mItems.add("≥");
+        mItems.add("无");
         ArrayAdapter<String> adapter1 = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, mItems);
         ArrayAdapter<String> adapter2 = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, mItems);
         ArrayAdapter<String> adapter3 = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, mItems);
@@ -639,15 +640,21 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
             projectFGGD.setYin_a_symbol(sysa);
             projectFGGD.setYin_b_symbol(sysb);
             String oka = mOkA.getText().toString();
-            if (oka.isEmpty()) {
-                ArmsUtils.snackbarText("请输入合格区间A");
-                return;
+            if (!sysa.equals("无")){
+
+                if (oka.isEmpty()) {
+                    ArmsUtils.snackbarText("请输入合格区间A");
+                    return;
+                }
             }
             projectFGGD.setYin_a(Double.parseDouble(oka));
             String okb = mOkB.getText().toString();
-            if (okb.isEmpty()) {
-                ArmsUtils.snackbarText("请输入合格区间B");
-                return;
+            if (!sysb.equals("无")){
+
+                if (okb.isEmpty()) {
+                    ArmsUtils.snackbarText("请输入合格区间B");
+                    return;
+                }
             }
             projectFGGD.setYin_b(Double.parseDouble(okb));
         }
@@ -658,15 +665,21 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
             projectFGGD.setYang_a_symbol(sysa);
             projectFGGD.setYang_b_symbol(sysb);
             String nga = mNgA.getText().toString();
-            if (nga.isEmpty()) {
-                ArmsUtils.snackbarText("请输入不合格区间A");
-                return;
+            if (!sysa.equals("无")){
+
+                if (nga.isEmpty()) {
+                    ArmsUtils.snackbarText("请输入不合格区间A");
+                    return;
+                }
             }
             projectFGGD.setYang_a(Double.parseDouble(nga));
             String ngb = mNgB.getText().toString();
-            if (ngb.isEmpty()) {
-                ArmsUtils.snackbarText("请输入不合格区间B");
-                return;
+            if (!sysb.equals("无")){
+
+                if (ngb.isEmpty()) {
+                    ArmsUtils.snackbarText("请输入不合格区间B");
+                    return;
+                }
             }
             projectFGGD.setYang_b(Double.parseDouble(ngb));
         }
@@ -677,15 +690,21 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
             projectFGGD.setKeyi_a_symbol(sysa);
             projectFGGD.setKeyi_b_symbol(sysb);
             String dfa = mDfA.getText().toString();
-            if (dfa.isEmpty()) {
-                ArmsUtils.snackbarText("请输入可疑区间A");
-                return;
+            if (!sysa.equals("无")){
+
+                if (dfa.isEmpty()) {
+                    ArmsUtils.snackbarText("请输入可疑区间A");
+                    return;
+                }
             }
             projectFGGD.setKeyi_a(Double.parseDouble(dfa));
             String dfb = mDfB.getText().toString();
-            if (dfb.isEmpty()) {
-                ArmsUtils.snackbarText("请输入可疑区间B");
-                return;
+            if (!sysb.equals("无")){
+
+                if (dfb.isEmpty()) {
+                    ArmsUtils.snackbarText("请输入可疑区间B");
+                    return;
+                }
             }
             projectFGGD.setKeyi_b(Double.parseDouble(dfb));
         }

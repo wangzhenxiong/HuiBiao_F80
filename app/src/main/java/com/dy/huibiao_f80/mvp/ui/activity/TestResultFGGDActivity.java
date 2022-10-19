@@ -15,16 +15,20 @@ import android.widget.CheckBox;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.dy.huibiao_f80.MyAppLocation;
 import com.dy.huibiao_f80.R;
-import com.dy.huibiao_f80.di.component.DaggerRecordComponent;
-import com.dy.huibiao_f80.greendao.DBHelper;
-import com.dy.huibiao_f80.greendao.TestRecord;
-import com.dy.huibiao_f80.mvp.contract.RecordContract;
-import com.dy.huibiao_f80.mvp.presenter.RecordPresenter;
-import com.dy.huibiao_f80.mvp.ui.adapter.TestRecrdAdapter;
+import com.dy.huibiao_f80.bean.GalleryBean;
+import com.dy.huibiao_f80.bean.eventBusBean.FGTestMessageBean;
+import com.dy.huibiao_f80.di.component.DaggerTestResultFGGDComponent;
+import com.dy.huibiao_f80.mvp.contract.TestResultFGGDContract;
+import com.dy.huibiao_f80.mvp.presenter.TestResultFGGDPresenter;
+import com.dy.huibiao_f80.mvp.ui.adapter.FGGDTestResultAdapter;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +39,7 @@ import butterknife.OnClick;
 
 import static com.jess.arms.utils.Preconditions.checkNotNull;
 
-public class RecordActivity extends BaseActivity<RecordPresenter> implements RecordContract.View {
+public class TestResultFGGDActivity extends BaseActivity<TestResultFGGDPresenter> implements TestResultFGGDContract.View {
 
     @BindView(R.id.toolbar_back)
     RelativeLayout mToolbarBack;
@@ -45,28 +49,26 @@ public class RecordActivity extends BaseActivity<RecordPresenter> implements Rec
     Toolbar mToolbar;
     @BindView(R.id.toolbarly)
     AppBarLayout mToolbarly;
-    @BindView(R.id.testmoudle)
-    Button mTestmoudle;
-    @BindView(R.id.testprojectname)
-    Button mTestprojectname;
-    @BindView(R.id.jujdger)
-    Button mJujdger;
-    @BindView(R.id.seach)
-    Button mSeach;
-    @BindView(R.id.choseall)
-    CheckBox mChoseall;
+    @BindView(R.id.title)
+    TextView mTitle;
+    @BindView(R.id.controvalue)
+    TextView mControvalue;
     @BindView(R.id.recylerview)
     RecyclerView mRecylerview;
-    @BindView(R.id.print)
-    Button mPrint;
-    @BindView(R.id.delete)
-    Button mDelete;
-    private List<TestRecord> testRecordList=new ArrayList<>();
-    private TestRecrdAdapter testRecrdAdapter;
+    @BindView(R.id.btn_retest)
+    Button mBtnRetest;
+    @BindView(R.id.btn_restart)
+    Button mBtnRestart;
+    @BindView(R.id.btn_record)
+    Button mBtnRecord;
+    @BindView(R.id.choseall)
+    CheckBox mChoseall;
+    private List<GalleryBean> dataList = new ArrayList<>();
+    private FGGDTestResultAdapter fggdAdapter;
 
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
-        DaggerRecordComponent //如找不到该类,请编译一下项目
+        DaggerTestResultFGGDComponent //如找不到该类,请编译一下项目
                 .builder()
                 .appComponent(appComponent)
                 .view(this)
@@ -76,22 +78,26 @@ public class RecordActivity extends BaseActivity<RecordPresenter> implements Rec
 
     @Override
     public int initView(@Nullable Bundle savedInstanceState) {
-        return R.layout.activity_record; //如果你不需要框架帮你设置 setContentView(id) 需要自行设置,请返回 0
+        return R.layout.activity_testresultfggd; //如果你不需要框架帮你设置 setContentView(id) 需要自行设置,请返回 0
     }
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
-        getData();
-
+        getdata();
+        ArmsUtils.configRecyclerView(mRecylerview, new GridLayoutManager(this, 1));
+        fggdAdapter = new FGGDTestResultAdapter(R.layout.layout_fggftestresult_item, dataList);
+        fggdAdapter.setEmptyView(R.layout.emptyview, (ViewGroup) mRecylerview.getParent());
+        mRecylerview.setAdapter(fggdAdapter);
     }
 
-    private void getData() {
-        testRecordList.clear();
-        testRecordList.addAll(DBHelper.getTestRecordDao().loadAll());
-        ArmsUtils.configRecyclerView(mRecylerview, new GridLayoutManager(this, 1));
-        testRecrdAdapter = new TestRecrdAdapter(R.layout.record_item_layou, testRecordList);
-        testRecrdAdapter.setEmptyView(R.layout.emptyview, (ViewGroup) mRecylerview.getParent());
-        mRecylerview.setAdapter(testRecrdAdapter);
+    private void getdata() {
+        dataList.clear();
+        for (int i = 0; i < MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.size(); i++) {
+            GalleryBean galleryBean = MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(i);
+            if (galleryBean.isCheckd()) {
+                dataList.add(galleryBean);
+            }
+        }
     }
 
     @Override
@@ -128,20 +134,25 @@ public class RecordActivity extends BaseActivity<RecordPresenter> implements Rec
         ButterKnife.bind(this);
     }
 
-    @OnClick({R.id.testmoudle, R.id.testprojectname, R.id.jujdger, R.id.seach, R.id.print, R.id.delete})
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(FGTestMessageBean tags) {
+        switch (tags.tag) {
+            case 0:
+                fggdAdapter.notifyDataSetChanged();
+
+                break;
+        }
+    }
+
+    @OnClick({R.id.btn_retest, R.id.btn_restart, R.id.btn_record})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.testmoudle:
+            case R.id.btn_retest:
                 break;
-            case R.id.testprojectname:
+            case R.id.btn_restart:
                 break;
-            case R.id.jujdger:
-                break;
-            case R.id.seach:
-                break;
-            case R.id.print:
-                break;
-            case R.id.delete:
+            case R.id.btn_record:
+                ArmsUtils.startActivity(new Intent(this,RecordActivity.class));
                 break;
         }
     }

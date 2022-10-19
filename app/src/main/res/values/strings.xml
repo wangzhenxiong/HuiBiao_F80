@@ -64,4 +64,14 @@
     <string name="standardname">检测标准</string>
     <string name="detectionLimit">方法检出限</string>
     <string name="tips">简要提示</string>
+    <string name="contro_erromessage1" translatable="false">开始或结束时吸光度无穷大，此次对照无效！</string>
+    <string name="lastcontrovalue" translatable="false">缺少对照值，检测无效！</string>
+    <string name="FGGD_TestMoudle" translatable="false">分光光度</string>
+    <string name="ok" translatable="false">合格</string>
+    <string name="ng" translatable="false">不合格</string>
+    <string name="keyi">可疑</string>
+    <string name="sampleerro_message1" translatable="false">开始或结束时吸光度无穷大，此次对照无效！</string>
+    <string name="sampleerro_message2" translatable="false">检测前吸光度大于检测后吸光度，此次对照无效！</string>
+    <string name="sampleerro_message3" translatable="false">对照值小于规定值，此次对照无效！</string>
+
 </resources>

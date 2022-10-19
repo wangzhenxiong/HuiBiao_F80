@@ -17,6 +17,14 @@
         <item>消线法</item>
         <item>比色法</item>
     </string-array>
+
+    <string-array name="checkdecome">
+
+        <item>合格</item>
+        <item>不合格</item>
+        <item>可疑</item>
+    </string-array>
+
     <string-array name="names">
         <item>游小陈</item>
         <item>扫地神僧</item>

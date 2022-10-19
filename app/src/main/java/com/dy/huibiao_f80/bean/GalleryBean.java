@@ -2,15 +2,13 @@ package com.dy.huibiao_f80.bean;
 
 import android.graphics.Bitmap;
 import android.hardware.usb.UsbDevice;
+import android.os.Parcelable;
 
 import com.apkfuns.logutils.LogUtils;
 import com.dy.huibiao_f80.BuildConfig;
 import com.dy.huibiao_f80.Constants;
 import com.dy.huibiao_f80.app.utils.PictureToolUtils;
 import com.dy.huibiao_f80.bean.base.BaseProjectMessage;
-import com.dy.huibiao_f80.bean.base.BaseSampleMessage;
-import com.dy.huibiao_f80.bean.base.BaseTaskMessage;
-import com.dy.huibiao_f80.bean.base.BaseUntilMessage;
 import com.dy.huibiao_f80.greendao.TestRecord;
 import com.dy.huibiao_f80.usbhelps.Status;
 import com.dy.huibiao_f80.usbhelps.UsbReadWriteHelper;
@@ -19,6 +17,7 @@ import com.jess.arms.utils.ArmsUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.RunnableScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -46,12 +45,12 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
  * <p>
  * Created by wangzhenxiong on 2019/3/6.
  */
-public abstract class GalleryBean implements UsbReadWriteHelper.onUsbReciver {
+public abstract class GalleryBean implements Parcelable,UsbReadWriteHelper.onUsbReciver {
     private int galleryNum;
     private int JTJ_MAC = -2;//胶体金模块编号
     private int MYYG_MAC = -2;//免疫荧光模块编号
     private int state;//通道状态  0等待测试 1正在测试 2测试结束 3测试失败
-    private int dowhat; //样品1  对照2
+    private int dowhat=1; //样品1  对照2
     private boolean clearn = true;//清零标志位 需要清零设为true，在解析数据时会重新设置作为对照的ad值 ，默认为true，会设置一次
     private boolean projectChange = false;//清零标志位 需要清零设为true，在解析数据时会重新设置作为对照的ad值 ，默认为true，会设置一次
 
@@ -96,10 +95,19 @@ public abstract class GalleryBean implements UsbReadWriteHelper.onUsbReciver {
     private double absorbance3_after;
     private double absorbance4_after;
 
+    public BaseProjectMessage getmProjectMessage() {
+        return mProjectMessage;
+    }
+
+    public void setmProjectMessage(BaseProjectMessage mProjectMessage) {
+        this.mProjectMessage = mProjectMessage;
+        ((TestRecord) this).setTest_project(mProjectMessage.getPjName());
+        ((TestRecord) this).setTest_method(mProjectMessage.getMethod_sp()+"");
+
+    }
+
     private BaseProjectMessage mProjectMessage;
-    private BaseSampleMessage mSampleMessage;
-    private BaseTaskMessage mTaskMessage;
-    private BaseUntilMessage mUntilMessage;
+
 
 
 
@@ -124,6 +132,16 @@ public abstract class GalleryBean implements UsbReadWriteHelper.onUsbReciver {
     private ScheduledThreadPoolExecutor mTimer;
     public boolean issend = false;
     public RunnableScheduledFuture<?> mRunnableScheduledFuture;
+    public boolean checkd;
+
+    public boolean isCheckd() {
+        return checkd;
+    }
+
+    public void setCheckd(boolean checkd) {
+        this.checkd = checkd;
+    }
+
 
     /**
      * 胶体金卡样式 3为三连卡 0为单卡
@@ -304,7 +322,6 @@ public abstract class GalleryBean implements UsbReadWriteHelper.onUsbReciver {
 
 
 
-    double[] mlist_y;
 
 
 
@@ -312,36 +329,16 @@ public abstract class GalleryBean implements UsbReadWriteHelper.onUsbReciver {
 
 
 
-    public BaseProjectMessage getProjectMessage1() {
-        return mProjectMessage1;
+
+
+
+
+    public  void removedata(){
+        ((TestRecord) this).setSamplename(null);
+        ((TestRecord) this).setSamplenum(null);
+        ((TestRecord) this).setDilutionratio(0);
+        ((TestRecord) this).setDowhat(1);
     }
-
-    public void setProjectMessage1(BaseProjectMessage projectMessage1) {
-        mProjectMessage1 = projectMessage1;
-
-    }
-
-    public BaseProjectMessage getProjectMessage2() {
-
-        return mProjectMessage2;
-    }
-
-    public void setProjectMessage2(BaseProjectMessage projectMessage2) {
-        mProjectMessage2 = projectMessage2;
-    }
-
-    public BaseProjectMessage getProjectMessage3() {
-        return mProjectMessage3;
-    }
-
-    public void setProjectMessage3(BaseProjectMessage projectMessage3) {
-        mProjectMessage3 = projectMessage3;
-
-    }
-
-    private BaseProjectMessage mProjectMessage1;
-    private BaseProjectMessage mProjectMessage2;
-    private BaseProjectMessage mProjectMessage3;
 
 
 
@@ -541,6 +538,48 @@ public abstract class GalleryBean implements UsbReadWriteHelper.onUsbReciver {
         this.remainingtime = remainingtime;
     }
 
+    public void startTest() {
+        //if (this.mProjectMessage instanceof FGGDTestItem) {
+        //FGGDTestItem message = (FGGDTestItem) mProjectMessage;
+        int wavelength = mProjectMessage.getWavelength();
+        switch (wavelength) {
+            case 0:
+                absorbance1_start = absorbance1;
+                break;
+            case 1:
+                absorbance2_start = absorbance2;
+                break;
+            case 2:
+                absorbance3_start = absorbance3;
+                break;
+            case 3:
+                absorbance4_start = absorbance4;
+                break;
+        }
+        // }
+    }
+
+    public void testFinished() {
+        // if (this.mProjectMessage instanceof FGGDTestItem) {
+        //FGGDTestItem message = (FGGDTestItem) mProjectMessage;
+        int wavelength = mProjectMessage.getWavelength();
+        switch (wavelength) {
+            case 0:
+                absorbance1_after = absorbance1;
+                break;
+            case 1:
+                absorbance2_after = absorbance2;
+                break;
+            case 2:
+                absorbance3_after = absorbance3;
+                break;
+            case 3:
+                absorbance4_after = absorbance4;
+                break;
+        }
+
+        // }
+    }
 
     /**
      * 检测模块
@@ -1085,8 +1124,85 @@ public abstract class GalleryBean implements UsbReadWriteHelper.onUsbReciver {
     }
 
 
-
-
-
-
+    @Override
+    public String toString() {
+        return "GalleryBean{" +
+                "galleryNum=" + galleryNum +
+                ", JTJ_MAC=" + JTJ_MAC +
+                ", MYYG_MAC=" + MYYG_MAC +
+                ", state=" + state +
+                ", dowhat=" + dowhat +
+                ", clearn=" + clearn +
+                ", projectChange=" + projectChange +
+                ", howmanysecond=" + howmanysecond +
+                ", remainingtime=" + remainingtime +
+                ", testmoudle='" + testmoudle + '\'' +
+                ", wave1=" + wave1 +
+                ", wave2=" + wave2 +
+                ", wave3=" + wave3 +
+                ", wave4=" + wave4 +
+                ", dzh_wave1_start=" + dzh_wave1_start +
+                ", dzh_wave2_start=" + dzh_wave2_start +
+                ", dzh_wave3_start=" + dzh_wave3_start +
+                ", dzh_wave4_start=" + dzh_wave4_start +
+                ", wave1_start=" + wave1_start +
+                ", wave2_start=" + wave2_start +
+                ", wave3_start=" + wave3_start +
+                ", wave4_start=" + wave4_start +
+                ", luminousness1=" + luminousness1 +
+                ", luminousness2=" + luminousness2 +
+                ", luminousness3=" + luminousness3 +
+                ", luminousness4=" + luminousness4 +
+                ", absorbance1=" + absorbance1 +
+                ", absorbance2=" + absorbance2 +
+                ", absorbance3=" + absorbance3 +
+                ", absorbance4=" + absorbance4 +
+                ", absorbance1_start=" + absorbance1_start +
+                ", absorbance2_start=" + absorbance2_start +
+                ", absorbance3_start=" + absorbance3_start +
+                ", absorbance4_start=" + absorbance4_start +
+                ", absorbance1_after=" + absorbance1_after +
+                ", absorbance2_after=" + absorbance2_after +
+                ", absorbance3_after=" + absorbance3_after +
+                ", absorbance4_after=" + absorbance4_after +
+                ", mProjectMessage=" + mProjectMessage +
+                ", mUsbDevice=" + mUsbDevice +
+                ", mJTJModel=" + mJTJModel +
+                ", mJTJCardModel=" + mJTJCardModel +
+                ", mJTJRWHelper=" + mJTJRWHelper +
+                ", horizontal_d=" + horizontal_d +
+                ", vertical_d=" + vertical_d +
+                ", JTJResultData=" + Arrays.toString(JTJResultData) +
+                ", MYYGResultData=" + Arrays.toString(MYYGResultData) +
+                ", JTJResultDatas=" + JTJResultDatas +
+                ", ZJSResultData=" + Arrays.toString(ZJSResultData) +
+                ", backgroundResous=" + backgroundResous +
+                ", mUserfullData=" + mUserfullData +
+                ", mUserfullData_myyg=" + mUserfullData_myyg +
+                ", mUserfullDatas=" + mUserfullDatas +
+                ", mTimer=" + mTimer +
+                ", issend=" + issend +
+                ", mRunnableScheduledFuture=" + mRunnableScheduledFuture +
+                ", checkd=" + checkd +
+                ", mUsbOnStatuChangeListener=" + mUsbOnStatuChangeListener +
+                ", mReciveWeakReference=" + mReciveWeakReference +
+                ", r=" + r +
+                ", g=" + g +
+                ", b=" + b +
+                ", r_0s=" + r_0s +
+                ", g_0s=" + g_0s +
+                ", b_0s=" + b_0s +
+                ", r_40s=" + r_40s +
+                ", g_40s=" + g_40s +
+                ", b_40s=" + b_40s +
+                ", r_480s=" + r_480s +
+                ", g_480s=" + g_480s +
+                ", b_480s=" + b_480s +
+                ", r_start=" + r_start +
+                ", g_start=" + g_start +
+                ", b_start=" + b_start +
+                ", checkState=" + checkState +
+                ", mBitmapList=" + mBitmapList +
+                '}';
+    }
 }

@@ -41,12 +41,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".mvp.ui.activity.ChoseGalleryJTJActivity"
+        <activity android:name=".mvp.ui.activity.TestResultFGGDActivity" />
+        <activity
+            android:name=".mvp.ui.activity.TestJTJActivity"
+            android:label="样品检测"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".mvp.ui.activity.TestFGGDActivity"
+            android:label="样品检测"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".mvp.ui.activity.ChoseGalleryJTJActivity"
             android:label="选择检测孔"
-            android:screenOrientation="landscape"/>
-        <activity android:name=".mvp.ui.activity.ChoseGalleryFGGDActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".mvp.ui.activity.ChoseGalleryFGGDActivity"
             android:label="选择检测孔"
-            android:screenOrientation="landscape"/>
+            android:screenOrientation="landscape" />
         <activity
             android:name=".mvp.ui.activity.SystemSetActivity"
             android:label="系统设置"

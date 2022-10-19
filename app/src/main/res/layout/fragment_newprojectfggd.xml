@@ -24,10 +24,10 @@
                 android:layout_weight="1">
 
                 <AutoCompleteTextView
-                    android:editable="false"
                     android:id="@+id/testprojectname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:editable="false"
                     android:hint="@string/ed_projectname"
                     android:maxLines="1"
                     android:singleLine="true" />
@@ -216,13 +216,14 @@
 
 
         </LinearLayout>
-         <LinearLayout
-             android:id="@+id/method_layout"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:orientation="vertical">
 
-         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/method_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        </LinearLayout>
 
 
         <LinearLayout
@@ -243,10 +244,6 @@
                 android:textColor="@color/black"
                 android:textStyle="bold" />
 
-            <Spinner
-                android:id="@+id/ok_a_demarcate"
-                android:layout_width="100dp"
-                android:layout_height="match_parent" />
 
             <android.support.design.widget.TextInputLayout
                 style="@style/TextInputLayoutStyle"
@@ -260,8 +257,20 @@
             </android.support.design.widget.TextInputLayout>
 
             <Spinner
+                android:id="@+id/ok_a_demarcate"
+                android:layout_width="60dp"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:text="检测结果" />
+
+            <Spinner
                 android:id="@+id/ok_b_demarcate"
-                android:layout_width="100dp"
+                android:layout_width="60dp"
                 android:layout_height="match_parent" />
 
             <android.support.design.widget.TextInputLayout
@@ -296,10 +305,6 @@
                 android:textColor="@color/black"
                 android:textStyle="bold" />
 
-            <Spinner
-                android:id="@+id/ng_a_demarcate"
-                android:layout_width="100dp"
-                android:layout_height="fill_parent" />
 
             <android.support.design.widget.TextInputLayout
                 style="@style/TextInputLayoutStyle"
@@ -313,8 +318,20 @@
             </android.support.design.widget.TextInputLayout>
 
             <Spinner
+                android:id="@+id/ng_a_demarcate"
+                android:layout_width="60dp"
+                android:layout_height="fill_parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:text="检测结果" />
+
+            <Spinner
                 android:id="@+id/ng_b_demarcate"
-                android:layout_width="100dp"
+                android:layout_width="60dp"
                 android:layout_height="fill_parent" />
 
             <android.support.design.widget.TextInputLayout
@@ -348,10 +365,6 @@
                 android:textColor="@color/black"
                 android:textStyle="bold" />
 
-            <Spinner
-                android:id="@+id/df_a_demarcate"
-                android:layout_width="100dp"
-                android:layout_height="fill_parent" />
 
             <android.support.design.widget.TextInputLayout
                 style="@style/TextInputLayoutStyle"
@@ -365,8 +378,20 @@
             </android.support.design.widget.TextInputLayout>
 
             <Spinner
+                android:id="@+id/df_a_demarcate"
+                android:layout_width="60dp"
+                android:layout_height="fill_parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:text="检测结果" />
+
+            <Spinner
                 android:id="@+id/df_b_demarcate"
-                android:layout_width="100dp"
+                android:layout_width="60dp"
                 android:layout_height="fill_parent" />
 
             <android.support.design.widget.TextInputLayout

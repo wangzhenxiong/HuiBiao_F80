@@ -231,6 +231,7 @@
 
 
                 <TextView
+                    android:id="@+id/title_gallery"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#E6E2E2"
@@ -257,6 +258,7 @@
                             android:layout_height="wrap_content"
                             android:text="设为对照 "/>
                         <CheckBox
+                            android:id="@+id/checkbox_duizhao"
                             android:layout_width="60dp"
                             android:layout_height="60dp"
                             />
@@ -297,6 +299,7 @@
                         android:textColorHint="#626161">
 
                         <AutoCompleteTextView
+                            android:id="@+id/dr"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="稀释倍数/稀释倍数"

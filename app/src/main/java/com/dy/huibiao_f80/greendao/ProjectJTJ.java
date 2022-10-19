@@ -60,6 +60,16 @@ public class ProjectJTJ extends BaseProjectMessage {
         return curveName;
     }
 
+    @Override
+    public int getMethod_sp() {
+        return testMethod;
+    }
+
+    @Override
+    public String getUnit_input() {
+        return "";
+    }
+
 
     @Id(autoincrement = true)
     private Long id;
