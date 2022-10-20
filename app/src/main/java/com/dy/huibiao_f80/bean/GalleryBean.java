@@ -290,16 +290,9 @@ public abstract class GalleryBean implements Parcelable,UsbReadWriteHelper.onUsb
         if (productId == Constants.MYPID_P && vendorId == Constants.MYVID_P) {
             setJTJModel(2);//设置模式 1为扫描2为摄像头
             setTestMoudle(4 + "");
-        } else if (productId == Constants.MYPID_S && vendorId == Constants.MYVID_S) {
-            setJTJModel(1);//设置模式 1为扫描2为摄像头
-            setTestMoudle(3 + "");
         } else if (productId == Constants.MYPID && vendorId == Constants.MYVID) {
             setJTJModel(3);
             setTestMoudle(3 + "");
-        } else if (productId == Constants.MYPID_P_OUT && vendorId == Constants.MYVID_P_OUT) {
-            setJTJModel(3);
-            setJTJCardModel(3);
-            setTestMoudle(7 + "");
         }
         mJTJRWHelper = new UsbReadWriteHelper(mUsbDevice);
         mJTJRWHelper.setReciverListener(this);
@@ -368,7 +361,7 @@ public abstract class GalleryBean implements Parcelable,UsbReadWriteHelper.onUsb
         /**
          * @param bitmap 接收成功，针对摄像头模块
          */
-        void onReciverSuccess(Bitmap bitmap);
+        void onReciverSuccess(Bitmap bitmap,int gallery);
 
         /**
          * 接收失败
@@ -1049,12 +1042,12 @@ public abstract class GalleryBean implements Parcelable,UsbReadWriteHelper.onUsb
             if (BuildConfig.DEBUG) {
                 PictureToolUtils.isHaveCard(mBitmapList.get(0));
                 if (recive != null) {
-                    recive.onReciverSuccess(mBitmapList.get(0));
+                    recive.onReciverSuccess(mBitmapList.get(0),galleryNum);
                 }
                 //mJTJResultRecive.onReciverSuccess(PictureToolUtils.drawRectFourcorners(mBitmapList.get(0)));
             } else {
                 if (recive != null) {
-                    recive.onReciverSuccess(mBitmapList.get(0));
+                    recive.onReciverSuccess(mBitmapList.get(0),galleryNum);
                 }
             }
 

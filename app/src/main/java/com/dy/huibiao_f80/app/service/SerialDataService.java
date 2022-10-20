@@ -113,8 +113,7 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
 
     public List<GalleryBean> mFGGDGalleryBeanList = new ArrayList<>();
     public List<GalleryBean> mGSNCGalleryBeanList = new ArrayList<>();
-    public List<GalleryBean> mZJSGalleryBeanList = new ArrayList<>();
-    public List<GalleryBean> mMYYGGalleryBeanList = new ArrayList<>();
+    public List<GalleryBean> mJTJGalleryBeanList = new ArrayList<>();
 
     public int mTempGallery1;
     public int mTempGallery2;
@@ -458,7 +457,7 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
             @Override
             public void run() {
                 //分光模块的数据更新
-                LogUtils.d("genxing1");
+                //LogUtils.d("genxing1");
                 if (RUNFLAG_FGGD || RUNFLAG_FGGD_HASSTART) {
                     for (int i = 0; i < mFGGDGalleryBeanList.size(); i++) {
 
@@ -517,7 +516,7 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
                     }
                     if (mFGGDGalleryBeanList.size() > 0) {
                         //发送更新
-                        LogUtils.d("发送更新");
+                       // LogUtils.d("发送更新");
                         EventBus.getDefault().post(new FGTestMessageBean(0));
                     }
 

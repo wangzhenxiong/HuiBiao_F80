@@ -41,7 +41,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".mvp.ui.activity.TestResultFGGDActivity" />
+        <activity android:name=".mvp.ui.activity.TestResultJTJActivity" />
+        <activity
+            android:name=".mvp.ui.activity.JTJ_AdjustActivity"
+            android:label="摄像头位置调整"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".mvp.ui.activity.TestResultFGGDActivity"
+            android:label="检测结果"
+            android:screenOrientation="landscape" />
         <activity
             android:name=".mvp.ui.activity.TestJTJActivity"
             android:label="样品检测"

@@ -87,10 +87,7 @@ public class UsbControl {
             int vendorId = device.getVendorId();
 
 
-                if ((vendorId == Constants.MYVID_S && productId == Constants.MYPID_S)
-                        || (vendorId == Constants.MYVID_P && productId == Constants.MYPID_P)) {
-                    mUsbDeviceList.add(device);
-                } else if (vendorId == Constants.MYVID_P_OUT && productId == Constants.MYPID_P_OUT) {
+                if (vendorId == Constants.MYVID_P && productId == Constants.MYPID_P) {
                     mUsbDeviceList.add(device);
                 }
         }

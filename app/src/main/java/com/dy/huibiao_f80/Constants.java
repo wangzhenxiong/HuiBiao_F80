@@ -9,6 +9,7 @@ import com.dy.huibiao_f80.app.utils.CRC8Util;
 import com.dy.huibiao_f80.app.utils.DataUtils;
 import com.dy.huibiao_f80.app.utils.FileUtils;
 import com.dy.huibiao_f80.app.utils.SPUtils;
+import com.dy.huibiao_f80.usbhelps.UsbControl;
 import com.google.gson.Gson;
 import com.jess.arms.utils.ArmsUtils;
 
@@ -48,7 +49,10 @@ public class Constants {
      * 免疫荧光积分值统一除以2800
      */
     public static int myyg_parameter = 2800;
-
+    /*
+     * 真菌毒素 胶体金多联卡
+     */
+    public static UsbControl mControl;
     //重启设备
     public static void shutdownDev() {
         try {
@@ -333,15 +337,7 @@ public class Constants {
     public static String ADDR_WF = "";
 
 
-    /**
-     * 胶体金 外接 摄像头模块
-     */
-    public static int MYVID_P_OUT = 1047, MYPID_P_OUT = 20497;
 
-    /**
-     * 胶体金扫描模块
-     */
-    public static int MYVID_S = 1155, MYPID_S = 22336;
 
 
     /**

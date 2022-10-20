@@ -239,7 +239,7 @@ public class NewProjectJTJFragment extends BaseFragment<NewProjectJTJPresenter> 
                     }
                     projectJTJ.setC_tB(Double.parseDouble(tcb));
                 }
-
+                projectJTJ.setFinishState(true);
                 if (mDfCurve.isChecked()) {
                     projectJTJ.setIsdefault(true);
                     List<ProjectJTJ> list = DBHelper.getProjectJTJDao().queryBuilder().where(ProjectJTJDao.Properties.Isdefault.eq(true)).list();

@@ -2,6 +2,7 @@ package com.dy.huibiao_f80.mvp.model;
 
 import android.app.Application;
 
+import com.apkfuns.logutils.LogUtils;
 import com.dy.huibiao_f80.bean.base.BaseProjectMessage;
 import com.dy.huibiao_f80.greendao.DBHelper;
 import com.dy.huibiao_f80.greendao.ProjectFGGD;
@@ -70,7 +71,9 @@ public class StartTestModel extends BaseModel implements StartTestContract.Model
         return Observable.create(new ObservableOnSubscribe<List<? extends BaseProjectMessage>>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<? extends BaseProjectMessage>> emitter) throws Exception {
-                QueryBuilder<ProjectJTJ> projectJTJQueryBuilder = DBHelper.getProjectJTJDao().queryBuilder();
+                ProjectJTJDao projectJTJDao = DBHelper.getProjectJTJDao();
+                LogUtils.d(projectJTJDao.loadAll());
+                QueryBuilder<ProjectJTJ> projectJTJQueryBuilder = projectJTJDao.queryBuilder();
                 if (null != keyword) {
                     projectJTJQueryBuilder = projectJTJQueryBuilder.where(ProjectJTJDao.Properties.ProjectName.like("%" + keyword + "%"));
                 }

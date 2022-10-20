@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="@drawable/beijing_img"
+    android:orientation="vertical">
+
+    <include layout="@layout/include_title"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <Button
+            android:id="@+id/btn_incard"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:background="@drawable/btn_background_blue"
+            android:text="进卡"
+            android:textColor="#fff"
+            android:textSize="18dp"/>
+
+        <Button
+            android:id="@+id/btn_outcard"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/btn_background_blue"
+            android:text="出卡"
+            android:textColor="#fff"
+            android:textSize="18dp"/>
+
+        <Button
+            android:id="@+id/btn_left"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/btn_background_blue"
+            android:text="左移"
+            android:textColor="#fff"
+            android:textSize="18dp"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/btn_right"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/btn_background_blue"
+            android:text="右移"
+            android:textColor="#fff"
+            android:textSize="18dp"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/btn_up"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/btn_background_blue"
+            android:text="上移"
+            android:textColor="#fff"
+            android:textSize="18dp"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/btn_down"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/btn_background_blue"
+            android:text="下移"
+            android:textColor="#fff"
+            android:textSize="18dp"
+            android:visibility="gone"/>
+
+        <Button
+
+            android:id="@+id/btn_getbitmapnocard"
+            android:layout_width="140dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/btn_background_blue"
+            android:text="采集无卡图片"
+            android:textColor="#fff"
+            android:textSize="18dp"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_model4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="10dp"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/btn_width_sub"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:background="@drawable/btn_background_blue"
+            android:text="-"
+            android:gravity="center"
+            android:textColor="#fff"
+            android:textSize="30dp"
+            android:visibility="visible"
+            />
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="wrap_content"
+            android:minWidth="60dp"
+            android:layout_height="wrap_content"
+            android:hint="宽度"
+            android:textColorHint="#FC0000">
+
+            <AutoCompleteTextView
+                android:id="@+id/width_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="100"
+                android:editable="false"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/btn_width_add"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:background="@drawable/btn_background_blue"
+            android:text="+"
+            android:gravity="center"
+            android:textColor="#fff"
+            android:textSize="30dp"
+            android:visibility="visible"
+            />
+
+        <Button
+            android:id="@+id/btn_height_sub"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:background="@drawable/btn_background_blue"
+            android:text="-"
+            android:gravity="center"
+            android:textColor="#fff"
+            android:textSize="30dp"
+            android:visibility="visible"
+            android:layout_marginLeft="30dp"/>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="wrap_content"
+            android:minWidth="60dp"
+            android:layout_height="wrap_content"
+            android:hint="高度"
+            android:textColorHint="#FC0000">
+
+            <AutoCompleteTextView
+                android:id="@+id/height_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="20"
+                android:editable="false"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/btn_height_add"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:background="@drawable/btn_background_blue"
+            android:text="+"
+            android:gravity="center"
+            android:textColor="#fff"
+            android:textSize="30dp"
+            android:visibility="visible" />
+
+        <Button
+            android:id="@+id/btn_cardspacing_sub"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:background="@drawable/btn_background_blue"
+            android:text="-"
+            android:gravity="center"
+            android:textColor="#fff"
+            android:textSize="30dp"
+            android:visibility="visible"
+            android:layout_marginLeft="30dp"/>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="wrap_content"
+            android:minWidth="60dp"
+            android:layout_height="wrap_content"
+            android:hint="通道间隙"
+            android:textColorHint="#FC0000">
+
+            <AutoCompleteTextView
+                android:id="@+id/cardspacing_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="60"
+                android:editable="false"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/btn_cardspacing_add"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:background="@drawable/btn_background_blue"
+            android:text="+"
+            android:gravity="center"
+            android:textColor="#fff"
+            android:textSize="30dp"
+            android:visibility="visible" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        >
+        <com.github.chrisbanes.photoview.PhotoView
+            android:id="@+id/iv_controbitmapnocard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <SurfaceView
+            android:id="@+id/surfaceview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:background="#00000000"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>
