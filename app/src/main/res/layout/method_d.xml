@@ -22,7 +22,7 @@
                 <AutoCompleteTextView
                     android:id="@+id/jzqxa"
                     style="@style/AutoCompleteTextViewStyle"
-                    android:inputType="numberSigned|numberDecimal" />
+                     />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -33,7 +33,7 @@
                 <AutoCompleteTextView
                     android:id="@+id/jzqxb"
                     style="@style/AutoCompleteTextViewStyle"
-                    android:inputType="numberSigned|numberDecimal" />
+                     />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -44,7 +44,7 @@
                 <AutoCompleteTextView
                     android:id="@+id/jzqxc"
                     style="@style/AutoCompleteTextViewStyle"
-                    android:inputType="numberSigned|numberDecimal" />
+                     />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -55,7 +55,7 @@
                 <AutoCompleteTextView
                     android:id="@+id/jzqxd"
                     style="@style/AutoCompleteTextViewStyle"
-                    android:inputType="numberSigned|numberDecimal" />
+                     />
 
             </android.support.design.widget.TextInputLayout>
 

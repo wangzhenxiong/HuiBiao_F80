@@ -19,6 +19,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.apkfuns.logutils.LogUtils;
 import com.jess.arms.http.GlobalHttpHandler;
 
 import okhttp3.Interceptor;
@@ -56,8 +57,8 @@ public class GlobalHttpHandlerImpl implements GlobalHttpHandler {
     @NonNull
     @Override
     public Response onHttpResultResponse(@Nullable String httpResult, @NonNull Interceptor.Chain chain, @NonNull Response response) {
-        //LogUtils.d(httpResult);
-        //LogUtils.d(response);
+        LogUtils.d(httpResult);
+        LogUtils.d(response);
 
         /*if (!TextUtils.isEmpty(httpResult) && RequestInterceptor.isJson(response.body().contentType())) {
             try {

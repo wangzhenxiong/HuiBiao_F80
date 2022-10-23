@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.dy.huibiao_f80.MyAppLocation;
 import com.dy.huibiao_f80.greendao.daos.DaoMaster;
 import com.dy.huibiao_f80.greendao.daos.DaoSession;
+import com.dy.huibiao_f80.greendao.daos.JTJPointDao;
 import com.dy.huibiao_f80.greendao.daos.ProjectFGGDDao;
 import com.dy.huibiao_f80.greendao.daos.ProjectJTJDao;
 import com.dy.huibiao_f80.greendao.daos.SamplingDao;
@@ -47,6 +48,8 @@ public class DBHelper extends DaoMaster.OpenHelper{
         super(context, name, factory);
     }
 
+
+
     @Override
     public void onUpgrade(Database db, int oldVersion, int newVersion) {
         MigrationHelper.migrate(db, new MigrationHelper.ReCreateAllTableListener() {
@@ -64,6 +67,7 @@ public class DBHelper extends DaoMaster.OpenHelper{
         , ProjectJTJDao.class
         , ProjectFGGDDao.class
         , SamplingDao.class
+        , JTJPointDao.class
         );
     }
 
@@ -102,6 +106,15 @@ public class DBHelper extends DaoMaster.OpenHelper{
         DaoMaster daoMaster = new DaoMaster(helper.getWritableDatabase());
         DaoSession daoSession = daoMaster.newSession();
         return daoSession.getSamplingDao();
+    }
+
+    public static JTJPointDao getJTJPointDao() {
+        if (null == helper) {
+            helper= new DBHelper(MyAppLocation.myAppLocation, "f80.db", null);
+        }
+        DaoMaster daoMaster = new DaoMaster(helper.getWritableDatabase());
+        DaoSession daoSession = daoMaster.newSession();
+        return daoSession.getJTJPointDao();
     }
 
 }

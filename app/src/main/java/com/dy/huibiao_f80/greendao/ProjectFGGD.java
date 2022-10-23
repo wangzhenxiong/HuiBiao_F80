@@ -67,7 +67,17 @@ public class ProjectFGGD extends BaseProjectMessage {
 
     @Override
     public String getUnit_input() {
-        return "";
+        return resultUnit;
+    }
+
+    @Override
+    public String getStandNum() {
+        return standardName;
+    }
+
+    @Override
+    public String getmethodLimit() {
+        return detectionLimit;
     }
 
 

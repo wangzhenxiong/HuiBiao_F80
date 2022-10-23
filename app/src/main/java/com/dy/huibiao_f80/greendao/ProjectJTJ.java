@@ -70,6 +70,16 @@ public class ProjectJTJ extends BaseProjectMessage {
         return "";
     }
 
+    @Override
+    public String getStandNum() {
+        return standardName;
+    }
+
+    @Override
+    public String getmethodLimit() {
+        return detectionLimit;
+    }
+
 
     @Id(autoincrement = true)
     private Long id;

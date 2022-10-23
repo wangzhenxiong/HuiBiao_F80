@@ -2,16 +2,21 @@ package com.dy.huibiao_f80.mvp.presenter;
 
 import android.app.Application;
 
-import com.jess.arms.integration.AppManager;
+import com.apkfuns.logutils.LogUtils;
+import com.dy.huibiao_f80.Constants;
+import com.dy.huibiao_f80.api.back.CheckExaminer_Back;
+import com.dy.huibiao_f80.mvp.contract.ExamContract;
 import com.jess.arms.di.scope.ActivityScope;
-import com.jess.arms.mvp.BasePresenter;
 import com.jess.arms.http.imageloader.ImageLoader;
-
-import me.jessyan.rxerrorhandler.core.RxErrorHandler;
+import com.jess.arms.integration.AppManager;
+import com.jess.arms.mvp.BasePresenter;
+import com.jess.arms.utils.RxLifecycleUtils;
 
 import javax.inject.Inject;
 
-import com.dy.huibiao_f80.mvp.contract.ExamContract;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import me.jessyan.rxerrorhandler.core.RxErrorHandler;
+import me.jessyan.rxerrorhandler.handler.ErrorHandleSubscriber;
 
 @ActivityScope
 public class ExamPresenter extends BasePresenter<ExamContract.Model, ExamContract.View> {
@@ -36,5 +41,23 @@ public class ExamPresenter extends BasePresenter<ExamContract.Model, ExamContrac
         this.mAppManager = null;
         this.mImageLoader = null;
         this.mApplication = null;
+    }
+
+    public void checkExaminer(int id, String name, String number, int personTestMethod) {
+        mModel.checkExaminer(Constants.URL,id,name,number,personTestMethod)
+                .doOnSubscribe(disposable -> {
+                    mRootView.showLoading();
+                }).subscribeOn(AndroidSchedulers.mainThread())
+                .doFinally(() -> {
+                    mRootView.hideLoading();
+                }).compose(RxLifecycleUtils.bindToLifecycle(mRootView))
+                .subscribe(new ErrorHandleSubscriber<CheckExaminer_Back>(mErrorHandler) {
+                    @Override
+                    public void onNext(CheckExaminer_Back back) {
+                        LogUtils.d(back);
+
+                    }
+                });
+
     }
 }

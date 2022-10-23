@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="10dp"
+    android:gravity="center"
+    android:background="@drawable/beijng_radius"
+    android:orientation="vertical">
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="40dp"
+        android:textColorHint="#626161">
+
+        <AutoCompleteTextView
+            android:id="@+id/samplename"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+           
+            android:hint="样品名称"
+            android:maxLines="1"
+            android:singleLine="true" />
+
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:textColorHint="#626161">
+
+        <AutoCompleteTextView
+            android:id="@+id/samplenumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+           
+            android:hint="采样单编号"
+            android:maxLines="1"
+            android:singleLine="true" />
+
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="20dp"
+        android:textColorHint="#626161">
+
+        <AutoCompleteTextView
+            android:id="@+id/unitsunderinspection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+           
+            android:hint="被检单位"
+            android:maxLines="1"
+            android:singleLine="true" />
+
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="20dp"
+        android:textColorHint="#626161">
+
+        <AutoCompleteTextView
+            android:id="@+id/testunit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+           
+            android:hint="检测单位"
+            android:maxLines="1"
+            android:singleLine="true" />
+
+
+    </android.support.design.widget.TextInputLayout>
+
+    <Button
+        android:id="@+id/btn_save"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/btn_background_blue"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="保存"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        android:layout_marginBottom="40dp"/>
+
+
+</LinearLayout>

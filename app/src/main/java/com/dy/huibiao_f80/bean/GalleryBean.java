@@ -7,9 +7,16 @@ import android.os.Parcelable;
 import com.apkfuns.logutils.LogUtils;
 import com.dy.huibiao_f80.BuildConfig;
 import com.dy.huibiao_f80.Constants;
+import com.dy.huibiao_f80.MyAppLocation;
+import com.dy.huibiao_f80.R;
+import com.dy.huibiao_f80.app.utils.FileUtils;
 import com.dy.huibiao_f80.app.utils.PictureToolUtils;
 import com.dy.huibiao_f80.bean.base.BaseProjectMessage;
+import com.dy.huibiao_f80.greendao.DBHelper;
+import com.dy.huibiao_f80.greendao.JTJPoint;
+import com.dy.huibiao_f80.greendao.ProjectJTJ;
 import com.dy.huibiao_f80.greendao.TestRecord;
+import com.dy.huibiao_f80.mvp.ui.widget.JTJDataModel_P;
 import com.dy.huibiao_f80.usbhelps.Status;
 import com.dy.huibiao_f80.usbhelps.UsbReadWriteHelper;
 import com.dy.huibiao_f80.usbhelps.listeners.OnStatuChangeListener;
@@ -45,12 +52,12 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
  * <p>
  * Created by wangzhenxiong on 2019/3/6.
  */
-public abstract class GalleryBean implements Parcelable,UsbReadWriteHelper.onUsbReciver {
+public abstract class GalleryBean implements Parcelable, UsbReadWriteHelper.onUsbReciver {
     private int galleryNum;
     private int JTJ_MAC = -2;//胶体金模块编号
     private int MYYG_MAC = -2;//免疫荧光模块编号
     private int state;//通道状态  0等待测试 1正在测试 2测试结束 3测试失败
-    private int dowhat=1; //样品1  对照2
+    private int dowhat = 1; //样品1  对照2
     private boolean clearn = true;//清零标志位 需要清零设为true，在解析数据时会重新设置作为对照的ad值 ，默认为true，会设置一次
     private boolean projectChange = false;//清零标志位 需要清零设为true，在解析数据时会重新设置作为对照的ad值 ，默认为true，会设置一次
 
@@ -102,13 +109,14 @@ public abstract class GalleryBean implements Parcelable,UsbReadWriteHelper.onUsb
     public void setmProjectMessage(BaseProjectMessage mProjectMessage) {
         this.mProjectMessage = mProjectMessage;
         ((TestRecord) this).setTest_project(mProjectMessage.getPjName());
-        ((TestRecord) this).setTest_method(mProjectMessage.getMethod_sp()+"");
+        ((TestRecord) this).setTest_method(mProjectMessage.getMethod_sp() + "");
+        ((TestRecord) this).setStand_num(mProjectMessage.getStandNum() + "");
+        ((TestRecord) this).setCov_unit(mProjectMessage.getUnit_input() + "");
+        ((TestRecord) this).setReservedfield1(mProjectMessage.getmethodLimit() + "");
 
     }
 
     private BaseProjectMessage mProjectMessage;
-
-
 
 
     public UsbDevice getUsbDevice() {
@@ -168,7 +176,6 @@ public abstract class GalleryBean implements Parcelable,UsbReadWriteHelper.onUsb
     public void setRunnableScheduledFuture(RunnableScheduledFuture<?> runnableScheduledFuture) {
         mRunnableScheduledFuture = runnableScheduledFuture;
     }
-
 
 
     public double[] getZJSResultData() {
@@ -299,8 +306,6 @@ public abstract class GalleryBean implements Parcelable,UsbReadWriteHelper.onUsb
     }
 
 
-
-
     /**
      * USB状态改变监听
      */
@@ -314,19 +319,7 @@ public abstract class GalleryBean implements Parcelable,UsbReadWriteHelper.onUsb
     };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-    public  void removedata(){
+    public void removedata() {
         ((TestRecord) this).setSamplename(null);
         ((TestRecord) this).setSamplenum(null);
         ((TestRecord) this).setDilutionratio(0);
@@ -352,8 +345,9 @@ public abstract class GalleryBean implements Parcelable,UsbReadWriteHelper.onUsb
         /**
          * @param userfuldata 接收成功 针对扫描模块
          * @param data
+         * @param galleryNum
          */
-        void onReciverSuccess(List<Float> userfuldata, double[] data);
+        void onReciverSuccess(List<Float> userfuldata, double[] data, int galleryNum);
 
 
         void onReciverSuccess(List<List<Float>> userfuldata, List<double[]> data);
@@ -361,7 +355,7 @@ public abstract class GalleryBean implements Parcelable,UsbReadWriteHelper.onUsb
         /**
          * @param bitmap 接收成功，针对摄像头模块
          */
-        void onReciverSuccess(Bitmap bitmap,int gallery);
+        void onReciverSuccess(Bitmap bitmap, int gallery);
 
         /**
          * 接收失败
@@ -380,7 +374,6 @@ public abstract class GalleryBean implements Parcelable,UsbReadWriteHelper.onUsb
 
 
     }
-
 
 
     protected WeakReference<onJTJResultRecive> mReciveWeakReference;
@@ -425,10 +418,6 @@ public abstract class GalleryBean implements Parcelable,UsbReadWriteHelper.onUsb
     private int b_start;
 
     public boolean checkState;
-
-
-
-
 
 
     public double getAbsorbance1_start() {
@@ -909,10 +898,6 @@ public abstract class GalleryBean implements Parcelable,UsbReadWriteHelper.onUsb
     }
 
 
-
-
-
-
     /**
      * 出卡
      */
@@ -1042,12 +1027,12 @@ public abstract class GalleryBean implements Parcelable,UsbReadWriteHelper.onUsb
             if (BuildConfig.DEBUG) {
                 PictureToolUtils.isHaveCard(mBitmapList.get(0));
                 if (recive != null) {
-                    recive.onReciverSuccess(mBitmapList.get(0),galleryNum);
+                    recive.onReciverSuccess(mBitmapList.get(0), galleryNum);
                 }
                 //mJTJResultRecive.onReciverSuccess(PictureToolUtils.drawRectFourcorners(mBitmapList.get(0)));
             } else {
                 if (recive != null) {
-                    recive.onReciverSuccess(mBitmapList.get(0),galleryNum);
+                    recive.onReciverSuccess(mBitmapList.get(0), galleryNum);
                 }
             }
 
@@ -1068,7 +1053,7 @@ public abstract class GalleryBean implements Parcelable,UsbReadWriteHelper.onUsb
             case 0x14: //卡状态响应
                 LogUtils.d("卡状态响应" + bytes);
                 if (bytes.get(4) == 0x01) { //有卡状态
-                   // cardScanning();
+                    // cardScanning();
 
                 } else if (bytes.get(4) == 0x02) { //无卡状态
                     if (state == 1) { //倒计时状态
@@ -1095,7 +1080,7 @@ public abstract class GalleryBean implements Parcelable,UsbReadWriteHelper.onUsb
 
                 LogUtils.d("扫描检测数据响应");
                 if (1 == mJTJModel) {
-                   // checkData_S(bytes);
+                    // checkData_S(bytes);
                 }
                 break;
             case 0x21: //获取摄像头参数 左右 上下
@@ -1197,5 +1182,168 @@ public abstract class GalleryBean implements Parcelable,UsbReadWriteHelper.onUsb
                 ", checkState=" + checkState +
                 ", mBitmapList=" + mBitmapList +
                 '}';
+    }
+
+    private Bitmap bitmap;
+
+    public Bitmap getBitmap() {
+        return bitmap;
+    }
+
+    public void setBitmap(Bitmap bitmap) {
+        this.bitmap = bitmap;
+    }
+
+    public void checkData_P() {
+        LogUtils.d("checkData_P");
+        Bitmap bitmap1 = mBitmapList.get(1);
+
+        List<List<Float>> lists = PictureToolUtils.bitmap2RGB_list(bitmap1);
+
+
+        List<Float> userfuldata = lists.get(1);
+        //设置可用数据到bean
+        setUserfullData(userfuldata);
+        //设置检测状态
+        setState(2);
+        //计算检测结果 耗时操作，需要在子线程运行
+
+        double[] data = getData_P(userfuldata);
+        LogUtils.d(data);
+        setJTJResultData(data);
+        //判断和保存检测结果
+        judgeAndSaveZJDSData(data, bitmap);
+        //将数据回调给 view做更新
+        if (mReciveWeakReference != null) {
+            onJTJResultRecive recive = mReciveWeakReference.get();
+            if (recive != null) {
+                recive.onReciverSuccess(userfuldata, data,galleryNum);
+                recive.onReciverSuccess(bitmap1,galleryNum);
+            }
+        }
+    }
+
+    private double[] getData_P(List<Float> bytes) {
+
+        return new JTJDataModel_P(bytes).getData_S();
+
+    }
+
+    protected void judgeAndSaveZJDSData(double[] data, Bitmap bitmap) {
+        // LogUtils.d(data);
+        TestRecord detection_record_fggd_nc = (TestRecord) this;
+        //JTJTestItem message = (JTJTestItem) mProjectMessage;
+        //根据胶体金检测项目的相关参数 判定是否合格
+        int method = mProjectMessage.getMethod_sp();
+        //根据通道号来取不同的参数（其实两个参数都是一样的，防止通道偏差造成结果不准）
+        int i = JTJ_MAC % 2;
+        double mCValue = 0;
+        double mTValueA = 0;
+        double mTValueB = 0;
+        double mCTValueA = 0;
+        double mCTValueB = 0;
+        ProjectJTJ projectJTJ = (ProjectJTJ) this.mProjectMessage;
+        mCValue=projectJTJ.getC();
+        mTValueA=projectJTJ.gettA();
+        mTValueB=projectJTJ.getTB();
+        mCTValueA=projectJTJ.getC_tA();
+        mCTValueB=projectJTJ.getC_tB();
+        LogUtils.d(method);
+        //检测结果 结论
+        if (method == 0) {//消线法
+
+            if (data[1] <= mCValue) { //无c线
+                //无效卡
+                if (data[3] <= mTValueA) {  //无c无t线
+                    detection_record_fggd_nc.setTestresult("无效");
+                    detection_record_fggd_nc.setDecisionoutcome("无效");
+                    backgroundResous = 1;
+                } else { //无c 有t线
+                    detection_record_fggd_nc.setTestresult("无效");
+                    detection_record_fggd_nc.setDecisionoutcome("无效");
+                    backgroundResous = 2;
+                }
+            } else {//有c线/  判断t线
+
+                if (data[3] <= mTValueA) {//有c无t线 /阳性
+                    detection_record_fggd_nc.setTestresult("阳性");
+                    detection_record_fggd_nc.setDecisionoutcome("不合格");
+                    backgroundResous = 3;
+                } else if (data[3] >= mTValueB) {//有c 有t线 阴性y
+                    detection_record_fggd_nc.setTestresult("阴性");
+                    detection_record_fggd_nc.setDecisionoutcome("合格");
+                    backgroundResous = 4;
+                } else {
+                    detection_record_fggd_nc.setTestresult("可疑");
+                    detection_record_fggd_nc.setDecisionoutcome("可疑");
+                    backgroundResous = 7;
+                }
+            }
+
+        } else if (method == 1) {//比色法
+
+            if (data[1] <= mCValue) { //无c线
+                //无效卡
+                if (data[3] <= mTValueA) {  //无c无t线
+                    detection_record_fggd_nc.setTestresult("无效");
+                    detection_record_fggd_nc.setDecisionoutcome("无效");
+                    backgroundResous = 1;
+                } else { //无c 有t线
+                    detection_record_fggd_nc.setTestresult("无效");
+                    detection_record_fggd_nc.setDecisionoutcome("无效");
+                    backgroundResous = 2;
+                }
+
+            } else {
+                if (data[3] / data[1] <= mCTValueA) {  //阳性
+                    detection_record_fggd_nc.setTestresult("阳性");
+                    detection_record_fggd_nc.setDecisionoutcome("不合格");
+                    backgroundResous = 5;
+                } else if (data[3] / data[1] >= mCTValueB) {  //阴性
+                    detection_record_fggd_nc.setTestresult("阴性");
+                    detection_record_fggd_nc.setDecisionoutcome("合格");
+                    backgroundResous = 6;
+                } else {
+                    detection_record_fggd_nc.setTestresult("可疑");
+                    detection_record_fggd_nc.setDecisionoutcome("可疑");
+                    backgroundResous = 8;
+                }
+            }
+
+
+        }
+
+        //检测完成时间
+        detection_record_fggd_nc.setTestingtime(System.currentTimeMillis());
+        //检测地点
+        detection_record_fggd_nc.setTestsite(Constants.ADDR_WF);
+        detection_record_fggd_nc.setLatitude(Constants.LATITUDE);
+        detection_record_fggd_nc.setLongitude(Constants.LONTITUDE);
+        //当前平台
+        detection_record_fggd_nc.setPlatform_tag(Constants.PLATFORM_TAG + "");
+        //对照值
+        //检测人员   这里填的是本地登录的账号名称
+        //detection_record_fggd_nc.setInspector(Constants.NOWUSER.getUsername());
+        //设置检测模块
+        detection_record_fggd_nc.setTest_Moudle(ArmsUtils.getString(MyAppLocation.myAppLocation, R.string.JTJ_TestMoudle_P));
+        // 保存至数据库
+        detection_record_fggd_nc.setId(null);//自增ID
+        //设置状态为检测完成 2
+        detection_record_fggd_nc.setState(2);
+        //detection_record_fggd_nc.setDowhat(0);
+        DBHelper.getTestRecordDao().insert(detection_record_fggd_nc);
+        StringBuilder builder = new StringBuilder(); //使用线程安全的StringBuffer
+        for (int i1 = 0; i1 < mUserfullData.size(); i1++) {
+            builder.append(mUserfullData.get(i1) + ",");
+        }
+        JTJPoint entity = new JTJPoint();
+        entity.setId(null);
+        entity.setPointData(builder.toString());
+        entity.setUuid(detection_record_fggd_nc.getSysCode());
+        long insert = DBHelper.getJTJPointDao().insert(entity);
+        // FileUtils.saveBitmaplevel1(mBitmapList.get(0), detection_record_fggd_nc.getSysCode());
+        FileUtils.saveBitmaplevel2(bitmap, detection_record_fggd_nc.getSysCode());
+        //printAndUpload(detection_record_fggd_nc, insert);
+
     }
 }

@@ -67,9 +67,9 @@ android {
             buildConfigField "boolean", "USE_CANARY", "false"
             buildConfigField "boolean", "INITCRASH", "true"
             //buildConfigField "boolean", "INITCRASH", "false"
-            minifyEnabled true   //是否进行混淆
-            shrinkResources true    //去除无用资源
-            zipAlignEnabled true    //Zipalign优化
+            minifyEnabled false   //是否进行混淆
+            //shrinkResources true    //去除无用资源
+            //zipAlignEnabled true    //Zipalign优化
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             multiDexKeepProguard file('multidex-config.pro')
             signingConfig signingConfigs.release
@@ -90,8 +90,8 @@ android {
             //versionName "1.0.0"
             dimension "moudle"
             applicationId "com.wangzx.dy.huibiao_f80"
-            buildConfigField "String", "DEVICE_MODEL_NAME", "\"DY7500S\""
-            buildConfigField "String", "DEVICE_UPDATA_NAME", "\"DY7500S\""
+            buildConfigField "String", "DEVICE_MODEL_NAME", "\"F80\""
+            buildConfigField "String", "DEVICE_UPDATA_NAME", "\"F80\""
             buildConfigField "String", "VERSIONDESCRIPTION", "\"标准版\""
             //分光模块 分为6通道 和8 通道 不同通道ad值得算法不一样
             buildConfigField "int", "FGGD_TYPE", "8"
@@ -137,7 +137,7 @@ android {
                 if (variant.buildType.name.equals("release")) {
                     def value = getBuildConfigFieldValue(variant,"DEVICE_UPDATA_NAME")
                     //在这里修改apk文件名
-                    outputFileName = "${variant.name}_${variant.versionName}_${variant.versionCode}_${value}_${new Date().format("yyyyMMddHHmmss")}.apk"
+                    outputFileName = "${variant.name}_${variant.versionName}_${variant.versionCode}_${new Date().format("yyyyMMddHHmmss")}.apk"
                 }
             }
     }

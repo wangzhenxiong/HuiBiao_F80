@@ -2,8 +2,9 @@ package com.dy.huibiao_f80.mvp.contract;
 
 import android.app.Activity;
 
-import com.jess.arms.mvp.IView;
+import com.dy.huibiao_f80.api.back.ExistExam_Back;
 import com.jess.arms.mvp.IModel;
+import com.jess.arms.mvp.IView;
 
 import io.reactivex.Observable;
 
@@ -20,5 +21,7 @@ public interface HomeContract {
     interface Model extends IModel {
 
         Observable<String> getTime();
+
+        Observable<ExistExam_Back> existExam(String url, String devicenum);
     }
 }

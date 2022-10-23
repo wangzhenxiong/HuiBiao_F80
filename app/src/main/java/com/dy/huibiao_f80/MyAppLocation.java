@@ -55,10 +55,8 @@ public class MyAppLocation extends BaseApplication implements TextToSpeech.OnIni
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mSerialDataService = ((SerialDataService.MyBinder) service).getService();
-            if (BuildConfig.DEBUG){
                 mSerialDataService.startFGGDSendthread();
                 mSerialDataService.startGSNCSendthread();
-            }
 
         }
 

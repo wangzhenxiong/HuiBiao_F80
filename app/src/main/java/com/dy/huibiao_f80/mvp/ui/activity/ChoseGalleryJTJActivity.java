@@ -8,6 +8,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -17,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.apkfuns.logutils.LogUtils;
 import com.dy.huibiao_f80.MyAppLocation;
 import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.bean.GalleryBean;
@@ -90,6 +93,7 @@ public class ChoseGalleryJTJActivity extends BaseActivity<ChoseGalleryJTJPresent
     private int nowCheckId = R.id.background1;
     private int nowCheckindex = 1;
     private TestRecord nowCheckGallery;
+    private String project;
 
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
@@ -108,6 +112,8 @@ public class ChoseGalleryJTJActivity extends BaseActivity<ChoseGalleryJTJPresent
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
+        Intent intent = getIntent();
+        project = intent.getStringExtra("project");
         mPresenter.initJTJUSB();
         mCheckall.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -118,6 +124,43 @@ public class ChoseGalleryJTJActivity extends BaseActivity<ChoseGalleryJTJPresent
                 mCheckbox4.setChecked(isChecked);
             }
         });
+        mSampleserial.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                LogUtils.d(s);
+                String sampleserial = s.toString();
+                nowCheckGallery.setSamplenum(sampleserial);
+            }
+        });
+        mSamplename.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                LogUtils.d(s);
+                String samplename = s.toString();
+                nowCheckGallery.setSamplename(samplename);
+            }
+        });
+        //先将所有通道设为未选择
+        List<GalleryBean> mJTJGalleryBeanList = MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList;
+        for (int i = 0; i < mJTJGalleryBeanList.size(); i++) {
+            mJTJGalleryBeanList.get(i).setCheckd(false);
+        }
     }
 
     @Override
@@ -233,13 +276,13 @@ public class ChoseGalleryJTJActivity extends BaseActivity<ChoseGalleryJTJPresent
                 refishMessage(1, view.getId());
                 break;
             case R.id.background2:
-                refishMessage(1, view.getId());
+                refishMessage(2, view.getId());
                 break;
             case R.id.background3:
-                refishMessage(1, view.getId());
+                refishMessage(3, view.getId());
                 break;
             case R.id.background4:
-                refishMessage(1, view.getId());
+                refishMessage(4, view.getId());
                 break;
         }
     }
@@ -279,8 +322,9 @@ public class ChoseGalleryJTJActivity extends BaseActivity<ChoseGalleryJTJPresent
             }
         }
          if (ischeck){
-             Intent content1 = new Intent(getActivity(), TestResultJTJActivity.class);
+             Intent content1 = new Intent(getActivity(), TestSettingJTJActivity.class);
              content1.putExtra("data", nowCheckindex);
+             content1.putExtra("project", project);
              ArmsUtils.startActivity(getActivity(), content1);
          }else {
              ArmsUtils.snackbarText("请选择通道");
@@ -288,7 +332,7 @@ public class ChoseGalleryJTJActivity extends BaseActivity<ChoseGalleryJTJPresent
     }
 
     private void clean() {
-        for (int i = 0; i < MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.size(); i++) {
+        for (int i = 0; i < MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.size(); i++) {
             MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(i).removedata();
         }
         refishMessage(nowCheckindex, nowCheckId);
@@ -305,6 +349,6 @@ public class ChoseGalleryJTJActivity extends BaseActivity<ChoseGalleryJTJPresent
         nowCheckGallery = (TestRecord) MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(i - 1);
         mSampleserial.setText(nowCheckGallery.getSamplenum());
         mSamplename.setText(nowCheckGallery.getSamplename());
-        mDr.setText(nowCheckGallery.getDilutionratio() + "");
+        //mDr.setText(nowCheckGallery.getDilutionratio() + "");
     }
 }

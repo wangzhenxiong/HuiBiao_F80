@@ -17,6 +17,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.apkfuns.logutils.LogUtils;
+import com.dy.huibiao_f80.Constants;
 import com.dy.huibiao_f80.MyAppLocation;
 import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.bean.GalleryBean;
@@ -93,13 +94,27 @@ public class TestFGGDActivity extends BaseActivity<TestFGGDPresenter> implements
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
         projectname = getIntent().getStringExtra("projectname");
-
+        mTitle.setText("分光光度检测——"+projectname);
         getdata();
         ArmsUtils.configRecyclerView(mRecylerview, new GridLayoutManager(this, 1));
         fggdAdapter = new FGGDAdapter(R.layout.layout_fggftest_item, dataList);
         fggdAdapter.setEmptyView(R.layout.emptyview, (ViewGroup) mRecylerview.getParent());
         mRecylerview.setAdapter(fggdAdapter);
         initCurve();
+
+
+    }
+
+    private void initControValue(int method_sp) {
+        if (method_sp==0){
+            mControvalue.setText("当前对照:"+ Constants.getControValue0());
+            mControvalue.setVisibility(View.GONE);
+        }else if (method_sp==1){
+            mControvalue.setText("当前对照:"+ Constants.getControValue1());
+            mControvalue.setVisibility(View.GONE);
+        }else {
+            mControvalue.setVisibility(View.GONE);
+        }
     }
 
     private void initCurve() {
@@ -122,6 +137,7 @@ public class TestFGGDActivity extends BaseActivity<TestFGGDPresenter> implements
                 for (int i = 0; i < dataList.size(); i++) {
                     dataList.get(i).setmProjectMessage(baseProjectMessage);
                 }
+                initControValue(baseProjectMessage.getMethod_sp());
             }
 
             @Override

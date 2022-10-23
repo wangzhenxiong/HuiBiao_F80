@@ -291,8 +291,8 @@ public class UsbReadWriteHelper {
     }
 
 
-    public static int vertical;
-    public static int horizontal;
+    public  int vertical;
+    public  int horizontal;
 
     /**
      * @param delay   多少秒后开始读取数据
@@ -362,7 +362,7 @@ public class UsbReadWriteHelper {
                             temp[i] = bytes.get(i + 8);
                         }
                         if (null != mReciver && READFLAG) {
-                            LogUtils.d("usb reciver 图像");
+                           // LogUtils.d("usb reciver 图像");
                             onUsbReciver reciver = mReciver.get();
                             if (reciver!=null){
                                 reciver.reciver(temp, WIDTH, HEIGHT);

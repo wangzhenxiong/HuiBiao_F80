@@ -199,6 +199,17 @@ public class EdtorProjectActivity extends BaseActivity<EdtorProjectPresenter> im
         mFilterEdit.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+               LogUtils.d("onTextChanged"+s.toString());
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                LogUtils.d("beforeTextChanged"+s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                LogUtils.d("afterTextChanged"+s.toString());
                 //当输入框里面的值为空，更新为原来的列表，否则为过滤数据列表
                 if (s.toString().isEmpty()) {
                     if (checkmoudle == 1) {
@@ -209,15 +220,6 @@ public class EdtorProjectActivity extends BaseActivity<EdtorProjectPresenter> im
                 } else {
                     filterData(s.toString());
                 }
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
             }
         });
 
@@ -235,10 +237,14 @@ public class EdtorProjectActivity extends BaseActivity<EdtorProjectPresenter> im
         List<BaseProjectMessage> list = new ArrayList<>();
         if (null != chosedProject) {
             if (checkmoudle == 1) {
-                list.addAll(projectFGGDDao.queryBuilder().where(ProjectFGGDDao.Properties.ProjectName.eq(chosedProject.getPjName()))
+                list.addAll(projectFGGDDao.queryBuilder()
+                        .where(ProjectFGGDDao.Properties.ProjectName.eq(chosedProject.getPjName()))
+                        //.where(ProjectFGGDDao.Properties.Isdefault.eq(true))
                         .build().list());
             } else if (checkmoudle == 2) {
-                list.addAll(projectJTJDao.queryBuilder().where(ProjectJTJDao.Properties.ProjectName.eq(chosedProject.getPjName()))
+                list.addAll(projectJTJDao.queryBuilder()
+                        .where(ProjectJTJDao.Properties.ProjectName.eq(chosedProject.getPjName()))
+                        //.where(ProjectJTJDao.Properties.Isdefault.eq(true))
                         .list());
             }
         }
@@ -398,8 +404,15 @@ public class EdtorProjectActivity extends BaseActivity<EdtorProjectPresenter> im
         AlertDialog alertDialog = new AlertDialog.Builder(this).create();
         alertDialog.setTitle("请输入新建曲线的名称");
         EditText view = new EditText(EdtorProjectActivity.this);
-        long count = projectFGGDDao.queryBuilder().where(ProjectFGGDDao.Properties.ProjectName.eq(pjName)).count();
-        view.setText("曲线" + (count + 1));
+        long count;
+        if (checkmoudle == 1) {
+            count = projectFGGDDao.queryBuilder().where(ProjectFGGDDao.Properties.ProjectName.eq(pjName)).count();
+            view.setText("曲线" + (count + 1));
+        } else {
+            count = projectJTJDao.queryBuilder().where(ProjectJTJDao.Properties.ProjectName.eq(pjName)).count();
+            view.setText("曲线" + (count + 1));
+        }
+
 
         alertDialog.setView(view);
         alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
@@ -463,20 +476,19 @@ public class EdtorProjectActivity extends BaseActivity<EdtorProjectPresenter> im
                     ProjectFGGD chosedProject = (ProjectFGGD) EdtorProjectActivity.this.chosedProject;
                     List<ProjectFGGD> list = DBHelper.getProjectFGGDDao().queryBuilder().where(ProjectFGGDDao.Properties.ProjectName.eq(chosedProject.getPjName())).list();
                     DBHelper.getProjectFGGDDao().deleteInTx(list);
-                    newProjectFGGDFragment=NewProjectFGGDFragment.newInstance();
                     mPresenter.replaceFragment(getSupportFragmentManager(), R.id.frame, newProjectFGGDFragment, mSparseTags.get(R.id.fggd));
                     newProjectFGGDFragment.setData(null);
                 } else if (chosedProject instanceof ProjectJTJ) {
                     ProjectJTJ chosedProject = (ProjectJTJ) EdtorProjectActivity.this.chosedProject;
                     List<ProjectJTJ> list = DBHelper.getProjectJTJDao().queryBuilder().where(ProjectJTJDao.Properties.ProjectName.eq(chosedProject.getPjName())).list();
                     DBHelper.getProjectJTJDao().deleteInTx(list);
-                    newProjectJTJFragment=NewProjectJTJFragment.newInstance();
                     mPresenter.replaceFragment(getSupportFragmentManager(), R.id.frame, newProjectJTJFragment, mSparseTags.get(R.id.jtj));
                     newProjectJTJFragment.setData(null);
                 }
                 mDateList.remove(chosedProject);
                 chosedProject = null;
                 mAdapter.notifyDataSetChanged();
+                initCurve(null);
             }
         });
         alertDialog.show();
@@ -570,7 +582,7 @@ public class EdtorProjectActivity extends BaseActivity<EdtorProjectPresenter> im
 
     @Override
     public void onEventJTJ(int what, Object o) {
-     initCurve(null);
+        initCurve(null);
     }
 
     @Override

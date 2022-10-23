@@ -1,8 +1,11 @@
 package com.dy.huibiao_f80.greendao;
 
 import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Transient;
+
+import java.text.SimpleDateFormat;
 
 /**
  * 　 ┏┓　  ┏┓+ +
@@ -39,15 +42,20 @@ public class Sampling {
     private String SamplingName;
     private String unitDetected;
     private String testingUnit;
-    private String creationTime;
-    private String testingTime;
+    private Long creationTime;
+    private Long testingTime;
     private String testResult;
+    @Transient
     public boolean check;
 
-    @Generated(hash = 854045647)
-    public Sampling(Long id, String SamplingNumber, String SamplingName,
-            String unitDetected, String testingUnit, String creationTime,
-            String testingTime, String testResult, boolean check) {
+
+
+
+
+
+    @Generated(hash = 1481809501)
+    public Sampling(Long id, String SamplingNumber, String SamplingName, String unitDetected,
+            String testingUnit, Long creationTime, Long testingTime, String testResult) {
         this.id = id;
         this.SamplingNumber = SamplingNumber;
         this.SamplingName = SamplingName;
@@ -56,12 +64,37 @@ public class Sampling {
         this.creationTime = creationTime;
         this.testingTime = testingTime;
         this.testResult = testResult;
-        this.check = check;
     }
 
     @Generated(hash = 1062560110)
     public Sampling() {
     }
+
+
+
+
+
+
+    public String getTestingTimeyymmddhhssmm() {
+        String format = null;
+        if (testingTime == null) {
+            format = "";
+        } else {
+            format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(testingTime);
+        }
+        return format;
+    }
+
+    public String getCreationTimeyymmddhhssmm() {
+        String format = null;
+        if (creationTime == null) {
+            format = "";
+        } else {
+            format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(creationTime);
+        }
+        return format;
+    }
+
 
     public Long getId() {
         return id;
@@ -103,20 +136,20 @@ public class Sampling {
         this.testingUnit = testingUnit == null ? "" : testingUnit;
     }
 
-    public String getCreationTime() {
-        return creationTime == null ? "" : creationTime;
+    public Long getCreationTime() {
+        return creationTime;
     }
 
-    public void setCreationTime(String creationTime) {
-        this.creationTime = creationTime == null ? "" : creationTime;
+    public void setCreationTime(Long creationTime) {
+        this.creationTime = creationTime;
     }
 
-    public String getTestingTime() {
-        return testingTime == null ? "" : testingTime;
+    public Long getTestingTime() {
+        return testingTime;
     }
 
-    public void setTestingTime(String testingTime) {
-        this.testingTime = testingTime == null ? "" : testingTime;
+    public void setTestingTime(Long testingTime) {
+        this.testingTime = testingTime;
     }
 
     public String getTestResult() {

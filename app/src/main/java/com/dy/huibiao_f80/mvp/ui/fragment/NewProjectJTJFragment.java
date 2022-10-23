@@ -16,6 +16,7 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
+import com.apkfuns.logutils.LogUtils;
 import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.di.component.DaggerNewProjectJTJComponent;
 import com.dy.huibiao_f80.greendao.DBHelper;
@@ -67,6 +68,7 @@ public class NewProjectJTJFragment extends BaseFragment<NewProjectJTJPresenter> 
     Button mSaveCurve;
     @BindView(R.id.delete_curve)
     Button mDeleteCurve;
+
     private ProjectJTJ projectJTJ;
 
     public static NewProjectJTJFragment newInstance() {
@@ -95,10 +97,8 @@ public class NewProjectJTJFragment extends BaseFragment<NewProjectJTJPresenter> 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
-                    mMethodXiaoxian.setVisibility(View.VISIBLE);
                     mMethodBise.setVisibility(View.GONE);
                 } else if (position == 1) {
-                    mMethodXiaoxian.setVisibility(View.GONE);
                     mMethodBise.setVisibility(View.VISIBLE);
                 }
             }
@@ -112,17 +112,21 @@ public class NewProjectJTJFragment extends BaseFragment<NewProjectJTJPresenter> 
 
     @Override
     public void setData(@Nullable Object data) {
-        if (null==data){
-            projectJTJ=null;
-            return;
+        LogUtils.d(data);
+        if (null == data) {
+            LogUtils.d("null");
+            projectJTJ = null;
+            initMessage(new ProjectJTJ());
+        } else {
+            projectJTJ = ((ProjectJTJ) data);
+            initMessage(projectJTJ);
         }
-        projectJTJ = ((ProjectJTJ) data);
-        initMessage();
 
 
     }
 
-    private void initMessage() {
+    private void initMessage(ProjectJTJ projectJTJ) {
+        LogUtils.d(mTestprojectname);
         mTestprojectname.setText(projectJTJ.getProjectName());
         mCureName.setText(projectJTJ.getCurveName());
         mDfCurve.setChecked(projectJTJ.getIsdefault());
@@ -174,6 +178,7 @@ public class NewProjectJTJFragment extends BaseFragment<NewProjectJTJPresenter> 
 
     @Override
     public void onDestroyView() {
+        LogUtils.d("onDestroyView");
         super.onDestroyView();
         unbinder.unbind();
     }
@@ -212,29 +217,28 @@ public class NewProjectJTJFragment extends BaseFragment<NewProjectJTJPresenter> 
                 projectJTJ.setC(Double.parseDouble(c));
                 int selectedItemPosition = mChosemethod.getSelectedItemPosition();
                 projectJTJ.setTestMethod(selectedItemPosition);
-                if (selectedItemPosition == 0) {
-                    String ta = mTA.getText().toString();
-                    if (ta.isEmpty()) {
-                        ArmsUtils.snackbarText("请输入T线出线值A");
-                        return;
-                    }
-                    projectJTJ.settA(Double.parseDouble(ta));
-                    String tb = mTB.getText().toString();
-                    if (tb.isEmpty()) {
-                        ArmsUtils.snackbarText("请输入T线出线值B");
-                        return;
-                    }
-                    projectJTJ.setTB(Double.parseDouble(tb));
-                } else {
+                String ta = mTA.getText().toString();
+                if (ta.isEmpty()) {
+                    ArmsUtils.snackbarText("请输入T线出线值A");
+                    return;
+                }
+                projectJTJ.settA(Double.parseDouble(ta));
+                String tb = mTB.getText().toString();
+                if (tb.isEmpty()) {
+                    ArmsUtils.snackbarText("请输入T线出线值B");
+                    return;
+                }
+                projectJTJ.setTB(Double.parseDouble(tb));
+                if (selectedItemPosition == 1) {
                     String tca = mTcA.getText().toString();
                     if (tca.isEmpty()) {
-                        ArmsUtils.snackbarText("请输入T/C线出线值A");
+                        ArmsUtils.snackbarText("请输入T/C值A");
                         return;
                     }
                     projectJTJ.setC_tA(Double.parseDouble(tca));
                     String tcb = mTcB.getText().toString();
                     if (tcb.isEmpty()) {
-                        ArmsUtils.snackbarText("请输入T/C线出线值B");
+                        ArmsUtils.snackbarText("请输入T/C值B");
                         return;
                     }
                     projectJTJ.setC_tB(Double.parseDouble(tcb));
@@ -242,22 +246,27 @@ public class NewProjectJTJFragment extends BaseFragment<NewProjectJTJPresenter> 
                 projectJTJ.setFinishState(true);
                 if (mDfCurve.isChecked()) {
                     projectJTJ.setIsdefault(true);
-                    List<ProjectJTJ> list = DBHelper.getProjectJTJDao().queryBuilder().where(ProjectJTJDao.Properties.Isdefault.eq(true)).list();
+                    List<ProjectJTJ> list = DBHelper.getProjectJTJDao().queryBuilder()
+                            .where(ProjectJTJDao.Properties.ProjectName.eq(projectJTJ.getProjectName()))
+                            .where(ProjectJTJDao.Properties.Isdefault.eq(true)).list();
                     if (list.size() > 0) {
                         ProjectJTJ p = list.get(0);
                         p.setIsdefault(false);
                         DBHelper.getProjectJTJDao().update(p);
                     }
                 }
+                LogUtils.d(projectJTJ);
                 DBHelper.getProjectJTJDao().update(projectJTJ);
+                LogUtils.d(DBHelper.getProjectJTJDao().loadAll());
                 ArmsUtils.snackbarText("保存成功");
                 break;
             case R.id.delete_curve:
-                  deleteCurve();
-                mEvent.onEventJTJ(2,null);
+                deleteCurve();
+                mEvent.onEventJTJ(2, null);
                 break;
         }
     }
+
     private void deleteCurve() {
         AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
         alertDialog.setTitle("确定要删除该曲线吗");
@@ -291,10 +300,12 @@ public class NewProjectJTJFragment extends BaseFragment<NewProjectJTJPresenter> 
 
 
     public void setOnEventListenner(OnEventJTJ onEvent) {
-        mEvent=onEvent;
+        mEvent = onEvent;
     }
+
     OnEventJTJ mEvent;
-    public interface OnEventJTJ{
-        void onEventJTJ(int what,Object o);
+
+    public interface OnEventJTJ {
+        void onEventJTJ(int what, Object o);
     }
 }

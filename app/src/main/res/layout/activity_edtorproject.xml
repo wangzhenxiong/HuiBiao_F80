@@ -87,7 +87,8 @@
                          android:layout_marginRight="15dp"
                          android:paddingLeft="8dp"
                          android:paddingRight="8dp"
-                         android:hint="请输入关键字"
+                         android:hint="请输入检测项目"
+                         android:textColorHint="#9B9999"
                          android:maxLines="1"
                          android:textSize="15dp"/>
 

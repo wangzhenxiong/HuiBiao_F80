@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.di.component.DaggerSetingComponent;
@@ -102,6 +103,16 @@ public class SetingActivity extends BaseActivity<SetingPresenter> implements Set
             case R.id.project:
                 ArmsUtils.startActivity(new Intent(this, EdtorProjectActivity.class));
                 break;
+        }
+    }
+    private long mExitTime = 0;
+    @Override
+    public void onBackPressed() {
+        if (System.currentTimeMillis() - mExitTime > 2000) {
+            Toast.makeText(this, "再按一次退出管理员登录", Toast.LENGTH_SHORT).show();
+            mExitTime = System.currentTimeMillis();
+        } else {
+            ArmsUtils.startActivity(this,HomeActivity.class);
         }
     }
 }

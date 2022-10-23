@@ -1,5 +1,8 @@
 package com.dy.huibiao_f80.mvp.ui.activity;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,9 +15,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.di.component.DaggerRecordComponent;
 import com.dy.huibiao_f80.greendao.DBHelper;
@@ -22,12 +27,15 @@ import com.dy.huibiao_f80.greendao.TestRecord;
 import com.dy.huibiao_f80.mvp.contract.RecordContract;
 import com.dy.huibiao_f80.mvp.presenter.RecordPresenter;
 import com.dy.huibiao_f80.mvp.ui.adapter.TestRecrdAdapter;
+import com.dy.huibiao_f80.printer.MyPrinterIntentService;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -61,9 +69,13 @@ public class RecordActivity extends BaseActivity<RecordPresenter> implements Rec
     Button mPrint;
     @BindView(R.id.delete)
     Button mDelete;
-    private List<TestRecord> testRecordList=new ArrayList<>();
-    private TestRecrdAdapter testRecrdAdapter;
-
+    @Inject
+    List<TestRecord> testRecordList;
+    @Inject
+    TestRecrdAdapter testRecrdAdapter;
+    @Inject
+    AlertDialog sportDialog;
+    private boolean isSeaching=false;
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
         DaggerRecordComponent //如找不到该类,请编译一下项目
@@ -81,27 +93,48 @@ public class RecordActivity extends BaseActivity<RecordPresenter> implements Rec
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
-        getData();
-
-    }
-
-    private void getData() {
-        testRecordList.clear();
-        testRecordList.addAll(DBHelper.getTestRecordDao().loadAll());
         ArmsUtils.configRecyclerView(mRecylerview, new GridLayoutManager(this, 1));
-        testRecrdAdapter = new TestRecrdAdapter(R.layout.record_item_layou, testRecordList);
         testRecrdAdapter.setEmptyView(R.layout.emptyview, (ViewGroup) mRecylerview.getParent());
         mRecylerview.setAdapter(testRecrdAdapter);
+
+        mChoseall.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                for (int i = 0; i < testRecordList.size(); i++) {
+                    testRecordList.get(i).setCheckd(isChecked);
+                }
+                testRecrdAdapter.notifyDataSetChanged();
+            }
+        });
+        mPresenter.load();
+        testRecrdAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                TestRecord testRecord = testRecordList.get(position);
+                Intent content = new Intent(getActivity(), RecordDetailActivity.class);
+                content.putExtra("id",testRecord.getId());
+                ArmsUtils.startActivity(content);
+            }
+        });
     }
+
 
     @Override
     public void showLoading() {
-
+        if (null != sportDialog) {
+            if (!sportDialog.isShowing()) {
+                sportDialog.show();
+            }
+        }
     }
 
     @Override
     public void hideLoading() {
-
+        if (null != sportDialog) {
+            if (sportDialog.isShowing()) {
+                sportDialog.dismiss();
+            }
+        }
     }
 
     @Override
@@ -132,17 +165,151 @@ public class RecordActivity extends BaseActivity<RecordPresenter> implements Rec
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.testmoudle:
+                makeDialogChoseMoudle();
                 break;
             case R.id.testprojectname:
+                mPresenter.makeDialogChoseProject();
                 break;
             case R.id.jujdger:
+                makeDialogChoseJujdger();
                 break;
             case R.id.seach:
+                if (isSeaching){
+                   isSeaching=false;
+                   mSeach.setText("查询");
+                   mTestmoudle.setText("选择检测方式");
+                   mTestprojectname.setText("选择检测项目");
+                   mJujdger.setText("选择判定结果");
+
+                }else {
+                    String testmoudle = mTestmoudle.getText().toString();
+                    String testproject = mTestprojectname.getText().toString();
+                    String jujdger = mJujdger.getText().toString();
+                    if (testmoudle.equals("选择检测方式")
+                            && testproject.equals("选择检测项目")
+                            && jujdger.equals("选择判定结果")){
+                        ArmsUtils.snackbarText("请选择查询条件");
+                        return;
+                    }
+                    isSeaching=true;
+                    mSeach.setText("取消");
+                    mPresenter.seach(testmoudle,testproject,jujdger);
+                }
                 break;
             case R.id.print:
+                int checkNum_print = 0;
+                List<String> checkSamples_print = new ArrayList<>();
+                for (int i = 0; i < testRecordList.size(); i++) {
+                    TestRecord sampling = testRecordList.get(i);
+                    boolean check = sampling.isCheckd();
+                    if (check) {
+                        checkNum_print++;
+                        checkSamples_print.add(sampling.getSysCode());
+                    }
+                }
+                if (checkNum_print == 0) {
+                    ArmsUtils.snackbarText("请选择需要打印的检测记录");
+                } else {
+                    // TODO: 10/21/22 打印
+                    MyPrinterIntentService.startActionToDeailPrint(getActivity(), checkSamples_print);
+                }
                 break;
             case R.id.delete:
+                int checkNum_delete = 0;
+                List<TestRecord> checkSamples = new ArrayList<>();
+                for (int i = 0; i < testRecordList.size(); i++) {
+                    TestRecord sampling = testRecordList.get(i);
+                    boolean check = sampling.isCheckd();
+                    if (check) {
+                        checkNum_delete++;
+                        checkSamples.add(sampling);
+                    }
+                }
+                if (checkNum_delete == 0) {
+                    ArmsUtils.snackbarText("请选择需要删除的检测记录");
+                } else {
+                    makeDeleteDialog(checkSamples);
+
+                }
                 break;
         }
     }
+    private void makeDeleteDialog(List<TestRecord> checkSamples) {
+        AlertDialog dialog = new AlertDialog.Builder(this).create();
+        dialog.setTitle("提示");
+        dialog.setIcon(R.mipmap.ic_launcher);
+        dialog.setMessage("确定要删除所选择的检测记录吗？");
+        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                DBHelper.getTestRecordDao().deleteInTx(checkSamples);
+                ArmsUtils.snackbarText("删除成功");
+                if (isSeaching) {
+                    mPresenter.seach(mTestmoudle.getText().toString(),mTestprojectname.getText().toString(),mJujdger.getText().toString());
+                } else {
+                    mPresenter.load();
+                }
+                dialog.dismiss();
+            }
+        });
+        dialog.setButton(DialogInterface.BUTTON_POSITIVE, "取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+
+    }
+
+    private void makeDialogChoseJujdger() {
+        String[] strings = new String[]{"合格", "不合格", "可疑", "--"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setIcon(R.mipmap.ic_launcher);
+        builder.setTitle("请选择判断结果");
+        builder.setSingleChoiceItems(strings, 0, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String string = strings[which];
+                mJujdger.setText(string);
+                dialog.dismiss();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        // dialog弹出后，点击界面其他部分dialog消失
+        dialog.setCanceledOnTouchOutside(true);
+    }
+
+
+    private void makeDialogChoseMoudle() {
+        String[] strings = new String[]{"分光光度", "胶体金"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setIcon(R.mipmap.ic_launcher);
+        builder.setTitle("请选择检测模块");
+        builder.setSingleChoiceItems(strings, 0, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String string = strings[which];
+                mTestmoudle.setText(string);
+                dialog.dismiss();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        // dialog弹出后，点击界面其他部分dialog消失
+        dialog.setCanceledOnTouchOutside(true);
+    }
+
+    @Override
+    public Activity getActivity() {
+        return this;
+    }
+
+    @Override
+    public void setChosedProject(String s) {
+      mTestprojectname.setText(s);
+    }
+
+
 }

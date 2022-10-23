@@ -516,7 +516,7 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
                     }
                     if (mFGGDGalleryBeanList.size() > 0) {
                         //发送更新
-                       // LogUtils.d("发送更新");
+                        // LogUtils.d("发送更新");
                         EventBus.getDefault().post(new FGTestMessageBean(0));
                     }
 
@@ -688,16 +688,16 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
             boolean yin_a_a = true;
             switch (yin_a_symbol) {
                 case "<":
-                    yin_a_a = testResult < yin_a;
+                    yin_a_a = yin_a < testResult;
                     break;
                 case ">":
-                    yin_a_a = testResult > yin_a;
+                    yin_a_a = yin_a > testResult;
                     break;
                 case "≥":
-                    yin_a_a = testResult >= yin_a;
+                    yin_a_a = yin_a >= testResult;
                     break;
                 case "≤":
-                    yin_a_a = testResult <= yin_a;
+                    yin_a_a = yin_a <= testResult;
                     break;
             }
             double yin_b = message2.getYin_b();
@@ -729,16 +729,16 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
             boolean yang_a_a = true;
             switch (yang_a_symbol) {
                 case "<":
-                    yang_a_a = testResult < yang_a;
+                    yang_a_a = yang_a < testResult;
                     break;
                 case ">":
-                    yang_a_a = testResult > yang_a;
+                    yang_a_a = yang_a > testResult;
                     break;
                 case "≥":
-                    yang_a_a = testResult >= yang_a;
+                    yang_a_a = yang_a >= testResult;
                     break;
                 case "≤":
-                    yang_a_a = testResult <= yang_a;
+                    yang_a_a = yang_a <= testResult;
                     break;
             }
 
@@ -769,16 +769,16 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
             boolean keyi_a_a = true;
             switch (keyi_a_symbol) {
                 case "<":
-                    keyi_a_a = testResult < keyi_a;
+                    keyi_a_a = keyi_a < testResult;
                     break;
                 case ">":
-                    keyi_a_a = testResult > keyi_a;
+                    keyi_a_a = keyi_a > testResult;
                     break;
                 case "≥":
-                    keyi_a_a = testResult >= keyi_a;
+                    keyi_a_a = keyi_a >= testResult;
                     break;
                 case "≤":
-                    keyi_a_a = testResult <= keyi_a;
+                    keyi_a_a = keyi_a <= testResult;
                     break;
             }
             double keyi_b = message2.getKeyi_b();

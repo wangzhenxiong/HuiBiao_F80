@@ -176,7 +176,8 @@
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="300dp"
                         android:layout_height="60dp"
-                        android:textColorHint="#626161">
+                        android:textColorHint="#626161"
+                        android:visibility="gone">
 
                         <AutoCompleteTextView
                             android:id="@+id/dr"
@@ -232,6 +233,7 @@
                 android:textSize="20dp" />
 
             <Button
+                android:visibility="gone"
                 android:id="@+id/btn_gallerychange"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"

@@ -2,6 +2,8 @@ package com.dy.huibiao_f80.mvp.model;
 
 import android.app.Application;
 
+import com.dy.huibiao_f80.api.HuiBiaoService;
+import com.dy.huibiao_f80.api.back.ExistExam_Back;
 import com.dy.huibiao_f80.app.utils.DataUtils;
 import com.dy.huibiao_f80.mvp.contract.HomeContract;
 import com.google.gson.Gson;
@@ -21,6 +23,7 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.schedulers.Schedulers;
+import me.jessyan.retrofiturlmanager.RetrofitUrlManager;
 
 @ActivityScope
 public class HomeModel extends BaseModel implements HomeContract.Model {
@@ -54,6 +57,16 @@ public class HomeModel extends BaseModel implements HomeContract.Model {
                 }, 0, 1, TimeUnit.SECONDS);
             }
         }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io());
+    }
+
+    @Override
+    public Observable<ExistExam_Back> existExam(String url, String devicenum) {
+        RetrofitUrlManager.getInstance().putDomain("xxx", url);
+        return mRepositoryManager.obtainRetrofitService(HuiBiaoService.class)
+                .existExam(devicenum)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io());
     }

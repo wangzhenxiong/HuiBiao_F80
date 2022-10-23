@@ -41,7 +41,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".mvp.ui.activity.TestResultJTJActivity" />
+        <activity android:name=".mvp.ui.activity.RecordDetailActivity"
+            android:label="详细信息"
+            android:screenOrientation="landscape"/>
+
+        <service
+            android:name=".printer.MyPrinterIntentService"
+            android:exported="false" />
+
+        <activity
+            android:name=".mvp.ui.activity.TestResultJTJActivity"
+            android:label="检测结果"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".mvp.ui.activity.TestSettingJTJActivity"
+            android:label="摄像头位置调整"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape" />
         <activity
             android:name=".mvp.ui.activity.JTJ_AdjustActivity"
             android:label="摄像头位置调整"
@@ -57,6 +73,7 @@
         <activity
             android:name=".mvp.ui.activity.TestFGGDActivity"
             android:label="样品检测"
+            android:launchMode="singleTask"
             android:screenOrientation="landscape" />
         <activity
             android:name=".mvp.ui.activity.ChoseGalleryJTJActivity"
@@ -65,6 +82,7 @@
         <activity
             android:name=".mvp.ui.activity.ChoseGalleryFGGDActivity"
             android:label="选择检测孔"
+            android:launchMode="singleTask"
             android:screenOrientation="landscape" />
         <activity
             android:name=".mvp.ui.activity.SystemSetActivity"
@@ -85,10 +103,11 @@
         <activity
             android:name=".mvp.ui.activity.StartTestActivity"
             android:label="选择检测方式和项目"
+            android:launchMode="singleTask"
             android:screenOrientation="landscape" />
         <activity
             android:name=".mvp.ui.activity.SamplingActivity"
-            android:label="采样管理"
+            android:label="采样单管理"
             android:screenOrientation="landscape" />
         <activity
             android:name=".mvp.ui.activity.SetingActivity"
@@ -106,7 +125,9 @@
             android:name=".mvp.ui.activity.ExamActivity"
             android:label="考试"
             android:screenOrientation="landscape" />
-        <activity android:name=".mvp.ui.activity.HomeActivity">
+        <activity
+            android:name=".mvp.ui.activity.HomeActivity"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

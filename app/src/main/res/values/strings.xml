@@ -73,5 +73,21 @@
     <string name="sampleerro_message1" translatable="false">开始或结束时吸光度无穷大，此次对照无效！</string>
     <string name="sampleerro_message2" translatable="false">检测前吸光度大于检测后吸光度，此次对照无效！</string>
     <string name="sampleerro_message3" translatable="false">对照值小于规定值，此次对照无效！</string>
-
+    <string name="JTJ_TestMoudle_P" translatable="false">胶体金</string>
+    <string name="withoutprintdata">暂无需要打印的检测记录!</string>
+    <string name="print_testreport" translatable="false">检测报告</string>
+    <string name="print_devicename" translatable="false">检测设备：</string>
+    <string name="print_mothed1" translatable="false">检测方法：抑制率法</string>
+    <string name="print_mothed2" translatable="false">检测方法：标准曲线法</string>
+    <string name="print_mothed3" translatable="false">检测方法：动力学法</string>
+    <string name="print_mothed4" translatable="false">检测方法：系数法</string>
+    <string name="print_mothed" translatable="false">检测方法：</string>
+    <string name="print_testdata" translatable="false">检测日期：</string>
+    <string name="print_testunit" translatable="false">检测值单位：</string>
+    <string name="print_beunits" translatable="false">被检单位：</string>
+    <string name="print_duizhaozhi" translatable="false">对照值：△A=</string>
+    <string name="print_testpeople" translatable="false">检测人员：</string>
+    <string name="print_checkpeople1" translatable="false">审核人员：_____</string>
+    <string name="print_checkpeople2" translatable="false">审核人员：</string>
+    <string name="my_app_name">检测仪器</string>
 </resources>

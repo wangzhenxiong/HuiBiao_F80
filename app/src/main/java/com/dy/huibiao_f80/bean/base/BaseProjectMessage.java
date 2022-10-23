@@ -59,4 +59,8 @@ public abstract class BaseProjectMessage {
     public abstract int getMethod_sp();
 
     public abstract String getUnit_input();
+
+    public abstract String getStandNum();
+
+    public abstract String getmethodLimit();
 }

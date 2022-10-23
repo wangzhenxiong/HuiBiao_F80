@@ -45,6 +45,7 @@ import static com.dy.huibiao_f80.app.utils.CRC8Util.FindCRC;
  */
 public class Constants {
 
+    public static final String URL = "https://devadmin.huibiaoyun.com";
     /**
      * 免疫荧光积分值统一除以2800
      */
@@ -549,7 +550,7 @@ public class Constants {
      * {@link #DEVICENUM}仪器编号<p>
      * {@link #KEY_DEVICENUM}仪器编号KEY<p>
      */
-    public static String DEVICENUM;
+    public static String DEVICENUM="20220707";
     public static final String KEY_DEVICENUM = "KEY_DEVICENUM";
 
 

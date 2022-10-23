@@ -157,6 +157,16 @@ public class StartTestActivity extends BaseActivity<StartTestPresenter> implemen
         mFilterEdit.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
                 //当输入框里面的值为空，更新为原来的列表，否则为过滤数据列表
                 if (s.toString().isEmpty()) {
                     if (checkmoudle == 1) {
@@ -167,15 +177,6 @@ public class StartTestActivity extends BaseActivity<StartTestPresenter> implemen
                 } else {
                     filterData(s.toString());
                 }
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
             }
         });
     }
@@ -273,13 +274,18 @@ public class StartTestActivity extends BaseActivity<StartTestPresenter> implemen
     }
 
     private void startTest() {
+        if (null==chosedProject){
+            ArmsUtils.snackbarText("请选择检测项目");
+            return;
+        }
         if (checkmoudle == 1) {
+
             Intent content = new Intent(this, ChoseGalleryFGGDActivity.class);
-            content.putExtra("projectname",chosedProject.getPjName());
+            content.putExtra("project",chosedProject.getPjName());
             ArmsUtils.startActivity(content);
         } else if (checkmoudle == 2) {
             Intent content = new Intent(this, ChoseGalleryJTJActivity.class);
-            content.putExtra("projectname",chosedProject.getPjName());
+            content.putExtra("project",chosedProject.getPjName());
             ArmsUtils.startActivity(content);
         }
     }

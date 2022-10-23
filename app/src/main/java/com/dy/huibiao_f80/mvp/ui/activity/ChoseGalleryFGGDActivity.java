@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.apkfuns.logutils.LogUtils;
 import com.dy.huibiao_f80.MyAppLocation;
 import com.dy.huibiao_f80.R;
+import com.dy.huibiao_f80.bean.GalleryBean;
 import com.dy.huibiao_f80.di.component.DaggerChoseGalleryFGGDComponent;
 import com.dy.huibiao_f80.greendao.TestRecord;
 import com.dy.huibiao_f80.mvp.contract.ChoseGalleryFGGDContract;
@@ -27,6 +28,8 @@ import com.dy.huibiao_f80.mvp.presenter.ChoseGalleryFGGDPresenter;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -152,7 +155,7 @@ public class ChoseGalleryFGGDActivity extends BaseActivity<ChoseGalleryFGGDPrese
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
         Intent intent = getIntent();
-        projectname = intent.getStringExtra("projectname");
+        projectname = intent.getStringExtra("project");
         mCheckall1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -221,10 +224,19 @@ public class ChoseGalleryFGGDActivity extends BaseActivity<ChoseGalleryFGGDPrese
             public void afterTextChanged(Editable s) {
                 LogUtils.d(s);
                 String dr = s.toString();
+                if (dr.isEmpty()){
+                    dr="1";
+                }
+                mDr.setText("1");
                 nowCheckGallery.setDilutionratio(Double.parseDouble(dr));
             }
         });
         refishMessage(1, R.id.background1);
+        //先将所有通道设为未选择
+        List<GalleryBean> mFGGDGalleryBeanList = MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList;
+        for (int i = 0; i < mFGGDGalleryBeanList.size(); i++) {
+           mFGGDGalleryBeanList.get(i).setCheckd(false);
+        }
     }
 
     private void check01(boolean isChecked) {
@@ -361,9 +373,21 @@ public class ChoseGalleryFGGDActivity extends BaseActivity<ChoseGalleryFGGDPrese
         MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(13).setCheckd(mCheckbox14.isChecked());
         MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(14).setCheckd(mCheckbox15.isChecked());
         MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(15).setCheckd(mCheckbox16.isChecked());
-        Intent content = new Intent(this, TestFGGDActivity.class);
-        content.putExtra("projectname",projectname);
-        ArmsUtils.startActivity(content);
+        boolean check=false;
+        for (int i = 0; i < MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.size(); i++) {
+            if (MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(i).isCheckd()) {
+                check=true;
+                break;
+            }
+        }
+         if (check){
+             Intent content = new Intent(this, TestFGGDActivity.class);
+             content.putExtra("projectname",projectname);
+             ArmsUtils.startActivity(content);
+         }else {
+             ArmsUtils.snackbarText("请选择通道");
+         }
+
     }
 
     private void clean() {

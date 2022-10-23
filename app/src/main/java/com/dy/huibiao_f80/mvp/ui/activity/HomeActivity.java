@@ -10,7 +10,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.dy.huibiao_f80.Constants;
 import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.di.component.DaggerHomeComponent;
 import com.dy.huibiao_f80.mvp.contract.HomeContract;
@@ -118,11 +120,21 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
                 ArmsUtils.startActivity(new Intent(getActivity(),TrainActivity.class));
                 break;
             case R.id.exam:
-                ArmsUtils.startActivity(new Intent(getActivity(),ExamActivity.class));
+                mPresenter.existExam(Constants.URL,Constants.DEVICENUM);
                 break;
             case R.id.seting:
                 ArmsUtils.startActivity(new Intent(getActivity(),SettingLoginActivity.class));
                 break;
+        }
+    }
+    private long mExitTime = 0;
+    @Override
+    public void onBackPressed() {
+        if (System.currentTimeMillis() - mExitTime > 2000) {
+            Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+            mExitTime = System.currentTimeMillis();
+        } else {
+            ArmsUtils.exitApp();
         }
     }
 }

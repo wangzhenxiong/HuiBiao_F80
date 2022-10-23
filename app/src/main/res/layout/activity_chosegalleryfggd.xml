@@ -296,15 +296,13 @@
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="300dp"
                         android:layout_height="60dp"
+                        android:hint="稀释倍数/反应液滴数"
                         android:textColorHint="#626161">
 
                         <AutoCompleteTextView
                             android:id="@+id/dr"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="稀释倍数/稀释倍数"
-                            android:maxLines="1"
-                            android:singleLine="true"/>
+                            style="@style/AutoCompleteTextViewStyle"
+                            android:layout_marginLeft="0dp"/>
 
 
                     </android.support.design.widget.TextInputLayout>

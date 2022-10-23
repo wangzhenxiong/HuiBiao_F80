@@ -28,7 +28,6 @@ import com.dy.huibiao_f80.bean.GalleryBean;
 import com.dy.huibiao_f80.di.component.DaggerJTJ_AdjustComponent;
 import com.dy.huibiao_f80.mvp.contract.JTJ_AdjustContract;
 import com.dy.huibiao_f80.mvp.presenter.JTJ_AdjustPresenter;
-import com.dy.huibiao_f80.usbhelps.UsbReadWriteHelper;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
@@ -247,16 +246,16 @@ public class JTJ_AdjustActivity extends BaseActivity<JTJ_AdjustPresenter> implem
                 mGalleryBean.cardOut();
                 break;
             case R.id.btn_up:
-                UsbReadWriteHelper.horizontal = 1;
+                mGalleryBean.getJTJRWHelper().horizontal = 1;
                 break;
             case R.id.btn_down:
-                UsbReadWriteHelper.horizontal = -1;
+                mGalleryBean.getJTJRWHelper().horizontal = -1;
                 break;
             case R.id.btn_left:
-                UsbReadWriteHelper.vertical = -1;
+                mGalleryBean.getJTJRWHelper().vertical = -1;
                 break;
             case R.id.btn_right:
-                UsbReadWriteHelper.vertical = 1;
+                mGalleryBean.getJTJRWHelper().vertical = 1;
                 break;
             case R.id.btn_width_sub:
                 drowrectwidth = Integer.parseInt(mWidthValue.getText().toString());
@@ -335,7 +334,7 @@ public class JTJ_AdjustActivity extends BaseActivity<JTJ_AdjustPresenter> implem
 
 
     @Override
-    public void onReciverSuccess(List<Float> userfuldata, double[] data) {
+    public void onReciverSuccess(List<Float> userfuldata, double[] data, int galleryNum) {
 
     }
 

@@ -121,7 +121,7 @@
                 android:id="@+id/c_"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="T线出线值"
+                android:hint="C线出线值"
                 android:inputType="numberDecimal"
                 android:maxLines="1"
                 android:singleLine="true" />
@@ -171,7 +171,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:visibility="gone"
+            android:visibility="visible"
             android:id="@+id/method_bise"
             android:layout_width="match_parent"
             android:layout_height="60dp"
@@ -190,7 +190,7 @@
                     android:id="@+id/tcA"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="T/C线出线值A"
+                    android:hint="T/C值A"
                     android:inputType="numberDecimal"
                     android:maxLines="1"
                     android:singleLine="true" />
@@ -207,7 +207,7 @@
                     android:id="@+id/tcB"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="T/C线出线值B"
+                    android:hint="T/C值B"
                     android:inputType="numberDecimal"
                     android:maxLines="1"
                     android:singleLine="true" />

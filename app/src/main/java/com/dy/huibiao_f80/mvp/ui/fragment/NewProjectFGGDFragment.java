@@ -231,15 +231,17 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
     public void setData(@Nullable Object data) {
         if (null == data) {
             projectFGGD = null;
-            return;
+            initMessage(new ProjectFGGD());
+        }else {
+            projectFGGD = ((ProjectFGGD) data);
+            initMessage(projectFGGD);
         }
-        projectFGGD = ((ProjectFGGD) data);
-        initMessage();
+
 
 
     }
 
-    private void initMessage() {
+    private void initMessage(ProjectFGGD projectFGGD) {
         mTestprojectname.setText(projectFGGD.getPjName());
         mStandardname.setText(projectFGGD.getStandardName());
         mCureName.setText(projectFGGD.getCurveName());
@@ -712,7 +714,10 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
         projectFGGD.setFinishState(true);
         if (mDfCurve.isChecked()) {
             projectFGGD.setIsdefault(true);
-            List<ProjectFGGD> list = DBHelper.getProjectFGGDDao().queryBuilder().where(ProjectFGGDDao.Properties.Isdefault.eq(true)).list();
+            List<ProjectFGGD> list = DBHelper.getProjectFGGDDao().queryBuilder()
+                    .where(ProjectFGGDDao.Properties.Isdefault.eq(true))
+                    .where(ProjectFGGDDao.Properties.ProjectName.eq(projectname))
+                    .list();
             if (list.size() > 0) {
                 ProjectFGGD p = list.get(0);
                 p.setIsdefault(false);

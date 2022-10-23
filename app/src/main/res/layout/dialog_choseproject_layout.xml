@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#00000000">
+    <LinearLayout
+        android:id="@+id/seachlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp">
+
+        <EditText
+            android:id="@+id/keyword"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:textSize="18dp"/>
+
+        <Button
+            android:id="@+id/btn_seach"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/btn_background_blue"
+            android:text="搜索"
+            android:textColor="#ffffff"
+            android:textSize="18dp"/>
+
+    </LinearLayout>
+    <android.support.v7.widget.RecyclerView
+
+        android:id="@+id/re_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/seachlayout"
+        android:paddingTop="4dp"/>
+
+
+</RelativeLayout>

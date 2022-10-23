@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.dy.huibiao_f80.BuildConfig;
 import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.di.component.DaggerSettingLoginComponent;
 import com.dy.huibiao_f80.mvp.contract.SettingLoginContract;
@@ -62,7 +63,10 @@ public class SettingLoginActivity extends BaseActivity<SettingLoginPresenter> im
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
-
+       if (BuildConfig.DEBUG){
+           mUsername.setText("admin");
+           mPassword.setText("123456");
+       }
     }
 
     @Override

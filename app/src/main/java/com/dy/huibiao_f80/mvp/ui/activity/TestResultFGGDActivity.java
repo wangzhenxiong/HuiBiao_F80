@@ -12,12 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.dy.huibiao_f80.Constants;
 import com.dy.huibiao_f80.MyAppLocation;
 import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.bean.GalleryBean;
+import com.dy.huibiao_f80.bean.base.BaseProjectMessage;
 import com.dy.huibiao_f80.bean.eventBusBean.FGTestMessageBean;
 import com.dy.huibiao_f80.di.component.DaggerTestResultFGGDComponent;
 import com.dy.huibiao_f80.mvp.contract.TestResultFGGDContract;
@@ -41,6 +44,7 @@ import static com.jess.arms.utils.Preconditions.checkNotNull;
 
 public class TestResultFGGDActivity extends BaseActivity<TestResultFGGDPresenter> implements TestResultFGGDContract.View {
 
+
     @BindView(R.id.toolbar_back)
     RelativeLayout mToolbarBack;
     @BindView(R.id.toolbar_title)
@@ -53,6 +57,8 @@ public class TestResultFGGDActivity extends BaseActivity<TestResultFGGDPresenter
     TextView mTitle;
     @BindView(R.id.controvalue)
     TextView mControvalue;
+    @BindView(R.id.choseall)
+    CheckBox mChoseall;
     @BindView(R.id.recylerview)
     RecyclerView mRecylerview;
     @BindView(R.id.btn_retest)
@@ -61,11 +67,9 @@ public class TestResultFGGDActivity extends BaseActivity<TestResultFGGDPresenter
     Button mBtnRestart;
     @BindView(R.id.btn_record)
     Button mBtnRecord;
-    @BindView(R.id.choseall)
-    CheckBox mChoseall;
     private List<GalleryBean> dataList = new ArrayList<>();
     private FGGDTestResultAdapter fggdAdapter;
-
+    String pjName;
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
         DaggerTestResultFGGDComponent //如找不到该类,请编译一下项目
@@ -84,11 +88,27 @@ public class TestResultFGGDActivity extends BaseActivity<TestResultFGGDPresenter
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
         getdata();
+        if (dataList.size()>0){
+
+             pjName = dataList.get(0).getmProjectMessage().getPjName();
+            mTitle.setText("分光光度检测——"+ pjName);
+        } else {
+            mTitle.setText("分光光度检测");
+        }
         ArmsUtils.configRecyclerView(mRecylerview, new GridLayoutManager(this, 1));
         fggdAdapter = new FGGDTestResultAdapter(R.layout.layout_fggftestresult_item, dataList);
         fggdAdapter.setEmptyView(R.layout.emptyview, (ViewGroup) mRecylerview.getParent());
         mRecylerview.setAdapter(fggdAdapter);
+        mChoseall.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                for (int i = 0; i < dataList.size(); i++) {
+                    dataList.get(i).setCheckd(isChecked);
+                }
+            }
+        });
     }
+
 
     private void getdata() {
         dataList.clear();
@@ -98,6 +118,13 @@ public class TestResultFGGDActivity extends BaseActivity<TestResultFGGDPresenter
                 dataList.add(galleryBean);
             }
         }
+        for (int i = 0; i < MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.size(); i++) {
+            GalleryBean galleryBean = MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(i);
+            if (galleryBean.isCheckd()) {
+                galleryBean.setCheckd(false);
+            }
+        }
+
     }
 
     @Override
@@ -139,21 +166,49 @@ public class TestResultFGGDActivity extends BaseActivity<TestResultFGGDPresenter
         switch (tags.tag) {
             case 0:
                 fggdAdapter.notifyDataSetChanged();
-
+                if (dataList.size()>0){
+                    BaseProjectMessage baseProjectMessage = dataList.get(0).getmProjectMessage();
+                    initControValue(baseProjectMessage.getMethod_sp());
+                }
                 break;
+        }
+    }
+    private void initControValue(int method_sp) {
+        if (method_sp==0){
+            mControvalue.setText("当前对照:"+ Constants.getControValue0());
+            mControvalue.setVisibility(View.GONE);
+        }else if (method_sp==1){
+            mControvalue.setText("当前对照:"+ Constants.getControValue1());
+            mControvalue.setVisibility(View.GONE);
+        }else {
+            mControvalue.setVisibility(View.GONE);
         }
     }
 
     @OnClick({R.id.btn_retest, R.id.btn_restart, R.id.btn_record})
     public void onClick(View view) {
+        Intent intent = getIntent();
+        intent.putExtra("project",pjName);
         switch (view.getId()) {
-            case R.id.btn_retest:
+            case R.id.btn_retest://复检
+                intent.setClass(TestResultFGGDActivity.this,TestFGGDActivity.class) ;
+                ArmsUtils.startActivity(intent);
                 break;
             case R.id.btn_restart:
+                intent.setClass(TestResultFGGDActivity.this,ChoseGalleryFGGDActivity.class) ;
+                ArmsUtils.startActivity(intent);
                 break;
             case R.id.btn_record:
-                ArmsUtils.startActivity(new Intent(this,RecordActivity.class));
+                intent.setClass(TestResultFGGDActivity.this,RecordActivity.class) ;
+
+                ArmsUtils.startActivity(intent);
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
     }
 }

@@ -1,6 +1,8 @@
 package com.dy.huibiao_f80.mvp.ui.adapter;
 
 import android.support.annotation.Nullable;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -91,6 +93,11 @@ public class FGGDTestResultAdapter extends BaseQuickAdapter<GalleryBean, BaseVie
         }
         double four = NumberUtils.four(abs_);
         helper.setText(R.id.abs_value,four+"");
-
+        ((CheckBox) helper.getView(R.id.checkbox)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                item.setCheckd(isChecked);
+            }
+        });
     }
 }
