@@ -41,9 +41,27 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".mvp.ui.activity.RecordDetailActivity"
-            android:label="详细信息"
+        <activity android:name=".mvp.ui.activity.ExamOperationActivity"
+            android:label="实操考试"
             android:screenOrientation="landscape"/>
+        <activity android:name=".mvp.ui.activity.ExamAnalyseActivity"
+            android:label="分析题考试"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".mvp.ui.activity.ExamTheoryActivity"
+            android:label="理论考试"
+            android:screenOrientation="landscape"/>
+        <activity
+            android:name=".mvp.ui.activity.ExamStateActivity"
+            android:label="考试内容"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".mvp.ui.activity.ExamHintsActivity"
+            android:label="考试注意事项"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".mvp.ui.activity.RecordDetailActivity"
+            android:label="详细信息"
+            android:screenOrientation="landscape" />
 
         <service
             android:name=".printer.MyPrinterIntentService"
@@ -123,7 +141,7 @@
             android:screenOrientation="landscape" />
         <activity
             android:name=".mvp.ui.activity.ExamActivity"
-            android:label="考试"
+            android:label="考生信息验证"
             android:screenOrientation="landscape" />
         <activity
             android:name=".mvp.ui.activity.HomeActivity"

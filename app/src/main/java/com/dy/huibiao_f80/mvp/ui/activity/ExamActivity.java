@@ -1,5 +1,6 @@
 package com.dy.huibiao_f80.mvp.ui.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.dy.huibiao_f80.BuildConfig;
 import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.di.component.DaggerExamComponent;
 import com.dy.huibiao_f80.mvp.contract.ExamContract;
@@ -44,7 +46,7 @@ public class ExamActivity extends BaseActivity<ExamPresenter> implements ExamCon
     AutoCompleteTextView mCardnumber;
     @BindView(R.id.btn_login)
     Button mBtnLogin;
-    private int id;
+    private String id;
     private int personTestMethod;
 
     @Override
@@ -65,9 +67,12 @@ public class ExamActivity extends BaseActivity<ExamPresenter> implements ExamCon
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
         Intent intent = getIntent();
-        id = intent.getIntExtra("id", 0);
-        personTestMethod = intent.getIntExtra("personTestMethod", 0);
-
+        id = intent.getStringExtra("id");
+        personTestMethod = intent.getIntExtra("personTestMethod",1);
+        if (BuildConfig.DEBUG){
+            mRealname.setText("小虎1");
+            mCardnumber.setText("43072420001010113X");
+        }
     }
 
     @Override
@@ -123,5 +128,10 @@ public class ExamActivity extends BaseActivity<ExamPresenter> implements ExamCon
                 mPresenter.checkExaminer(id,name,number,personTestMethod);
                 break;
         }
+    }
+
+    @Override
+    public Activity getActivity() {
+        return this;
     }
 }

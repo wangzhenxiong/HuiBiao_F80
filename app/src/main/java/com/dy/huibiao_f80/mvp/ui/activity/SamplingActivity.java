@@ -106,6 +106,20 @@ public class SamplingActivity extends BaseActivity<SamplingPresenter> implements
         ArmsUtils.configRecyclerView(mRecylerview, new GridLayoutManager(this, 1));
         mRecylerview.setAdapter(samplingAdapter);
         samplingAdapter.setEmptyView(R.layout.emptyview, (ViewGroup) mRecylerview.getParent());
+        samplingAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                if (view.getId()==R.id.checkbox) {
+                    Sampling galleryBean = samplingList.get(position);
+                    if (galleryBean.isCheck()) {
+                        galleryBean.setCheck(false);
+                    }else {
+                        galleryBean.setCheck(true);
+                    }
+                }
+            }
+        });
+
         mPresenter.load(true);
         mChoseall.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

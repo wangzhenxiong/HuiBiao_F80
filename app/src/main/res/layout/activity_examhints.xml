@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/include_title" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/colorAccent"
+            android:orientation="vertical">
+
+            <LinearLayout style="@style/examhint_linearlayout">
+
+                <TextView
+                    style="@style/examhint_linearlayout_title"
+                    android:text="| 考生姓名：" />
+
+                <TextView
+                    android:id="@+id/studentname"
+                    style="@style/examhint_linearlayout_name"
+                    android:text="" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/white" />
+
+            <LinearLayout style="@style/examhint_linearlayout">
+
+                <TextView
+                    style="@style/examhint_linearlayout_title"
+                    android:text="| 准考证号：" />
+
+                <TextView
+                    android:id="@+id/cardname"
+                    style="@style/examhint_linearlayout_name"
+                    android:text="" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/white" />
+
+            <LinearLayout style="@style/examhint_linearlayout">
+
+                <TextView
+                    style="@style/examhint_linearlayout_title"
+                    android:text="| 考试院校：" />
+
+                <TextView
+                    android:id="@+id/schoolname"
+                    style="@style/examhint_linearlayout_name"
+                    android:text="" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/white" />
+
+            <LinearLayout
+                style="@style/examhint_linearlayout"
+                android:layout_weight="2">
+
+                <TextView
+                    style="@style/examhint_linearlayout_title"
+                    android:text="| 考试项目：" />
+
+                <TextView
+                    android:id="@+id/examname"
+                    style="@style/examhint_linearlayout_name"
+                    android:text="" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="80dp"
+                android:gravity="center"
+                android:text="考生注意事项"
+                android:textColor="@color/black"
+                android:textSize="26dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="40dp"
+                android:paddingRight="40dp"
+                android:text="1、考生在考试时，未经监考人员允许不得擅自离开考场或座位，不得大声喧哗，有疑问或需求向考官示意。
+\n2、考场严禁交头接耳、严禁抄袭，一经发现，即取消考试资格。
+\n3、除必要的演算用笔、计算器（均自备）外，严禁将任何资料及各类通讯工具等带入考场。
+\n4、非正式考试期间，考生不得动用仪器设备和考核用品。
+\n5、如仪器设备出现故障，或发生意外等突发事件时应及时向监考老师报告并启用备用机。
+\n6、实操考核期间，考生应穿实验服（白大褂）考试。
+\n7、实操考核所需原始记录，入考场后由监考老师统一发放。"
+                android:textSize="20dp" />
+
+            <CheckBox
+                android:id="@+id/checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:paddingRight="40dp"
+                android:layout_marginTop="40dp"
+                android:text="已阅读并同意考试注意事项" />
+
+            <Button
+                android:id="@+id/startexam"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:text=">>进入考试>>"
+                android:layout_gravity="center"
+                android:background="@drawable/btn_background_blue"
+                android:textColor="@color/white"
+                android:layout_marginTop="100dp"
+                android:textSize="20dp"/>
+
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

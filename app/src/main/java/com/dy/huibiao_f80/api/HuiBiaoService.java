@@ -62,12 +62,20 @@ public interface HuiBiaoService {
     /**
      * 考生认证
      *
-     * @param queryExaminer
+     * @param examinationId  考试主键id
+     * @param name   真实姓名
+     * @param idNumber  准考证号
+     * @param personTestMethod  考生验证方式，默认1
      * @return
      */
     @Headers({"Domain-Name: xxx"})
     @POST("/examPath/quickCheck/examiner/checkExaminer")
-    Observable<CheckExaminer_Back> checkExaminer(@Query("queryExaminer") String queryExaminer);
+    Observable<CheckExaminer_Back> checkExaminer(
+            @Query("examinationId") String examinationId ,
+            @Query("name") String name ,
+            @Query("idNumber") String idNumber  ,
+            @Query("personTestMethod") int personTestMethod
+    );
 
     /**
      * 考试须知-点击考试/考试完成后展示考试页
@@ -101,23 +109,23 @@ public interface HuiBiaoService {
 
     /**
      * 实操考试-进入考试
-     * @param queryExaminer  考试信息主键
+     * @param examinationId  考试信息主键
      * @param examinerId  考生信息主键
      * @param identificationNumber  设备号
      * @return
      */
     @Headers({"Domain-Name: xxx"})
     @POST("/examPath/quickCheck/examination/beginOperationExam")
-    Observable<BeginOperationExam_Back> beginOperationExam(@Query("examinationId") String queryExaminer, @Query("examinerId") String examinerId, @Query("identificationNumber") String identificationNumber);
+    Observable<BeginOperationExam_Back> beginOperationExam(@Query("examinationId") String examinationId, @Query("examinerId") String examinerId, @Query("identificationNumber") String identificationNumber);
 
     /**
      * 获取实践报告数据
-     * @param queryExaminer  考试信息主键
+     * @param examinationId  考试信息主键
      * @return
      */
     @Headers({"Domain-Name: xxx"})
     @POST("/examPath/quickCheck/examination/beginTestForm")
-    Observable<BeginTestForm_Back> beginTestForm(@Query("examinationId") String queryExaminer);
+    Observable<BeginTestForm_Back> beginTestForm(@Query("examinationId") String examinationId);
 
     /**
      * 理论试卷-交卷

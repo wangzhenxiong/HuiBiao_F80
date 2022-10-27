@@ -45,7 +45,8 @@ import static com.dy.huibiao_f80.app.utils.CRC8Util.FindCRC;
  */
 public class Constants {
 
-    public static final String URL = "https://devadmin.huibiaoyun.com";
+    public static String URL = "https://devadmin.huibiaoyun.com";
+    public static final String KEY_URL = "KEY_URL";
     /**
      * 免疫荧光积分值统一除以2800
      */
@@ -954,7 +955,7 @@ public class Constants {
      * @param application
      */
     public static void init(Application application) {
-
+        Constants.URL= (String) SPUtils.get(application, Constants.KEY_URL, "https://devadmin.huibiaoyun.com");
 
         Constants.JTJLINK = (String) SPUtils.get(application, Constants.KEY_JTJLINK, "");
         Constants.FGITEMLINK = (String) SPUtils.get(application, Constants.KEY_FGITEMLINK, "");

@@ -100,6 +100,10 @@ public class TestResultJTJActivity extends BaseActivity<TestResultJTJPresenter> 
     ImageView mImage2;
     @BindView(R.id.btn_retest)
     Button mBtnRetest;
+    @BindView(R.id.samplename1)
+    AutoCompleteTextView mSamplename1;
+    @BindView(R.id.samplename2)
+    AutoCompleteTextView mSamplename2;
     private Typeface mTf;
     private String pjName;
 
@@ -117,7 +121,9 @@ public class TestResultJTJActivity extends BaseActivity<TestResultJTJPresenter> 
     public int initView(@Nullable Bundle savedInstanceState) {
         return R.layout.activity_testresultjtj; //如果你不需要框架帮你设置 setContentView(id) 需要自行设置,请返回 0
     }
-    List<GalleryBean> checklist=new ArrayList<>();
+
+    List<GalleryBean> checklist = new ArrayList<>();
+
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
         mTf = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Bold.ttf");
@@ -125,7 +131,7 @@ public class TestResultJTJActivity extends BaseActivity<TestResultJTJPresenter> 
         for (int i = 0; i < mJTJGalleryBeanList.size(); i++) {
             GalleryBean galleryBean = mJTJGalleryBeanList.get(i);
             if (galleryBean.isCheckd()) {
-                 checklist.add(galleryBean);
+                checklist.add(galleryBean);
                 if (galleryBean.getGalleryNum() == 1) {
                     mGallery1.setVisibility(View.VISIBLE);
                 } else if (galleryBean.getGalleryNum() == 2) {
@@ -136,7 +142,7 @@ public class TestResultJTJActivity extends BaseActivity<TestResultJTJPresenter> 
                 galleryBean.checkData_P();
                 galleryBean.cardOut();
                 pjName = galleryBean.getmProjectMessage().getPjName();
-                mToolbarTitle.setText("胶体金检测——"+ pjName);
+                mToolbarTitle.setText("胶体金检测——" + pjName);
 
             }
         }
@@ -198,7 +204,7 @@ public class TestResultJTJActivity extends BaseActivity<TestResultJTJPresenter> 
         return this;
     }
 
-    @OnClick({R.id.gallery2, R.id.btn_checkrecord,R.id.btn_retest})
+    @OnClick({R.id.gallery2, R.id.btn_checkrecord, R.id.btn_retest})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.gallery2:
@@ -213,11 +219,11 @@ public class TestResultJTJActivity extends BaseActivity<TestResultJTJPresenter> 
                     checklist.get(i).cardGet_Argmen();
                     checklist.get(i).cardInNotScan();
                     checklist.get(i).getJTJRWHelper().sendMessage(Constants.COLLAURUM_ENT_SCANNING_REQUEST_P, true);
-                    checklist.get(i).getJTJRWHelper().stratReadData_P(2000,true);
+                    checklist.get(i).getJTJRWHelper().stratReadData_P(2000, true);
                 }
-                Intent intent = getIntent();
+                Intent intent = new Intent();
                 intent.setClass(getActivity(), TestSettingJTJActivity.class);
-                intent.putExtra("project",pjName);
+                intent.putExtra("project", pjName);
                 ArmsUtils.startActivity(intent);
                 getActivity().finish();
                 break;
@@ -253,6 +259,8 @@ public class TestResultJTJActivity extends BaseActivity<TestResultJTJPresenter> 
         } else {
             mTcValue1.setVisibility(View.VISIBLE);
         }
+        mSamplename1.setText(((TestRecord) galleryBean).getSamplename());
+        mSampleserial1.setText(((TestRecord) galleryBean).getSamplenum());
         LineData data = getData(userfuldata, mChartview1, ((Double) datas[0]).intValue(), ((Double) datas[2]).intValue());
         data.setValueTypeface(mTf);
         setupChart(mChartview1, data);
@@ -271,6 +279,8 @@ public class TestResultJTJActivity extends BaseActivity<TestResultJTJPresenter> 
         } else {
             mTcValue2.setVisibility(View.VISIBLE);
         }
+        mSamplename2.setText(((TestRecord) galleryBean).getSamplename());
+        mSampleserial2.setText(((TestRecord) galleryBean).getSamplenum());
         LineData data2 = getData(userfuldata, mChartview2, ((Double) datas[0]).intValue(), ((Double) datas[2]).intValue());
         data2.setValueTypeface(mTf);
         setupChart(mChartview2, data2);
@@ -390,11 +400,11 @@ public class TestResultJTJActivity extends BaseActivity<TestResultJTJPresenter> 
             @Override
             public void run() {
                 if (gallery == 1) {
-                    if (null!=mImage1){
+                    if (null != mImage1) {
                         mImage1.setImageBitmap(bitmap);
                     }
                 } else if (gallery == 2) {
-                    if (null!=mImage1){
+                    if (null != mImage1) {
                         mImage2.setImageBitmap(bitmap);
                     }
                 }
@@ -419,6 +429,6 @@ public class TestResultJTJActivity extends BaseActivity<TestResultJTJPresenter> 
 
     @Override
     public void onBackPressed() {
-        ArmsUtils.startActivity(this,StartTestActivity.class);
+        ArmsUtils.startActivity(this, StartTestActivity.class);
     }
 }

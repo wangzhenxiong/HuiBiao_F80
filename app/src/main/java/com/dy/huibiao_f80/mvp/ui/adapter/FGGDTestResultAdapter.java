@@ -1,8 +1,6 @@
 package com.dy.huibiao_f80.mvp.ui.adapter;
 
 import android.support.annotation.Nullable;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -51,8 +49,14 @@ public class FGGDTestResultAdapter extends BaseQuickAdapter<GalleryBean, BaseVie
     protected void convert(BaseViewHolder helper, GalleryBean item) {
         TestRecord item1 = (TestRecord) item;
 
+       helper.addOnClickListener(R.id.checkbox);
+        boolean checkd = item.checkd;
+        if (checkd){
+            helper.setChecked(R.id.checkbox, true);
+        } else {
+            helper.setChecked(R.id.checkbox, false);
+        }
 
-        helper.setChecked(R.id.checkbox,item.checkd);
 
         String decisionoutcome = item1.getDecisionoutcome();
         if (decisionoutcome.isEmpty()){
@@ -93,11 +97,14 @@ public class FGGDTestResultAdapter extends BaseQuickAdapter<GalleryBean, BaseVie
         }
         double four = NumberUtils.four(abs_);
         helper.setText(R.id.abs_value,four+"");
-        ((CheckBox) helper.getView(R.id.checkbox)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+       /* helper.setOnCheckedChangeListener(R.id.checkbox, new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                LogUtils.d(item);
                 item.setCheckd(isChecked);
             }
-        });
+        }) ;*/
+
     }
 }

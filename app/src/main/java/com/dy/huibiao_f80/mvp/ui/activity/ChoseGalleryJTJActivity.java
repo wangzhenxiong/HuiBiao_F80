@@ -298,6 +298,7 @@ public class ChoseGalleryJTJActivity extends BaseActivity<ChoseGalleryJTJPresent
                     ischeck=true;
                 }
                 galleryBean.setCheckd(checked);
+
             }
             if (i==1){
                 boolean checked = mCheckbox2.isChecked();
@@ -332,10 +333,14 @@ public class ChoseGalleryJTJActivity extends BaseActivity<ChoseGalleryJTJPresent
     }
 
     private void clean() {
+        LogUtils.d(MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList);
+
         for (int i = 0; i < MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.size(); i++) {
-            MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(i).removedata();
+            MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(i).removedata();
         }
         refishMessage(nowCheckindex, nowCheckId);
+        LogUtils.d(MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList);
+
     }
 
     private void refishMessage(int i, int id) {

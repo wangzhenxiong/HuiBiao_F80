@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.dy.huibiao_f80.R;
+import com.dy.huibiao_f80.bean.GalleryBean;
 import com.dy.huibiao_f80.di.component.DaggerRecordComponent;
 import com.dy.huibiao_f80.greendao.DBHelper;
 import com.dy.huibiao_f80.greendao.TestRecord;
@@ -95,6 +96,19 @@ public class RecordActivity extends BaseActivity<RecordPresenter> implements Rec
     public void initData(@Nullable Bundle savedInstanceState) {
         ArmsUtils.configRecyclerView(mRecylerview, new GridLayoutManager(this, 1));
         testRecrdAdapter.setEmptyView(R.layout.emptyview, (ViewGroup) mRecylerview.getParent());
+        testRecrdAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                if (view.getId()==R.id.checkbox) {
+                    GalleryBean galleryBean = testRecordList.get(position);
+                    if (galleryBean.isCheckd()) {
+                        galleryBean.setCheckd(false);
+                    }else {
+                        galleryBean.setCheckd(true);
+                    }
+                }
+            }
+        });
         mRecylerview.setAdapter(testRecrdAdapter);
 
         mChoseall.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

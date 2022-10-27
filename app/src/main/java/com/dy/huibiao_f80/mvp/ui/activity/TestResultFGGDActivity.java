@@ -16,6 +16,7 @@ import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.dy.huibiao_f80.Constants;
 import com.dy.huibiao_f80.MyAppLocation;
 import com.dy.huibiao_f80.R;
@@ -70,6 +71,7 @@ public class TestResultFGGDActivity extends BaseActivity<TestResultFGGDPresenter
     private List<GalleryBean> dataList = new ArrayList<>();
     private FGGDTestResultAdapter fggdAdapter;
     String pjName;
+
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
         DaggerTestResultFGGDComponent //如找不到该类,请编译一下项目
@@ -88,15 +90,28 @@ public class TestResultFGGDActivity extends BaseActivity<TestResultFGGDPresenter
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
         getdata();
-        if (dataList.size()>0){
+        if (dataList.size() > 0) {
 
-             pjName = dataList.get(0).getmProjectMessage().getPjName();
-            mTitle.setText("分光光度检测——"+ pjName);
+            pjName = dataList.get(0).getmProjectMessage().getPjName();
+            mTitle.setText("分光光度检测——" + pjName);
         } else {
             mTitle.setText("分光光度检测");
         }
         ArmsUtils.configRecyclerView(mRecylerview, new GridLayoutManager(this, 1));
         fggdAdapter = new FGGDTestResultAdapter(R.layout.layout_fggftestresult_item, dataList);
+        fggdAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                if (view.getId()==R.id.checkbox) {
+                    GalleryBean galleryBean = dataList.get(position);
+                    if (galleryBean.isCheckd()) {
+                       galleryBean.setCheckd(false);
+                    }else {
+                        galleryBean.setCheckd(true);
+                    }
+                }
+            }
+        });
         fggdAdapter.setEmptyView(R.layout.emptyview, (ViewGroup) mRecylerview.getParent());
         mRecylerview.setAdapter(fggdAdapter);
         mChoseall.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -105,6 +120,7 @@ public class TestResultFGGDActivity extends BaseActivity<TestResultFGGDPresenter
                 for (int i = 0; i < dataList.size(); i++) {
                     dataList.get(i).setCheckd(isChecked);
                 }
+                fggdAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -166,40 +182,41 @@ public class TestResultFGGDActivity extends BaseActivity<TestResultFGGDPresenter
         switch (tags.tag) {
             case 0:
                 fggdAdapter.notifyDataSetChanged();
-                if (dataList.size()>0){
+                if (dataList.size() > 0) {
                     BaseProjectMessage baseProjectMessage = dataList.get(0).getmProjectMessage();
                     initControValue(baseProjectMessage.getMethod_sp());
                 }
                 break;
         }
     }
+
     private void initControValue(int method_sp) {
-        if (method_sp==0){
-            mControvalue.setText("当前对照:"+ Constants.getControValue0());
-            mControvalue.setVisibility(View.GONE);
-        }else if (method_sp==1){
-            mControvalue.setText("当前对照:"+ Constants.getControValue1());
-            mControvalue.setVisibility(View.GONE);
-        }else {
+        if (method_sp == 0) {
+            mControvalue.setText("当前对照:" + Constants.getControValue0());
+            mControvalue.setVisibility(View.VISIBLE);
+        } else if (method_sp == 1) {
+            mControvalue.setText("当前对照:" + Constants.getControValue1());
+            mControvalue.setVisibility(View.VISIBLE);
+        } else {
             mControvalue.setVisibility(View.GONE);
         }
     }
 
     @OnClick({R.id.btn_retest, R.id.btn_restart, R.id.btn_record})
     public void onClick(View view) {
-        Intent intent = getIntent();
-        intent.putExtra("project",pjName);
+        Intent intent = new Intent();
+        intent.putExtra("project", pjName);
         switch (view.getId()) {
             case R.id.btn_retest://复检
-                intent.setClass(TestResultFGGDActivity.this,TestFGGDActivity.class) ;
+                intent.setClass(TestResultFGGDActivity.this, TestFGGDActivity.class);
                 ArmsUtils.startActivity(intent);
                 break;
             case R.id.btn_restart:
-                intent.setClass(TestResultFGGDActivity.this,ChoseGalleryFGGDActivity.class) ;
+                intent.setClass(TestResultFGGDActivity.this, ChoseGalleryFGGDActivity.class);
                 ArmsUtils.startActivity(intent);
                 break;
             case R.id.btn_record:
-                intent.setClass(TestResultFGGDActivity.this,RecordActivity.class) ;
+                intent.setClass(TestResultFGGDActivity.this, RecordActivity.class);
 
                 ArmsUtils.startActivity(intent);
                 break;

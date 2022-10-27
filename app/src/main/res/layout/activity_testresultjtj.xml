@@ -52,24 +52,50 @@
                 <com.github.mikephil.charting.charts.LineChart
                     android:id="@+id/chartview1"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp" />
+                    android:layout_height="100dp"
+                    android:layout_marginTop="20dp"/>
 
-                <android.support.design.widget.TextInputLayout
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:textColorHint="#626161">
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="60dp"
+                        android:textColorHint="#626161">
 
-                    <AutoCompleteTextView
-                        android:id="@+id/sampleserial1"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:editable="false"
-                        android:hint="样品编号"
-                        android:maxLines="1"
-                        android:singleLine="true" />
+                        <AutoCompleteTextView
+                            android:id="@+id/samplename1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:editable="false"
+                            android:hint="样品名称"
+                            android:maxLines="1"
+                            android:singleLine="true" />
 
 
-                </android.support.design.widget.TextInputLayout>
+                    </android.support.design.widget.TextInputLayout>
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="60dp"
+                        android:textColorHint="#626161">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/sampleserial1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:editable="false"
+                            android:hint="样品编号"
+                            android:maxLines="1"
+                            android:singleLine="true" />
+
+
+                    </android.support.design.widget.TextInputLayout>
+                </LinearLayout>
+
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -192,24 +218,48 @@
                 <com.github.mikephil.charting.charts.LineChart
                     android:id="@+id/chartview2"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp" />
+                    android:layout_height="100dp"
+                    android:layout_marginTop="20dp"/>
 
-                <android.support.design.widget.TextInputLayout
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:textColorHint="#626161">
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="60dp"
+                        android:textColorHint="#626161">
 
-                    <AutoCompleteTextView
-                        android:id="@+id/sampleserial2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:editable="false"
-                        android:hint="样品编号"
-                        android:maxLines="1"
-                        android:singleLine="true" />
+                        <AutoCompleteTextView
+                            android:id="@+id/samplename2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:editable="false"
+                            android:hint="样品名称"
+                            android:maxLines="1"
+                            android:singleLine="true" />
 
 
-                </android.support.design.widget.TextInputLayout>
+                    </android.support.design.widget.TextInputLayout>
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="60dp"
+                        android:textColorHint="#626161">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/sampleserial2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:editable="false"
+                            android:hint="样品编号"
+                            android:maxLines="1"
+                            android:singleLine="true" />
+
+
+                    </android.support.design.widget.TextInputLayout>
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"

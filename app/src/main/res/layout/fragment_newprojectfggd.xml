@@ -182,7 +182,8 @@
 
                 <AutoCompleteTextView
                     android:id="@+id/unit_input"
-                    style="@style/AutoCompleteTextViewStyle" />
+                    style="@style/AutoCompleteTextViewStyle"
+                    android:inputType="text"/>
 
             </android.support.design.widget.TextInputLayout>
 

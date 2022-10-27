@@ -1,6 +1,7 @@
 package com.dy.huibiao_f80.mvp.ui.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,6 +25,7 @@ import com.jess.arms.utils.ArmsUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import dmax.dialog.SpotsDialog;
 
 import static com.jess.arms.utils.Preconditions.checkNotNull;
 
@@ -44,6 +46,7 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
     TextView mExam;
     @BindView(R.id.seting)
     Button mSeting;
+    private AlertDialog sportDialog;
 
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
@@ -63,17 +66,27 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
         mPresenter.setTime();
-
+        sportDialog = new SpotsDialog.Builder().setContext(this).setCancelable(true).build();
     }
 
     @Override
     public void showLoading() {
-
+        if (null==sportDialog){
+            return;
+        }
+        if (!sportDialog.isShowing()) {
+            sportDialog.show();
+        }
     }
 
     @Override
     public void hideLoading() {
-
+        if (null==sportDialog){
+            return;
+        }
+        if (sportDialog.isShowing()) {
+            sportDialog.dismiss();
+        }
     }
 
     @Override

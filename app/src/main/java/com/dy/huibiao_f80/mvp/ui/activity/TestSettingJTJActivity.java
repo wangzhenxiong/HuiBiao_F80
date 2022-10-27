@@ -129,6 +129,7 @@ public class TestSettingJTJActivity extends BaseActivity<TestSettingTJPresenter>
     public void initData(@Nullable Bundle savedInstanceState) {
         Intent intent = getIntent();
         project = intent.getStringExtra("project");
+        LogUtils.d(project);
         initSpinner();
         List<GalleryBean> mJTJGalleryBeanList = MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList;
         for (int i = 0; i < mJTJGalleryBeanList.size(); i++) {

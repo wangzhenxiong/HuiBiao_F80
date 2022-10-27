@@ -81,6 +81,8 @@
     <string name="print_mothed2" translatable="false">检测方法：标准曲线法</string>
     <string name="print_mothed3" translatable="false">检测方法：动力学法</string>
     <string name="print_mothed4" translatable="false">检测方法：系数法</string>
+    <string name="print_xiaoxian" translatable="false">检测方法：消线法</string>
+    <string name="print_bise" translatable="false">检测方法：比色法</string>
     <string name="print_mothed" translatable="false">检测方法：</string>
     <string name="print_testdata" translatable="false">检测日期：</string>
     <string name="print_testunit" translatable="false">检测值单位：</string>

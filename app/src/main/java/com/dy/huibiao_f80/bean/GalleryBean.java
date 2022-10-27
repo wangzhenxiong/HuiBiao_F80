@@ -322,7 +322,7 @@ public abstract class GalleryBean implements Parcelable, UsbReadWriteHelper.onUs
     public void removedata() {
         ((TestRecord) this).setSamplename(null);
         ((TestRecord) this).setSamplenum(null);
-        ((TestRecord) this).setDilutionratio(0);
+        ((TestRecord) this).setDilutionratio(1);
         ((TestRecord) this).setDowhat(1);
     }
 

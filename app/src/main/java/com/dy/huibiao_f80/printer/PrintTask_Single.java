@@ -89,17 +89,26 @@ public class PrintTask_Single implements Itask {
         control.sendPortData(control, "\r\n");
         String string = MyAppLocation.myAppLocation.getString(R.string.print_devicename) + ArmsUtils.getString(MyAppLocation.myAppLocation, R.string.my_app_name);
         CharUtils.splitLine180(control, string);
-        if ("0".equals(method)) {
-            control.sendPortData(control, MyAppLocation.myAppLocation.getString(R.string.print_mothed1) + "\r");
-        } else if ("1".equals(method)) {
-            control.sendPortData(control, MyAppLocation.myAppLocation.getString(R.string.print_mothed2) + "\r");
-        } else if ("2".equals(method)) {
-            control.sendPortData(control, MyAppLocation.myAppLocation.getString(R.string.print_mothed3) + "\r");
-        } else if ("3".equals(method)) {
-            control.sendPortData(control, MyAppLocation.myAppLocation.getString(R.string.print_mothed4) + "\r");
-        } else {
-            CharUtils.splitLine180(control, MyAppLocation.myAppLocation.getString(R.string.print_mothed) + method, 33, 34);
+        if (q.getTest_Moudle().equals("分光光度")){
+            if ("0".equals(method)) {
+                control.sendPortData(control, MyAppLocation.myAppLocation.getString(R.string.print_mothed1) + "\r");
+            } else if ("1".equals(method)) {
+                control.sendPortData(control, MyAppLocation.myAppLocation.getString(R.string.print_mothed2) + "\r");
+            } else if ("2".equals(method)) {
+                control.sendPortData(control, MyAppLocation.myAppLocation.getString(R.string.print_mothed3) + "\r");
+            } else if ("3".equals(method)) {
+                control.sendPortData(control, MyAppLocation.myAppLocation.getString(R.string.print_mothed4) + "\r");
+            } else {
+                CharUtils.splitLine180(control, MyAppLocation.myAppLocation.getString(R.string.print_mothed) + method, 33, 34);
+            }
+        }else if (q.getTest_Moudle().equals("胶体金")){
+            if ("0".equals(method)) {
+                control.sendPortData(control, MyAppLocation.myAppLocation.getString(R.string.print_xiaoxian) + "\r");
+            } else if ("1".equals(method)) {
+                control.sendPortData(control, MyAppLocation.myAppLocation.getString(R.string.print_bise) + "\r");
+            }
         }
+
 
         String out = "检测依据：" + q.getStand_num();
         CharUtils.splitLine180(control, out);

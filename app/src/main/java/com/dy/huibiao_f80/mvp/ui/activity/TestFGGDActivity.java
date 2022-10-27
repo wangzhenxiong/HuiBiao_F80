@@ -25,6 +25,7 @@ import com.dy.huibiao_f80.bean.base.BaseProjectMessage;
 import com.dy.huibiao_f80.bean.eventBusBean.FGTestMessageBean;
 import com.dy.huibiao_f80.di.component.DaggerTestFGGDComponent;
 import com.dy.huibiao_f80.greendao.DBHelper;
+import com.dy.huibiao_f80.greendao.TestRecord;
 import com.dy.huibiao_f80.greendao.daos.ProjectFGGDDao;
 import com.dy.huibiao_f80.mvp.contract.TestFGGDContract;
 import com.dy.huibiao_f80.mvp.presenter.TestFGGDPresenter;
@@ -204,6 +205,8 @@ public class TestFGGDActivity extends BaseActivity<TestFGGDPresenter> implements
 
                 for (int i = 0; i < dataList.size(); i++) {
                     GalleryBean galleryBean = dataList.get(i);
+                    ((TestRecord) galleryBean).setDecisionoutcome(null);
+                    ((TestRecord) galleryBean).setRetest(0);
                     if (galleryBean.getDowhat()==1){
                         galleryBean.setState(1);
                         galleryBean.setRemainingtime(baseProjectMessage.getJiancetime() + baseProjectMessage.getYuretime()+1);

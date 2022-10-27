@@ -85,6 +85,7 @@
                     android:orientation="vertical">
 
                     <EditText
+                        android:id="@+id/devicenumber"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:textColor="@color/black"
@@ -92,6 +93,7 @@
                         android:textStyle="bold" />
 
                     <Button
+                        android:id="@+id/edtmoudle"
                         android:layout_width="wrap_content"
                         android:layout_height="50dp"
                         android:layout_marginTop="10dp"
@@ -100,6 +102,7 @@
                         android:textColor="@color/white" />
 
                     <EditText
+                        android:id="@+id/plaurl"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_marginTop="10dp"
@@ -120,6 +123,7 @@
                             android:text="V2.22"
                             android:textSize="20dp"/>
                         <Button
+                            android:id="@+id/checknewversion"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/btn_background_blue"
@@ -142,6 +146,7 @@
                 android:orientation="vertical"
                 android:gravity="center">
                 <Button
+                    android:id="@+id/save"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/btn_background_blue"

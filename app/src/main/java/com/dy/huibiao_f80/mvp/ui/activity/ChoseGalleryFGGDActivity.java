@@ -17,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.apkfuns.logutils.LogUtils;
 import com.dy.huibiao_f80.MyAppLocation;
 import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.bean.GalleryBean;
@@ -156,6 +155,7 @@ public class ChoseGalleryFGGDActivity extends BaseActivity<ChoseGalleryFGGDPrese
     public void initData(@Nullable Bundle savedInstanceState) {
         Intent intent = getIntent();
         projectname = intent.getStringExtra("project");
+        refishMessage(1, R.id.background1);
         mCheckall1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -190,7 +190,6 @@ public class ChoseGalleryFGGDActivity extends BaseActivity<ChoseGalleryFGGDPrese
 
             @Override
             public void afterTextChanged(Editable s) {
-                LogUtils.d(s);
                 String sampleserial = s.toString();
                 nowCheckGallery.setSamplenum(sampleserial);
             }
@@ -206,7 +205,6 @@ public class ChoseGalleryFGGDActivity extends BaseActivity<ChoseGalleryFGGDPrese
 
             @Override
             public void afterTextChanged(Editable s) {
-                LogUtils.d(s);
                 String samplename = s.toString();
                 nowCheckGallery.setSamplename(samplename);
             }
@@ -222,16 +220,16 @@ public class ChoseGalleryFGGDActivity extends BaseActivity<ChoseGalleryFGGDPrese
 
             @Override
             public void afterTextChanged(Editable s) {
-                LogUtils.d(s);
                 String dr = s.toString();
                 if (dr.isEmpty()){
                     dr="1";
+                    mDr.setText("1");
                 }
-                mDr.setText("1");
+
                 nowCheckGallery.setDilutionratio(Double.parseDouble(dr));
             }
         });
-        refishMessage(1, R.id.background1);
+
         //先将所有通道设为未选择
         List<GalleryBean> mFGGDGalleryBeanList = MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList;
         for (int i = 0; i < mFGGDGalleryBeanList.size(); i++) {

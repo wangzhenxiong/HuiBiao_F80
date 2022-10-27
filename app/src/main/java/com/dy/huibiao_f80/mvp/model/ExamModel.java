@@ -37,26 +37,14 @@ public class ExamModel extends BaseModel implements ExamContract.Model {
     }
 
     @Override
-    public Observable<CheckExaminer_Back> checkExaminer(String url, int id, String name, String number, int personTestMethod) {
+    public Observable<CheckExaminer_Back> checkExaminer(String url, String id, String name, String number, int personTestMethod) {
         RetrofitUrlManager.getInstance().putDomain("xxx", url);
         return mRepositoryManager.obtainRetrofitService(HuiBiaoService.class)
-                .checkExaminer(mGson.toJson(new QueryExaminer(id + "", name, number, personTestMethod + "")))
+                .checkExaminer(id,name,number,personTestMethod)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io());
     }
 
-    class QueryExaminer {
-        public QueryExaminer(String examinationId, String name, String idNumber, String personTestMethod) {
-            this.examinationId = examinationId;
-            this.name = name;
-            this.idNumber = idNumber;
-            this.personTestMethod = personTestMethod;
-        }
 
-        private String examinationId;
-        private String name;
-        private String idNumber;
-        private String personTestMethod;
-    }
 }
