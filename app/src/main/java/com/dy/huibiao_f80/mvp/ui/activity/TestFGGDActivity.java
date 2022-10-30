@@ -1,4 +1,4 @@
-package com.dy.huibiao_f80.mvp.ui.activity;
+ package com.dy.huibiao_f80.mvp.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,6 +25,7 @@ import com.dy.huibiao_f80.bean.base.BaseProjectMessage;
 import com.dy.huibiao_f80.bean.eventBusBean.FGTestMessageBean;
 import com.dy.huibiao_f80.di.component.DaggerTestFGGDComponent;
 import com.dy.huibiao_f80.greendao.DBHelper;
+import com.dy.huibiao_f80.greendao.ProjectFGGD;
 import com.dy.huibiao_f80.greendao.TestRecord;
 import com.dy.huibiao_f80.greendao.daos.ProjectFGGDDao;
 import com.dy.huibiao_f80.mvp.contract.TestFGGDContract;
@@ -95,25 +96,25 @@ public class TestFGGDActivity extends BaseActivity<TestFGGDPresenter> implements
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
         projectname = getIntent().getStringExtra("projectname");
-        mTitle.setText("分光光度检测——"+projectname);
-        getdata();
+        mTitle.setText("分光光度检测——" + projectname);
         ArmsUtils.configRecyclerView(mRecylerview, new GridLayoutManager(this, 1));
         fggdAdapter = new FGGDAdapter(R.layout.layout_fggftest_item, dataList);
         fggdAdapter.setEmptyView(R.layout.emptyview, (ViewGroup) mRecylerview.getParent());
         mRecylerview.setAdapter(fggdAdapter);
+        getdata();
         initCurve();
 
 
     }
 
     private void initControValue(int method_sp) {
-        if (method_sp==0){
-            mControvalue.setText("当前对照:"+ Constants.getControValue0());
+        if (method_sp == 0) {
+            mControvalue.setText("当前对照:" + Constants.getControValue0());
             mControvalue.setVisibility(View.GONE);
-        }else if (method_sp==1){
-            mControvalue.setText("当前对照:"+ Constants.getControValue1());
+        } else if (method_sp == 1) {
+            mControvalue.setText("当前对照:" + Constants.getControValue1());
             mControvalue.setVisibility(View.GONE);
-        }else {
+        } else {
             mControvalue.setVisibility(View.GONE);
         }
     }
@@ -146,6 +147,11 @@ public class TestFGGDActivity extends BaseActivity<TestFGGDPresenter> implements
 
             }
         });
+        for (int i = 0; i < list.size(); i++) {
+            if (((ProjectFGGD) list.get(i)).getIsdefault()) {
+                mCures.setSelection(i);
+            }
+        }
     }
 
     private void getdata() {
@@ -154,8 +160,18 @@ public class TestFGGDActivity extends BaseActivity<TestFGGDPresenter> implements
             GalleryBean galleryBean = MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(i);
             if (galleryBean.isCheckd()) {
                 dataList.add(galleryBean);
+                LogUtils.d(galleryBean.getGalleryNum());
+            }else {
+                galleryBean.setState(0);
             }
         }
+        fggdAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        getdata();
     }
 
     @Override
@@ -205,11 +221,12 @@ public class TestFGGDActivity extends BaseActivity<TestFGGDPresenter> implements
 
                 for (int i = 0; i < dataList.size(); i++) {
                     GalleryBean galleryBean = dataList.get(i);
+                    galleryBean.setCheckd(false);
                     ((TestRecord) galleryBean).setDecisionoutcome(null);
                     ((TestRecord) galleryBean).setRetest(0);
-                    if (galleryBean.getDowhat()==1){
+                    if (galleryBean.getDowhat() == 1) {
                         galleryBean.setState(1);
-                        galleryBean.setRemainingtime(baseProjectMessage.getJiancetime() + baseProjectMessage.getYuretime()+1);
+                        galleryBean.setRemainingtime(baseProjectMessage.getJiancetime() + baseProjectMessage.getYuretime() + 1);
                     }
                     if (galleryBean.getDowhat() == 2) {
                         galleryBean.setState(1);
@@ -218,7 +235,7 @@ public class TestFGGDActivity extends BaseActivity<TestFGGDPresenter> implements
 
                 }
 
-                ArmsUtils.startActivity(new Intent(this,TestResultFGGDActivity.class));
+                ArmsUtils.startActivity(new Intent(this, TestResultFGGDActivity.class));
                 break;
         }
     }
@@ -233,4 +250,6 @@ public class TestFGGDActivity extends BaseActivity<TestFGGDPresenter> implements
                 break;
         }
     }
+
+
 }

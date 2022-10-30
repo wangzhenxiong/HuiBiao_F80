@@ -47,6 +47,7 @@ public class FGGDTestResultAdapter extends BaseQuickAdapter<GalleryBean, BaseVie
 
     @Override
     protected void convert(BaseViewHolder helper, GalleryBean item) {
+
         TestRecord item1 = (TestRecord) item;
 
        helper.addOnClickListener(R.id.checkbox);
@@ -62,7 +63,7 @@ public class FGGDTestResultAdapter extends BaseQuickAdapter<GalleryBean, BaseVie
         if (decisionoutcome.isEmpty()){
             decisionoutcome=item.getRemainingtime()+"";
         }
-        helper.setText(R.id.gallery_num,item.getGalleryNum()+"")
+        helper.setText(R.id.gallery_num,item.getGalleryNum()+""+(item.getDowhat()==2?"(对照)":""))
                 .setText(R.id.samplename,item1.getSamplename())
                 .setText(R.id.sampleserial,item1.getSamplenum())
                 .setText(R.id.dishu,item1.getDilutionratio()+"")

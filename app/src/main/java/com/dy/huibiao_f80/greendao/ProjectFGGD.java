@@ -1,10 +1,11 @@
 package com.dy.huibiao_f80.greendao;
 
 import com.dy.huibiao_f80.bean.base.BaseProjectMessage;
+import com.dy.huibiao_f80.mvp.ui.widget.OutMoudle;
 
 import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
 
 /**
  * 　 ┏┓　  ┏┓+ +
@@ -144,12 +145,14 @@ public class ProjectFGGD extends BaseProjectMessage {
      * 检测项目信息完成状态，新建时状态都是未完成，在点击保存时候才改完true
      */
     private boolean finishState;
+    /**
+     * 创建者，用于导入的时候区分，导入时需要删除自带的，用户新建的检测项目需要保留
+     */
+    private int creator;
 
 
 
-
-
-    @Generated(hash = 516655006)
+    @Generated(hash = 1061115712)
     public ProjectFGGD(Long id, String projectName, String curveName, int curveOrder,
             boolean isdefault, String standardName, int method, int waveLength, int warmTime,
             int testTime, String resultUnit, float controValue, String controValueLastTime,
@@ -159,7 +162,7 @@ public class ProjectFGGD extends BaseProjectMessage {
             double yin_b, String yin_b_symbol, boolean user_yang, double yang_a,
             String yang_a_symbol, double yang_b, String yang_b_symbol, boolean user_keyi,
             double keyi_a, String keyi_a_symbol, double keyi_b, String keyi_b_symbol,
-            String tips, String detectionLimit, boolean finishState) {
+            String tips, String detectionLimit, boolean finishState, int creator) {
         this.id = id;
         this.projectName = projectName;
         this.curveName = curveName;
@@ -207,13 +210,38 @@ public class ProjectFGGD extends BaseProjectMessage {
         this.tips = tips;
         this.detectionLimit = detectionLimit;
         this.finishState = finishState;
+        this.creator = creator;
     }
 
     @Generated(hash = 1476994882)
     public ProjectFGGD() {
     }
 
+    public OutMoudle<String> toJxlTitle() {
+        return new OutMoudle<String>("数据库ID,项目名称,曲线名称,曲线序号,是否默认曲线,检测标准,检测方法," +
+                "波长,预热时间,检测时间,检测结果单位,A0,BO," +
+                "C0,D0,FROM0,TO0,A1,B1," +
+                "C1,D1,FROM1,TO1," +
+                "A,B,C,D" +
+                ",启用阴性区间,阴性范围A,阴性范围A对比符号,阴性范围B,阴性范围B对比符号" +
+                ",启用阳性区间,阳性范围A,阳性范围A对比符号,阳性范围B,阳性范围B对比符号" +
+                ",启用可疑区间,可疑范围A,可疑范围A对比符号,可疑范围B,可疑范围B对比符号" +
+                ",启用可疑区间,可疑范围A,可疑范围A对比符号,可疑范围B,可疑范围B对比符号"+
+                ",简要提示,方法检出限,创建者"
+        );
+    }
 
+    public OutMoudle<String> toJxlString() {
+        return new OutMoudle<String>(id + "," + projectName + "," + curveName + "," + curveOrder + "," + isdefault + "," + standardName + "," + method + "," +
+                waveLength + "," + warmTime + "," + testTime + "," + resultUnit + "," + a0 + "," + b0 + "," +
+                c0 + "," + d0 + "," + from0 + "," + to0 + "," + a1 + "," + b1 + "," +
+                c1 + "," + d1 + "," + from1 + "," + to1 + "," +
+                a + "," + b + "," + c + "," + d + ","
+                + user_yin + "," + yin_a + "," + yin_a_symbol + "," + yin_b+ "," + yin_b_symbol + ","
+                + user_yang + "," + yang_a + "," + yang_a_symbol + "," + yang_b+ "," + yang_b_symbol + ","
+                + user_keyi + "," + keyi_a + "," + keyi_a_symbol + "," + keyi_b+ "," + keyi_b_symbol + ","
+                + tips + "," + detectionLimit  + "," + creator);
+    }
 
 
 
@@ -611,5 +639,13 @@ public class ProjectFGGD extends BaseProjectMessage {
 
     public void setCurveOrder(int curveOrder) {
         this.curveOrder = curveOrder;
+    }
+
+    public int getCreator() {
+        return creator;
+    }
+
+    public void setCreator(int creator) {
+        this.creator = creator;
     }
 }

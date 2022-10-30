@@ -15,6 +15,10 @@ import com.dy.huibiao_f80.crash.CaocConfig;
 import com.dy.huibiao_f80.crash.CustomActivityOnCrash;
 import com.dy.huibiao_f80.mvp.ui.activity.HomeActivity;
 import com.jess.arms.base.BaseApplication;
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
 import net.posprinter.posprinterface.IMyBinder;
 import net.posprinter.service.PosprinterService;
@@ -105,11 +109,29 @@ public class MyAppLocation extends BaseApplication implements TextToSpeech.OnIni
             bindService(mIntent, mConnection, BIND_AUTO_CREATE);
             bindService(mIntent2, mConnection2, BIND_AUTO_CREATE);
             initTextToSpeech();
+            initImageLoader(getApplicationContext());
         }
 
 
 
 
+    }
+
+    private void initImageLoader(Context context) {
+        // This configuration tuning is custom. You can tune every option, you may tune some of them,
+        // or you can create default configuration by
+        //  ImageLoaderConfiguration.createDefault(this);
+        // method.
+        ImageLoaderConfiguration.Builder config = new ImageLoaderConfiguration.Builder(context);
+        config.threadPriority(Thread.NORM_PRIORITY - 2);
+        config.denyCacheImageMultipleSizesInMemory();
+        config.diskCacheFileNameGenerator(new Md5FileNameGenerator());
+        config.diskCacheSize(50 * 1024 * 1024); // 50 MiB
+        config.tasksProcessingOrder(QueueProcessingType.LIFO);
+        config.writeDebugLogs(); // Remove for release app
+
+        // Initialize ImageLoader with configuration.
+        ImageLoader.getInstance().init(config.build());
     }
 
     /**

@@ -1,6 +1,5 @@
 package com.dy.huibiao_f80.printer;
 
-import com.dy.huibiao_f80.Constants;
 import com.dy.huibiao_f80.MyAppLocation;
 import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.greendao.DBHelper;
@@ -75,11 +74,8 @@ public class PrintHelper {
             String project = nc.getTest_project();
 
             String inspector;
-            if (Constants.PLATFORM_TAG == 30) {
-                inspector = nc.getPlanName();
-            } else {
-                inspector = nc.getInspector();
-            }
+
+            inspector = nc.getInspector();
             String moudle = nc.getTest_Moudle();
             String method = nc.getTest_method();
             String num = nc.getStand_num();
@@ -95,11 +91,7 @@ public class PrintHelper {
                 String moudle1 = nc1.getTest_Moudle();
                 String method1 = nc1.getTest_method();
                 String inspector1;
-                if (Constants.PLATFORM_TAG == 30) {
-                    inspector1 = nc.getPlanName();
-                } else {
-                    inspector1 = nc.getInspector();
-                }
+                inspector1 = nc.getInspector();
                 String num1 = nc1.getStand_num();
                 String testingtime1 = nc1.getdfTestingtimeYY_MM_DD();
                 String prosecutedunits1 = nc1.getProsecutedunits();
@@ -192,23 +184,6 @@ public class PrintHelper {
 
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }

@@ -106,7 +106,7 @@ public class RecordDetailActivity extends BaseActivity<RecordDetailPresenter> im
         mTestresult.setText(testRecord.getTestresult());
         mJudge.setText(testRecord.getDecisionoutcome());
         mStandnum.setText(testRecord.getStand_num());
-        mMethodlimit.setText(testRecord.getReservedfield1());
+        mMethodlimit.setText(testRecord.getMethodsDetectionLimit());
 
     }
 
@@ -169,7 +169,7 @@ public class RecordDetailActivity extends BaseActivity<RecordDetailPresenter> im
                 break;
             case R.id.btn_save:
                 if (null!=sampling){
-                    testRecord.setReservedfield2(sampling.getId()+"");
+                    testRecord.setSamplingID(sampling.getId());
                     sampling.setTestingTime(testRecord.getTestingtime());
                     sampling.setTestResult(testRecord.getDecisionoutcome());
                     DBHelper.getSamplingDao().update(sampling);

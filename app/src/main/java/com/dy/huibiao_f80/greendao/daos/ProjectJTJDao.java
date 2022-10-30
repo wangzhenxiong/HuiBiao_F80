@@ -40,6 +40,7 @@ public class ProjectJTJDao extends AbstractDao<ProjectJTJ, Long> {
         public final static Property Tips = new Property(13, String.class, "tips", false, "TIPS");
         public final static Property DetectionLimit = new Property(14, String.class, "detectionLimit", false, "DETECTION_LIMIT");
         public final static Property FinishState = new Property(15, boolean.class, "finishState", false, "FINISH_STATE");
+        public final static Property Creator = new Property(16, int.class, "creator", false, "CREATOR");
     }
 
 
@@ -70,7 +71,8 @@ public class ProjectJTJDao extends AbstractDao<ProjectJTJ, Long> {
                 "\"TEST_TIME\" INTEGER NOT NULL ," + // 12: testTime
                 "\"TIPS\" TEXT," + // 13: tips
                 "\"DETECTION_LIMIT\" TEXT," + // 14: detectionLimit
-                "\"FINISH_STATE\" INTEGER NOT NULL );"); // 15: finishState
+                "\"FINISH_STATE\" INTEGER NOT NULL ," + // 15: finishState
+                "\"CREATOR\" INTEGER NOT NULL );"); // 16: creator
     }
 
     /** Drops the underlying database table. */
@@ -122,6 +124,7 @@ public class ProjectJTJDao extends AbstractDao<ProjectJTJ, Long> {
             stmt.bindString(15, detectionLimit);
         }
         stmt.bindLong(16, entity.getFinishState() ? 1L: 0L);
+        stmt.bindLong(17, entity.getCreator());
     }
 
     @Override
@@ -167,6 +170,7 @@ public class ProjectJTJDao extends AbstractDao<ProjectJTJ, Long> {
             stmt.bindString(15, detectionLimit);
         }
         stmt.bindLong(16, entity.getFinishState() ? 1L: 0L);
+        stmt.bindLong(17, entity.getCreator());
     }
 
     @Override
@@ -192,7 +196,8 @@ public class ProjectJTJDao extends AbstractDao<ProjectJTJ, Long> {
             cursor.getInt(offset + 12), // testTime
             cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13), // tips
             cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14), // detectionLimit
-            cursor.getShort(offset + 15) != 0 // finishState
+            cursor.getShort(offset + 15) != 0, // finishState
+            cursor.getInt(offset + 16) // creator
         );
         return entity;
     }
@@ -215,6 +220,7 @@ public class ProjectJTJDao extends AbstractDao<ProjectJTJ, Long> {
         entity.setTips(cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13));
         entity.setDetectionLimit(cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14));
         entity.setFinishState(cursor.getShort(offset + 15) != 0);
+        entity.setCreator(cursor.getInt(offset + 16));
      }
     
     @Override

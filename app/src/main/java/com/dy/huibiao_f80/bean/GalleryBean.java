@@ -112,7 +112,7 @@ public abstract class GalleryBean implements Parcelable, UsbReadWriteHelper.onUs
         ((TestRecord) this).setTest_method(mProjectMessage.getMethod_sp() + "");
         ((TestRecord) this).setStand_num(mProjectMessage.getStandNum() + "");
         ((TestRecord) this).setCov_unit(mProjectMessage.getUnit_input() + "");
-        ((TestRecord) this).setReservedfield1(mProjectMessage.getmethodLimit() + "");
+        ((TestRecord) this).setMethodsDetectionLimit(mProjectMessage.getmethodLimit() + "");
 
     }
 
@@ -1320,7 +1320,6 @@ public abstract class GalleryBean implements Parcelable, UsbReadWriteHelper.onUs
         detection_record_fggd_nc.setLatitude(Constants.LATITUDE);
         detection_record_fggd_nc.setLongitude(Constants.LONTITUDE);
         //当前平台
-        detection_record_fggd_nc.setPlatform_tag(Constants.PLATFORM_TAG + "");
         //对照值
         //检测人员   这里填的是本地登录的账号名称
         //detection_record_fggd_nc.setInspector(Constants.NOWUSER.getUsername());

@@ -9,6 +9,7 @@ import com.dy.huibiao_f80.greendao.ProjectJTJ;
 import com.dy.huibiao_f80.greendao.daos.ProjectFGGDDao;
 import com.dy.huibiao_f80.greendao.daos.ProjectJTJDao;
 import com.dy.huibiao_f80.mvp.contract.EdtorProjectContract;
+import com.dy.huibiao_f80.mvp.ui.widget.OutMoudle;
 import com.google.gson.Gson;
 import com.jess.arms.di.scope.ActivityScope;
 import com.jess.arms.integration.IRepositoryManager;
@@ -16,6 +17,7 @@ import com.jess.arms.mvp.BaseModel;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -80,5 +82,41 @@ public class EdtorProjectModel extends BaseModel implements EdtorProjectContract
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io());
+    }
+
+    @Override
+    public Observable<List<OutMoudle>> getJTJJXLs() {
+        return Observable.create(new ObservableOnSubscribe<List<OutMoudle>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<OutMoudle>> emitter) throws Exception {
+                List<OutMoudle> list = new ArrayList<>();
+                List<ProjectJTJ> s = DBHelper.getProjectJTJDao().loadAll();
+                list.add(new ProjectJTJ().toJxlTitle());
+                for (int i = 0; i < s.size(); i++) {
+                    ProjectJTJ simple33 = s.get(i);
+                    list.add(simple33.toJxlString());
+                }
+                emitter.onNext(list);
+                emitter.onComplete();
+            }
+        });
+    }
+
+    @Override
+    public Observable<List<OutMoudle>> getFGGDJXLs() {
+        return Observable.create(new ObservableOnSubscribe<List<OutMoudle>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<OutMoudle>> emitter) throws Exception {
+                List<OutMoudle> list = new ArrayList<>();
+                List<ProjectFGGD> s = DBHelper.getProjectFGGDDao().loadAll();
+                list.add(new ProjectFGGD().toJxlTitle());
+                for (int i = 0; i < s.size(); i++) {
+                    ProjectFGGD simple33 = s.get(i);
+                    list.add(simple33.toJxlString());
+                }
+                emitter.onNext(list);
+                emitter.onComplete();
+            }
+        });
     }
 }

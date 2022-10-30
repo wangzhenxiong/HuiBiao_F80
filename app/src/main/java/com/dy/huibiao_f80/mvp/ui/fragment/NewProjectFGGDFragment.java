@@ -23,7 +23,6 @@ import com.dy.huibiao_f80.di.component.DaggerNewProjectFGGDComponent;
 import com.dy.huibiao_f80.greendao.DBHelper;
 import com.dy.huibiao_f80.greendao.ProjectFGGD;
 import com.dy.huibiao_f80.greendao.daos.ProjectFGGDDao;
-import com.dy.huibiao_f80.greendao.daos.ProjectJTJDao;
 import com.dy.huibiao_f80.mvp.contract.NewProjectFGGDContract;
 import com.dy.huibiao_f80.mvp.presenter.NewProjectFGGDPresenter;
 import com.dy.huibiao_f80.mvp.ui.adapter.GuidePageAdapter_h;
@@ -107,7 +106,6 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
     private View methoed_b_page;
     private View methoed_c_page;
     private View methoed_d_page;
-    private List<View> mViewList = new ArrayList<>();
     private ViewHoldera mViewHoldera;
     private ViewHolderb mViewHolderb;
     private ViewHolderc mViewHolderc;
@@ -139,7 +137,7 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
-        initpages();
+
 
         mChosewavalength.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -158,18 +156,23 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
                 switch (position) {
                     case 0:
                         mVp.removeAllViews();
+                        initpages_a();
                         mVp.addView(methoed_a_page);
                         break;
                     case 1:
                         mVp.removeAllViews();
+                        initpages_b();
                         mVp.addView(methoed_b_page);
                         break;
                     case 2:
                         mVp.removeAllViews();
+                        initpages_c();
+
                         mVp.addView(methoed_c_page);
                         break;
                     case 3:
                         mVp.removeAllViews();
+                        initpages_d();
                         mVp.addView(methoed_d_page);
                         break;
 
@@ -207,24 +210,66 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
 
     }
 
-    private void initpages() {
-        LayoutInflater inflater = getLayoutInflater();
-        methoed_a_page = inflater.inflate(R.layout.method_a, null);
+    private void initpages_a() {
+        methoed_a_page = getLayoutInflater().inflate(R.layout.method_a, null);
         mViewHoldera = new ViewHoldera(methoed_a_page);
 
+
+    }
+
+    private void initpages_b() {
+        LayoutInflater inflater = getLayoutInflater();
         methoed_b_page = inflater.inflate(R.layout.method_b, null);
         mViewHolderb = new ViewHolderb(methoed_b_page);
+        if (null == projectFGGD) {
+            return;
+        }
+        mViewHolderb.mAx0.setText(projectFGGD.getA0() + "");
+        mViewHolderb.mAx1.setText(projectFGGD.getB0() + "");
+        mViewHolderb.mAx2.setText(projectFGGD.getC0() + "");
+        mViewHolderb.mAx3.setText(projectFGGD.getD0() + "");
+        mViewHolderb.mAfrom.setText(projectFGGD.getFrom0() + "");
+        mViewHolderb.mAto.setText(projectFGGD.getTo0() + "");
+
+        mViewHolderb.mBx0.setText(projectFGGD.getA1() + "");
+        mViewHolderb.mBx1.setText(projectFGGD.getB1() + "");
+        mViewHolderb.mBx2.setText(projectFGGD.getC1() + "");
+        mViewHolderb.mBx3.setText(projectFGGD.getD1() + "");
+        mViewHolderb.mBfrom.setText(projectFGGD.getFrom1() + "");
+        mViewHolderb.mBto.setText(projectFGGD.getTo1() + "");
+
+        mViewHolderb.mJzqxa.setText(projectFGGD.getA() + "");
+        mViewHolderb.mJzqxb.setText(projectFGGD.getB() + "");
+
+    }
+
+    private void initpages_c() {
+        LayoutInflater inflater = getLayoutInflater();
+
 
         methoed_c_page = inflater.inflate(R.layout.method_c, null);
         mViewHolderc = new ViewHolderc(methoed_c_page);
+        if (null == projectFGGD) {
+            return;
+        }
+        mViewHolderc.mJzqxa.setText(projectFGGD.getA() + "");
+        mViewHolderc.mJzqxb.setText(projectFGGD.getB() + "");
+
+
+    }
+
+    private void initpages_d() {
+        LayoutInflater inflater = getLayoutInflater();
 
         methoed_d_page = inflater.inflate(R.layout.method_d, null);
         mViewHolderd = new ViewHolderd(methoed_d_page);
-        mViewList.add(methoed_a_page);
-        mViewList.add(methoed_b_page);
-        mViewList.add(methoed_c_page);
-        mViewList.add(methoed_d_page);
-
+        if (null == projectFGGD) {
+            return;
+        }
+        mViewHolderd.mJzqxa.setText(projectFGGD.getA() + "");
+        mViewHolderd.mJzqxb.setText(projectFGGD.getB() + "");
+        mViewHolderd.mJzqxc.setText(projectFGGD.getC() + "");
+        mViewHolderd.mJzqxd.setText(projectFGGD.getD() + "");
     }
 
     @Override
@@ -232,11 +277,10 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
         if (null == data) {
             projectFGGD = null;
             initMessage(new ProjectFGGD());
-        }else {
+        } else {
             projectFGGD = ((ProjectFGGD) data);
             initMessage(projectFGGD);
         }
-
 
 
     }
@@ -273,6 +317,9 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
             case "≥":
                 mOkADemarcate.setSelection(3);
                 break;
+            case "无":
+                mOkADemarcate.setSelection(4);
+                break;
         }
         switch (yin_b_symbol) {
             case "<":
@@ -287,6 +334,8 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
             case "≥":
                 mOkBDemarcate.setSelection(3);
                 break;
+            case "无":
+                mOkBDemarcate.setSelection(4);
         }
         switch (yang_a_symbol) {
             case "<":
@@ -301,6 +350,8 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
             case "≥":
                 mNgADemarcate.setSelection(3);
                 break;
+            case "无":
+                mNgADemarcate.setSelection(4);
         }
         switch (yang_b_symbol) {
             case "<":
@@ -315,6 +366,8 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
             case "≥":
                 mNgBDemarcate.setSelection(3);
                 break;
+            case "无":
+                mNgBDemarcate.setSelection(4);
         }
         switch (keyi_a_symbol) {
             case "<":
@@ -329,6 +382,8 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
             case "≥":
                 mDfADemarcate.setSelection(3);
                 break;
+            case "无":
+                mDfADemarcate.setSelection(4);
         }
         switch (keyi_b_symbol) {
             case "<":
@@ -343,6 +398,8 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
             case "≥":
                 mDfBDemarcate.setSelection(3);
                 break;
+            case "无":
+                mDfBDemarcate.setSelection(4);
         }
         LogUtils.d(projectFGGD);
         int method = projectFGGD.getMethod();
@@ -354,33 +411,19 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
 
                 break;
             case 1:
-                mViewHolderb.mAx0.setText(projectFGGD.getA0() + "");
-                mViewHolderb.mAx1.setText(projectFGGD.getB0() + "");
-                mViewHolderb.mAx2.setText(projectFGGD.getC0() + "");
-                mViewHolderb.mAx3.setText(projectFGGD.getD0() + "");
-                mViewHolderb.mAfrom.setText(projectFGGD.getFrom0() + "");
-                mViewHolderb.mAto.setText(projectFGGD.getTo0() + "");
-
-                mViewHolderb.mBx0.setText(projectFGGD.getA1() + "");
-                mViewHolderb.mBx1.setText(projectFGGD.getB1() + "");
-                mViewHolderb.mBx2.setText(projectFGGD.getC1() + "");
-                mViewHolderb.mBx3.setText(projectFGGD.getD1() + "");
-                mViewHolderb.mBfrom.setText(projectFGGD.getFrom1() + "");
-                mViewHolderb.mBto.setText(projectFGGD.getTo1() + "");
-
-                mViewHolderb.mJzqxa.setText(projectFGGD.getA() + "");
-                mViewHolderb.mJzqxb.setText(projectFGGD.getB() + "");
-
+                mVp.removeAllViews();
+                initpages_b();
+                mVp.addView(methoed_b_page);
                 break;
             case 2:
-                mViewHolderc.mJzqxa.setText(projectFGGD.getA() + "");
-                mViewHolderc.mJzqxb.setText(projectFGGD.getB() + "");
+                mVp.removeAllViews();
+                initpages_c();
+                mVp.addView(methoed_c_page);
                 break;
             case 3:
-                mViewHolderd.mJzqxa.setText(projectFGGD.getA() + "");
-                mViewHolderd.mJzqxb.setText(projectFGGD.getB() + "");
-                mViewHolderd.mJzqxc.setText(projectFGGD.getC() + "");
-                mViewHolderd.mJzqxd.setText(projectFGGD.getD() + "");
+                mVp.removeAllViews();
+                initpages_d();
+                mVp.addView(methoed_d_page);
                 break;
         }
 
@@ -452,7 +495,7 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
             case R.id.delete_curve:
                 deleteCurve();
                 // TODO: 10/16/22删除和新建后需要通知更新表头的曲线组
-                mEvent.onEventFGGD(1,null);
+                mEvent.onEventFGGD(1, null);
                 break;
         }
     }
@@ -642,23 +685,23 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
             projectFGGD.setYin_a_symbol(sysa);
             projectFGGD.setYin_b_symbol(sysb);
             String oka = mOkA.getText().toString();
-            if (!sysa.equals("无")){
+            if (!sysa.equals("无")) {
 
                 if (oka.isEmpty()) {
                     ArmsUtils.snackbarText("请输入合格区间A");
                     return;
                 }
+                projectFGGD.setYin_a(Double.parseDouble(oka));
             }
-            projectFGGD.setYin_a(Double.parseDouble(oka));
             String okb = mOkB.getText().toString();
-            if (!sysb.equals("无")){
+            if (!sysb.equals("无")) {
 
                 if (okb.isEmpty()) {
                     ArmsUtils.snackbarText("请输入合格区间B");
                     return;
                 }
+                projectFGGD.setYin_b(Double.parseDouble(okb));
             }
-            projectFGGD.setYin_b(Double.parseDouble(okb));
         }
         if (mCheckboxNg.isChecked()) {
             projectFGGD.setUser_yang(true);
@@ -667,23 +710,23 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
             projectFGGD.setYang_a_symbol(sysa);
             projectFGGD.setYang_b_symbol(sysb);
             String nga = mNgA.getText().toString();
-            if (!sysa.equals("无")){
+            if (!sysa.equals("无")) {
 
                 if (nga.isEmpty()) {
                     ArmsUtils.snackbarText("请输入不合格区间A");
                     return;
                 }
+                projectFGGD.setYang_a(Double.parseDouble(nga));
             }
-            projectFGGD.setYang_a(Double.parseDouble(nga));
             String ngb = mNgB.getText().toString();
-            if (!sysb.equals("无")){
+            if (!sysb.equals("无")) {
 
                 if (ngb.isEmpty()) {
                     ArmsUtils.snackbarText("请输入不合格区间B");
                     return;
                 }
+                projectFGGD.setYang_b(Double.parseDouble(ngb));
             }
-            projectFGGD.setYang_b(Double.parseDouble(ngb));
         }
         if (mCheckboxDf.isChecked()) {
             projectFGGD.setUser_keyi(true);
@@ -692,23 +735,23 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
             projectFGGD.setKeyi_a_symbol(sysa);
             projectFGGD.setKeyi_b_symbol(sysb);
             String dfa = mDfA.getText().toString();
-            if (!sysa.equals("无")){
+            if (!sysa.equals("无")) {
 
                 if (dfa.isEmpty()) {
                     ArmsUtils.snackbarText("请输入可疑区间A");
                     return;
                 }
+                projectFGGD.setKeyi_a(Double.parseDouble(dfa));
             }
-            projectFGGD.setKeyi_a(Double.parseDouble(dfa));
             String dfb = mDfB.getText().toString();
-            if (!sysb.equals("无")){
+            if (!sysb.equals("无")) {
 
                 if (dfb.isEmpty()) {
                     ArmsUtils.snackbarText("请输入可疑区间B");
                     return;
                 }
+                projectFGGD.setKeyi_b(Double.parseDouble(dfb));
             }
-            projectFGGD.setKeyi_b(Double.parseDouble(dfb));
         }
 
         projectFGGD.setFinishState(true);
@@ -746,7 +789,7 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
                 String pjName = projectFGGD.getPjName();
                 DBHelper.getProjectFGGDDao().delete(projectFGGD);
                 if (projectFGGD.isdefault()) {
-                    List<ProjectFGGD> list = DBHelper.getProjectFGGDDao().queryBuilder().where(ProjectJTJDao.Properties.ProjectName.eq(pjName))
+                    List<ProjectFGGD> list = DBHelper.getProjectFGGDDao().queryBuilder().where(ProjectFGGDDao.Properties.ProjectName.eq(pjName))
                             .orderDesc(ProjectFGGDDao.Properties.CurveOrder).build().list();
                     if (list.size() > 0) {
                         ProjectFGGD projectFGGD = list.get(0);
@@ -755,6 +798,7 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
                     }
                 }
                 ArmsUtils.snackbarText("删除成功");
+                setData(null);
             }
         });
         alertDialog.show();
@@ -842,10 +886,12 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
     }
 
     public void setOnEventListenner(OnEventFGGD onEvent) {
-        mEvent=onEvent;
+        mEvent = onEvent;
     }
+
     OnEventFGGD mEvent;
-    public interface OnEventFGGD{
-        void onEventFGGD(int what,Object o);
+
+    public interface OnEventFGGD {
+        void onEventFGGD(int what, Object o);
     }
 }

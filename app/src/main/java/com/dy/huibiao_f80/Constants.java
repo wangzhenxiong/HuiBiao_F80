@@ -1189,4 +1189,99 @@ public class Constants {
         bytes = ByteUtils.byteMerger(bytes, new byte[]{(byte) MYYGHCMD_END});
         return bytes;
     }
+
+
+
+
+
+/*    public class mainactivity  {
+        private handler handler;
+        private string html;
+        private textview tv;
+        private progressbar bar;
+
+        @override
+        protected void oncreate(bundle savedinstancestate) {
+            super.oncreate(savedinstancestate);
+            setcontentview(r.layout.activity_main);
+            // 网上找的html数据
+            html = “<html><head><title>textview使用html</title></head><body><p><strong>强调</strong></p><p><em>斜体</em></p>”
+            + “<p><a href=”//www.jb51.net”>超链接html入门</a>学习html!</p><p><font color=”#aabb00″>颜色1″
+            + “</p><p><font color=”#00bbaa”>颜色2</p><h1>标题1</h1><h3>标题2</h3><h6>标题3</h6><p>大于>小于<</p><p>”
+            + “下面是网络图片</p><img src=”//www.jb51.net/1207.jpg”/></body>”
+            + “下面是网络图片</p><img src=”//www.jb51.net/207.jpg”/></body></html>”;
+
+            tv = (textview) this.findviewbyid(r.id.id);
+            bar = (progressbar) this.findviewbyid(r.id.id_bar);
+            tv.setmovementmethod(scrollingmovementmethod.getinstance());// 滚动
+
+            handler = new handler() {
+                @override
+                public void handlemessage(message msg) {
+                    // todo auto-generated method stub
+                    if (msg.what == 0x101) {
+                        bar.setvisibility(view.gone);
+                        tv.settext((charsequence) msg.obj);
+                    }
+                    super.handlemessage(msg);
+                }
+            };
+
+            // 因为从网上下载图片是耗时操作 所以要开启新线程
+            thread t = new thread(new runnable() {
+                message msg = message.obtain();
+
+                @override
+                public void run() {
+                    // todo auto-generated method stub
+                    bar.setvisibility(view.visible);
+                    *//**
+                     * 要实现图片的显示需要使用html.fromhtml的一个重构方法：public static spanned
+                     * fromhtml (string source, html.imagegetterimagegetter,
+                     * html.taghandler
+                     * taghandler)其中html.imagegetter是一个接口，我们要实现此接口，在它的getdrawable
+                     * (string source)方法中返回图片的drawable对象才可以。
+                     *//*
+                    imagegetter imagegetter = new imagegetter() {
+
+                        @override
+                        public drawable getdrawable(string source) {
+                            // todo auto-generated method stub
+                            url url;
+                            drawable drawable = null;
+                            try {
+                                url = new url(source);
+                                drawable = drawable.createfromstream(
+                                        url.openstream(), null);
+                                drawable.setbounds(0, 0,
+                                        drawable.getintrinsicwidth(),
+                                        drawable.getintrinsicheight());
+                            } catch (malformedurlexception e) {
+                                // todo auto-generated catch block
+                                e.printstacktrace();
+                            } catch (ioexception e) {
+                                // todo auto-generated catch block
+                                e.printstacktrace();
+                            }
+                            return drawable;
+                        }
+                    };
+                    charsequence test = html.fromhtml(html, imagegetter, null);
+                    msg.what = 0x101;
+                    msg.obj = test;
+                    handler.sendmessage(msg);
+                }
+            });
+            t.start();
+        }
+
+        @override
+        public boolean oncreateoptionsmenu(menu menu) {
+            // inflate the menu; this adds items to the action bar if it is present.
+            getmenuinflater().inflate(r.menu.main, menu);
+            return true;
+        }
+
+    }*/
+
 }

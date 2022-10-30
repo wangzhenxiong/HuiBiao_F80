@@ -6,4 +6,81 @@
     android:orientation="vertical">
 
     <include layout="@layout/exam_include_title" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <ScrollView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/EXAMBAC01"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/exam_title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/examname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="0232选择题，一共70题，总分100"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+
+
+            </LinearLayout>
+
+
+        </ScrollView>
+        <ScrollView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:id="@+id/examtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/titletype"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="20dp"
+                    android:gravity="center"
+                    android:text="-------------------------------------------------------------请在下面作答-------------------------------------------------------------"
+                    android:textSize="16dp" />
+
+                <EditText
+                    android:id="@+id/ed_answer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="18dp"
+                    android:text=""
+                    android:gravity="left|top"
+                    android:minHeight="200dp" />
+
+
+            </LinearLayout>
+        </ScrollView>
+
+    </LinearLayout>
 </LinearLayout>

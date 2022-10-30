@@ -129,21 +129,21 @@ public interface HuiBiaoService {
 
     /**
      * 理论试卷-交卷
-     * @param theoryQuestionRecord 考生理论考试答案记录实体
+     * @param requestBody 考生理论考试答案记录实体
      * @return
      */
     @Headers({"Domain-Name: xxx"})
     @POST("/examPath/quickCheck/examination/theorySubmit")
-    Observable<TheorySubmit_Back> theorySubmit(@Query("theoryQuestionRecord") String theoryQuestionRecord);
+    Observable<TheorySubmit_Back> theorySubmit(@Body RequestBody requestBody);
 
     /**
      * 分析题试卷-交卷
-     * @param analysePaperDetailRecord  考生分析题考试答案记录实体
+     * @param requestBody  考生分析题考试答案记录实体
      * @return
      */
     @Headers({"Domain-Name: xxx"})
     @POST("/examPath/quickCheck/examination/analyseSubmit")
-    Observable<AnalyseSubmit_Back> analyseSubmit(@Query("analysePaperDetailRecord") String analysePaperDetailRecord);
+    Observable<AnalyseSubmit_Back> analyseSubmit(@Body RequestBody requestBody);
 
     /**
      * 实践报告-提交报告

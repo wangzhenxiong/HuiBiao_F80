@@ -16,6 +16,7 @@ import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.apkfuns.logutils.LogUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.dy.huibiao_f80.Constants;
 import com.dy.huibiao_f80.MyAppLocation;
@@ -130,16 +131,16 @@ public class TestResultFGGDActivity extends BaseActivity<TestResultFGGDPresenter
         dataList.clear();
         for (int i = 0; i < MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.size(); i++) {
             GalleryBean galleryBean = MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(i);
-            if (galleryBean.isCheckd()) {
+            if (galleryBean.getState()!=0) {
                 dataList.add(galleryBean);
             }
         }
-        for (int i = 0; i < MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.size(); i++) {
+       /* for (int i = 0; i < MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.size(); i++) {
             GalleryBean galleryBean = MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(i);
             if (galleryBean.isCheckd()) {
                 galleryBean.setCheckd(false);
             }
-        }
+        }*/
 
     }
 
@@ -182,6 +183,8 @@ public class TestResultFGGDActivity extends BaseActivity<TestResultFGGDPresenter
         switch (tags.tag) {
             case 0:
                 fggdAdapter.notifyDataSetChanged();
+                LogUtils.d(MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList);
+
                 if (dataList.size() > 0) {
                     BaseProjectMessage baseProjectMessage = dataList.get(0).getmProjectMessage();
                     initControValue(baseProjectMessage.getMethod_sp());
@@ -208,12 +211,15 @@ public class TestResultFGGDActivity extends BaseActivity<TestResultFGGDPresenter
         intent.putExtra("project", pjName);
         switch (view.getId()) {
             case R.id.btn_retest://复检
+
                 intent.setClass(TestResultFGGDActivity.this, TestFGGDActivity.class);
                 ArmsUtils.startActivity(intent);
+                this.finish();
                 break;
             case R.id.btn_restart:
                 intent.setClass(TestResultFGGDActivity.this, ChoseGalleryFGGDActivity.class);
                 ArmsUtils.startActivity(intent);
+                this.finish();
                 break;
             case R.id.btn_record:
                 intent.setClass(TestResultFGGDActivity.this, RecordActivity.class);

@@ -975,9 +975,8 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
         detection_record_fggd_nc.setLongitude(Constants.LONTITUDE);
         //对照值
         //当前平台
-        detection_record_fggd_nc.setPlatform_tag(Constants.PLATFORM_TAG + "");
         //detection_record_fggd_nc.setControlvalue(Constants.FGGD_BIAOZHUN_CONTROL_VALUE + "");
-        detection_record_fggd_nc.setControlvalue(projectMessage.getControValue() + "");
+        detection_record_fggd_nc.setControlvalue(controlValue + "");
         //检测人员   这里填的是本地登录的账号名称
         //detection_record_fggd_nc.setInspector(Constants.NOWUSER.getUsername());
         //设置检测模块
@@ -1004,14 +1003,6 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
         int wavelength = 0;
         wavelength = message.getWavelength();
         LogUtils.d(wavelength);
-        /*if (message instanceof FGGDTestItem) {
-            FGGDTestItem projectMessage = (FGGDTestItem) message;
-            wavelength = projectMessage.getWavelength();
-        } else if (message instanceof DeviceItem_KJFW) {
-            DeviceItem_KJFW projectMessage = (DeviceItem_KJFW) message;
-            wavelength = projectMessage.getWavelength();
-        }*/
-
         //计算结果所需的参数
         float stop_Absorbance = 0; //结束吸光度
 
@@ -1045,12 +1036,6 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
         Float aFloat = Float.valueOf(format);
 
         Constants.setControValue1(aFloat);
-
-        /*Constants.FGGD_BIAOZHUN_CONTROL_VALUE = aFloat;
-        long l = System.currentTimeMillis();//时间戳
-        SPUtils.put(MyAppLocation.myAppLocation, Constants.KEY_FGGD_BIAOHUN_CONTROL_VALUE, aFloat);
-        SPUtils.put(MyAppLocation.myAppLocation, Constants.KEY_FGGD_BIAOZHUN_CONTROLTIME, l);
-        Constants.FGGD_BIAOZHUN_CONTROLTIME = l;*/
         detection_record_fggd_nc.setState(2);
     }
 
@@ -1059,8 +1044,6 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
      */
     private void getFGmethod3result(int i) {
         TestRecord detection_record_fggd_nc = (TestRecord) mFGGDGalleryBeanList.get(i);
-        //销库存
-        //DownLoadBaseDataService.updateJxcByxmAjcs_ZHENJIANG(this, detection_record_fggd_nc.getUnique_testproject());
         ProjectFGGD projectMessage = (ProjectFGGD) detection_record_fggd_nc.getmProjectMessage();
         String unit_input = projectMessage.getUnit_input();
 
@@ -1127,7 +1110,6 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
         detection_record_fggd_nc.setLatitude(Constants.LATITUDE);
         detection_record_fggd_nc.setLongitude(Constants.LONTITUDE);
         //当前平台
-        detection_record_fggd_nc.setPlatform_tag(Constants.PLATFORM_TAG + "");
         //检测人员   这里填的是本地登录的账号名称
         //detection_record_fggd_nc.setInspector(Constants.NOWUSER.getUsername());
         //设置检测模块
@@ -1179,8 +1161,6 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
         detection_record_fggd_nc.setTestsite(Constants.ADDR_WF);
         detection_record_fggd_nc.setLatitude(Constants.LATITUDE);
         detection_record_fggd_nc.setLongitude(Constants.LONTITUDE);
-        //当前平台
-        detection_record_fggd_nc.setPlatform_tag(Constants.PLATFORM_TAG + "");
         //稀释倍数
         detection_record_fggd_nc.setControlvalue(everyresponse + "");
         //检测人员   这里填的是本地登录的账号名称

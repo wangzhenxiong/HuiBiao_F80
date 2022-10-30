@@ -76,7 +76,8 @@ public class RecordActivity extends BaseActivity<RecordPresenter> implements Rec
     TestRecrdAdapter testRecrdAdapter;
     @Inject
     AlertDialog sportDialog;
-    private boolean isSeaching=false;
+    private boolean isSeaching = false;
+
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
         DaggerRecordComponent //如找不到该类,请编译一下项目
@@ -99,11 +100,11 @@ public class RecordActivity extends BaseActivity<RecordPresenter> implements Rec
         testRecrdAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                if (view.getId()==R.id.checkbox) {
+                if (view.getId() == R.id.checkbox) {
                     GalleryBean galleryBean = testRecordList.get(position);
                     if (galleryBean.isCheckd()) {
                         galleryBean.setCheckd(false);
-                    }else {
+                    } else {
                         galleryBean.setCheckd(true);
                     }
                 }
@@ -126,7 +127,7 @@ public class RecordActivity extends BaseActivity<RecordPresenter> implements Rec
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 TestRecord testRecord = testRecordList.get(position);
                 Intent content = new Intent(getActivity(), RecordDetailActivity.class);
-                content.putExtra("id",testRecord.getId());
+                content.putExtra("id", testRecord.getId());
                 ArmsUtils.startActivity(content);
             }
         });
@@ -188,26 +189,26 @@ public class RecordActivity extends BaseActivity<RecordPresenter> implements Rec
                 makeDialogChoseJujdger();
                 break;
             case R.id.seach:
-                if (isSeaching){
-                   isSeaching=false;
-                   mSeach.setText("查询");
-                   mTestmoudle.setText("选择检测方式");
-                   mTestprojectname.setText("选择检测项目");
-                   mJujdger.setText("选择判定结果");
-
-                }else {
+                if (isSeaching) {
+                    isSeaching = false;
+                    mSeach.setText("查询");
+                    mTestmoudle.setText("选择检测方式");
+                    mTestprojectname.setText("选择检测项目");
+                    mJujdger.setText("选择判定结果");
+                    mPresenter.load();
+                } else {
                     String testmoudle = mTestmoudle.getText().toString();
                     String testproject = mTestprojectname.getText().toString();
                     String jujdger = mJujdger.getText().toString();
                     if (testmoudle.equals("选择检测方式")
                             && testproject.equals("选择检测项目")
-                            && jujdger.equals("选择判定结果")){
+                            && jujdger.equals("选择判定结果")) {
                         ArmsUtils.snackbarText("请选择查询条件");
                         return;
                     }
-                    isSeaching=true;
+                    isSeaching = true;
                     mSeach.setText("取消");
-                    mPresenter.seach(testmoudle,testproject,jujdger);
+                    mPresenter.seach(testmoudle, testproject, jujdger);
                 }
                 break;
             case R.id.print:
@@ -248,6 +249,7 @@ public class RecordActivity extends BaseActivity<RecordPresenter> implements Rec
                 break;
         }
     }
+
     private void makeDeleteDialog(List<TestRecord> checkSamples) {
         AlertDialog dialog = new AlertDialog.Builder(this).create();
         dialog.setTitle("提示");
@@ -259,7 +261,7 @@ public class RecordActivity extends BaseActivity<RecordPresenter> implements Rec
                 DBHelper.getTestRecordDao().deleteInTx(checkSamples);
                 ArmsUtils.snackbarText("删除成功");
                 if (isSeaching) {
-                    mPresenter.seach(mTestmoudle.getText().toString(),mTestprojectname.getText().toString(),mJujdger.getText().toString());
+                    mPresenter.seach(mTestmoudle.getText().toString(), mTestprojectname.getText().toString(), mJujdger.getText().toString());
                 } else {
                     mPresenter.load();
                 }
@@ -322,7 +324,7 @@ public class RecordActivity extends BaseActivity<RecordPresenter> implements Rec
 
     @Override
     public void setChosedProject(String s) {
-      mTestprojectname.setText(s);
+        mTestprojectname.setText(s);
     }
 
 

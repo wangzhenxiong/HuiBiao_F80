@@ -3,7 +3,7 @@ package com.dy.huibiao_f80.greendao;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.dy.huibiao_f80.bean.OutMoudle;
+import com.dy.huibiao_f80.mvp.ui.widget.OutMoudle;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;

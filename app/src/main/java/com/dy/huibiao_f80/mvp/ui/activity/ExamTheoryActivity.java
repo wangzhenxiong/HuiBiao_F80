@@ -41,7 +41,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.jess.arms.utils.Preconditions.checkNotNull;
 
 public class ExamTheoryActivity extends BaseActivity<ExamTheoryPresenter> implements ExamTheoryContract.View {
 
@@ -358,14 +357,7 @@ public class ExamTheoryActivity extends BaseActivity<ExamTheoryPresenter> implem
 
     @Override
     public void showMessage(@NonNull String message) {
-        checkNotNull(message);
-        ArmsUtils.snackbarText(message);
-    }
 
-    @Override
-    public void launchActivity(@NonNull Intent intent) {
-        checkNotNull(intent);
-        ArmsUtils.startActivity(intent);
     }
 
     @Override
@@ -379,13 +371,13 @@ public class ExamTheoryActivity extends BaseActivity<ExamTheoryPresenter> implem
         // TODO: add setContentView(...) invocation
         ButterKnife.bind(this);
     }
-
-
+   private BeginTheoryExam_Back beginTheoryExamBack;
     /**
      * @param back 考试信息返回
      */
     @Override
     public void showExamTitle(BeginTheoryExam_Back back) {
+        beginTheoryExamBack=back;
         BeginTheoryExam_Back.EntityBean entity = back.getEntity();
         BeginTheoryExam_Back.EntityBean.TheoryPaperBean theoryPaper = entity.getTheoryPaper();
         theoryExamTime = theoryPaper.getTheoryExamTime() * 60;
@@ -398,13 +390,15 @@ public class ExamTheoryActivity extends BaseActivity<ExamTheoryPresenter> implem
                             @Override
                             public void run() {
                                 if (null != mToolbarTime) {
-                                    mToolbarTime.setText("剩余时间  " + theoryExamTime / 60 + ":" + theoryExamTime % 60);
+                                    int i = theoryExamTime / 60;
+                                    int i1 = theoryExamTime % 60;
+                                    mToolbarTime.setText("剩余时间  " + (i<10?"0"+i:""+i )+ ":" + (i1<10?"0"+i1:""+i1));
                                 }
                             }
                         });
                         theoryExamTime--;
                     } else {
-                        mPresenter.submit();
+                        mPresenter.submit(examinationId, examinerId, beginTheoryExamBack);
                         runflag = false;
                     }
                 }
@@ -431,7 +425,6 @@ public class ExamTheoryActivity extends BaseActivity<ExamTheoryPresenter> implem
         initTheoryQuestionJudge();
         mExamTitle.addView(theoryQuestionJudge_layout);
     }
-
 
     private void initTheoryQuestionRadio() {
         TextView examtype = (TextView) theoryQuestionRadio_layout.findViewById(R.id.exam_type);
@@ -469,7 +462,6 @@ public class ExamTheoryActivity extends BaseActivity<ExamTheoryPresenter> implem
         adapter1.notifyDataSetChanged();
 
     }
-
 
     private void initTheoryQuestionMultiple() {
         TextView examtype = (TextView) theoryQuestionMultiple_layout.findViewById(R.id.exam_type);
@@ -702,13 +694,13 @@ public class ExamTheoryActivity extends BaseActivity<ExamTheoryPresenter> implem
             mGroupChecksingle.setVisibility(View.GONE);
             mGroupMultiple.setVisibility(View.GONE);
             mGroupJudger.setVisibility(View.VISIBLE);
-            mGroupChecksingle.clearCheck();
+            mGroupJudger.clearCheck();
             String studentAnswer = object1.getStudentAnswer();
             LogUtils.d(studentAnswer);
             if (studentAnswer.equals("A")) {
-                mGroupChecksingle.check(R.id.radio_right);
+                mGroupJudger.check(R.id.radio_right);
             } else if (studentAnswer.equals("B")) {
-                mGroupChecksingle.check(R.id.radio_error);
+                mGroupJudger.check(R.id.radio_error);
             }
         }
 
@@ -718,6 +710,16 @@ public class ExamTheoryActivity extends BaseActivity<ExamTheoryPresenter> implem
     @Override
     public Activity getActivity() {
         return this;
+    }
+
+    @Override
+    public void submitSuccess() {
+        runflag=false;
+        finish();
+        Intent content = new Intent(getActivity(),ExamStateActivity.class);
+        content.putExtra("examinationId", examinationId);
+        content.putExtra("examinerId", examinerId);
+        ArmsUtils.startActivity(content);
     }
 
     boolean isup = false;
@@ -737,7 +739,7 @@ public class ExamTheoryActivity extends BaseActivity<ExamTheoryPresenter> implem
                 isup = false;
                 break;
             case R.id.btn_submit:
-                mPresenter.submit();
+                mPresenter.submit(examinationId,examinerId,beginTheoryExamBack);
                 break;
         }
     }

@@ -218,7 +218,10 @@ public class ChoseGalleryJTJActivity extends BaseActivity<ChoseGalleryJTJPresent
             public void run() {
                 List<GalleryBean> mJTJGalleryBeanList = MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList;
                 for (int i = 0; i < mJTJGalleryBeanList.size(); i++) {
-                    int galleryNum = mJTJGalleryBeanList.get(i).getGalleryNum();
+                    GalleryBean galleryBean = mJTJGalleryBeanList.get(i);
+                    galleryBean.cardOut();
+                    int galleryNum = galleryBean.getGalleryNum();
+
                     if (galleryNum == 1) {
                         mBackground1.setVisibility(View.VISIBLE);
                     }
@@ -355,5 +358,14 @@ public class ChoseGalleryJTJActivity extends BaseActivity<ChoseGalleryJTJPresent
         mSampleserial.setText(nowCheckGallery.getSamplenum());
         mSamplename.setText(nowCheckGallery.getSamplename());
         //mDr.setText(nowCheckGallery.getDilutionratio() + "");
+    }
+
+    @Override
+    public void onBackPressed() {
+        List<GalleryBean> mJTJGalleryBeanList = MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList;
+        for (int i = 0; i < mJTJGalleryBeanList.size(); i++) {
+            mJTJGalleryBeanList.get(i).cardInNotScan();
+        }
+        super.onBackPressed();
     }
 }

@@ -28,6 +28,7 @@ import com.dy.huibiao_f80.bean.GalleryBean;
 import com.dy.huibiao_f80.bean.base.BaseProjectMessage;
 import com.dy.huibiao_f80.di.component.DaggerTestSettingJTJComponent;
 import com.dy.huibiao_f80.greendao.DBHelper;
+import com.dy.huibiao_f80.greendao.ProjectJTJ;
 import com.dy.huibiao_f80.greendao.daos.ProjectJTJDao;
 import com.dy.huibiao_f80.mvp.contract.TestSettingJTJContract;
 import com.dy.huibiao_f80.mvp.presenter.TestSettingTJPresenter;
@@ -193,6 +194,11 @@ public class TestSettingJTJActivity extends BaseActivity<TestSettingTJPresenter>
 
             }
         });
+        for (int i = 0; i < list.size(); i++) {
+            if (((ProjectJTJ) list.get(i)).getIsdefault()) {
+                mCure2.setSelection(i);
+            }
+        }
     }
 
     private void initSurfaceView() {

@@ -180,6 +180,15 @@ public class BeginAnalyseExam_Back {
             private String delFlag;
             private String createTime;
             private String createUser;
+            private String studentAnswer;
+
+            public String getStudentAnswer() {
+                return studentAnswer == null ? "" : studentAnswer;
+            }
+
+            public void setStudentAnswer(String studentAnswer) {
+                this.studentAnswer = studentAnswer == null ? "" : studentAnswer;
+            }
 
             public String getId() {
                 return id;

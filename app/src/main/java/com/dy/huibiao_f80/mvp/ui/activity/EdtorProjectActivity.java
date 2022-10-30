@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.SparseArray;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -29,6 +30,8 @@ import android.widget.TextView;
 import com.apkfuns.logutils.LogUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.dy.huibiao_f80.R;
+import com.dy.huibiao_f80.app.utils.DataUtils;
+import com.dy.huibiao_f80.app.utils.JxlUtils;
 import com.dy.huibiao_f80.bean.base.BaseProjectMessage;
 import com.dy.huibiao_f80.di.component.DaggerEdtorProjectComponent;
 import com.dy.huibiao_f80.greendao.DBHelper;
@@ -60,6 +63,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import dmax.dialog.SpotsDialog;
 
 import static com.jess.arms.utils.Preconditions.checkNotNull;
 
@@ -113,6 +117,7 @@ public class EdtorProjectActivity extends BaseActivity<EdtorProjectPresenter> im
     private NewProjectJTJFragment newProjectJTJFragment;
     private ProjectFGGDDao projectFGGDDao;
     private ProjectJTJDao projectJTJDao;
+    private AlertDialog mSportDialog;
 
 
     @Override
@@ -144,7 +149,79 @@ public class EdtorProjectActivity extends BaseActivity<EdtorProjectPresenter> im
         initCharIndex();
         initsparr();
         checkFGGD();
+        mToolbarTitle.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                makeExportProjectDialog();
+                return true;
+            }
+        });
+    }
 
+    private void makeExportProjectDialog() {
+        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog.setTitle("请选择导入或者导出");
+        View inflate = LayoutInflater.from(getActivity()).inflate(R.layout.expor_data_item, null);
+        alertDialog.setView(inflate);
+        inflate.findViewById(R.id.out_fggd).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                JxlUtils.openFilechose_Folder(EdtorProjectActivity.this, 4);
+                alertDialog.dismiss();
+            }
+        });
+        inflate.findViewById(R.id.out_jtj).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                JxlUtils.openFilechose_Folder(EdtorProjectActivity.this, 3);
+                alertDialog.dismiss();
+            }
+        });
+        inflate.findViewById(R.id.in_fggd).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                JxlUtils.openFilechose_File(EdtorProjectActivity.this, 2);
+                alertDialog.dismiss();
+            }
+        });
+        inflate.findViewById(R.id.in_jtj).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                JxlUtils.openFilechose_File(EdtorProjectActivity.this, 1);
+                alertDialog.dismiss();
+            }
+        });
+        
+        alertDialog.show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 1) {
+                //文件选择模式，需要获取选择的所有文件的路径集合
+                List<String> list = data.getStringArrayListExtra("paths");
+                mPresenter.inputJTJProject(list);
+
+
+            } else if (requestCode == 2) {
+                //文件选择模式，需要获取选择的所有文件的路径集合
+                List<String> list = data.getStringArrayListExtra("paths");
+                mPresenter.inputFGGDProject(list);
+
+            } else if (requestCode == 3) {
+                //文件夹选择模式，需要获取选择的文件夹路径
+                String path = data.getStringExtra("path");
+                mPresenter.outPutItem(path, "胶体金检测项目" + DataUtils.getFIleNameNowtimeyyymmddhhmmss() + ".xls", "胶体金检测项目", 3);
+
+            } else if (requestCode == 4) {
+                //文件夹选择模式，需要获取选择的文件夹路径
+                String path = data.getStringExtra("path");
+                mPresenter.outPutItem(path, "分光光度检测项目" + DataUtils.getFIleNameNowtimeyyymmddhhmmss() + ".xls", "分光光度检测项目", 4);
+
+
+            }
+        }
     }
 
     private void initCharIndex() {
@@ -199,17 +276,17 @@ public class EdtorProjectActivity extends BaseActivity<EdtorProjectPresenter> im
         mFilterEdit.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-               LogUtils.d("onTextChanged"+s.toString());
+                LogUtils.d("onTextChanged" + s.toString());
             }
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                LogUtils.d("beforeTextChanged"+s.toString());
+                LogUtils.d("beforeTextChanged" + s.toString());
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                LogUtils.d("afterTextChanged"+s.toString());
+                LogUtils.d("afterTextChanged" + s.toString());
                 //当输入框里面的值为空，更新为原来的列表，否则为过滤数据列表
                 if (s.toString().isEmpty()) {
                     if (checkmoudle == 1) {
@@ -224,7 +301,10 @@ public class EdtorProjectActivity extends BaseActivity<EdtorProjectPresenter> im
         });
 
     }
-
+   /* @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(DeleteDataMessage tags) {
+        initCurve(tags.getDeleteproject());
+    }*/
     private void initCurve(String curvename) {
         if (null == curvename) {
             mSpCuregroup.setVisibility(View.GONE);
@@ -435,6 +515,7 @@ public class EdtorProjectActivity extends BaseActivity<EdtorProjectPresenter> im
                     projectFGGD.setProjectName(pjName);
                     projectFGGD.setCurveName(curvename);
                     projectFGGD.setCurveOrder((int) count);
+                    projectFGGD.setCreator(1);
                     projectFGGDDao.insert(projectFGGD);
                     initCurve(curvename);
                 } else if (checkmoudle == 2) {
@@ -442,6 +523,7 @@ public class EdtorProjectActivity extends BaseActivity<EdtorProjectPresenter> im
                     projectJTJ.setId(null);
                     projectJTJ.setProjectName(pjName);
                     projectJTJ.setCurveName(curvename);
+                    projectJTJ.setCreator(1);
                     projectJTJ.setCurveOrder((int) count);
                     projectJTJDao.insert(projectJTJ);
                     initCurve(curvename);
@@ -529,6 +611,7 @@ public class EdtorProjectActivity extends BaseActivity<EdtorProjectPresenter> im
                     entity.setIsdefault(true);
                     entity.setId(null);
                     entity.setCurveOrder(0);
+                    entity.setCreator(1);
                     projectFGGDDao.insert(entity);
                     mPresenter.getFGGDProject(null);
                 } else if (checkmoudle == 2) {
@@ -542,6 +625,7 @@ public class EdtorProjectActivity extends BaseActivity<EdtorProjectPresenter> im
                     entity.setIsdefault(true);
                     entity.setId(null);
                     entity.setCurveOrder(0);
+                    entity.setCreator(1);
                     projectJTJDao.insert(entity);
                     mPresenter.getJTJProject(null);
                 }
@@ -577,6 +661,38 @@ public class EdtorProjectActivity extends BaseActivity<EdtorProjectPresenter> im
     @Override
     public Activity getActivity() {
         return this;
+    }
+
+    @Override
+    public void showSportDialog(String title) {
+        //尝试先消除上次的dialog 避免弹框不消失
+        if (mSportDialog != null) {
+            if (mSportDialog.isShowing()) {
+                mSportDialog.dismiss();
+            }
+        }
+        LogUtils.d(title);
+        mSportDialog = new SpotsDialog.Builder().setContext(getActivity()).build();
+        mSportDialog.setMessage(title);
+        mSportDialog.show();
+    }
+
+    @Override
+    public void hideSportDialog() {
+        if (mSportDialog != null) {
+            if (mSportDialog.isShowing()) {
+                mSportDialog.dismiss();
+            }
+        }
+    }
+
+    @Override
+    public void RefreshList() {
+        if (checkmoudle == 1) {
+            checkFGGD();
+        } else {
+            checkJTJ();
+        }
     }
 
 

@@ -71,6 +71,7 @@ public class ProjectFGGDDao extends AbstractDao<ProjectFGGD, Long> {
         public final static Property Tips = new Property(44, String.class, "tips", false, "TIPS");
         public final static Property DetectionLimit = new Property(45, String.class, "detectionLimit", false, "DETECTION_LIMIT");
         public final static Property FinishState = new Property(46, boolean.class, "finishState", false, "FINISH_STATE");
+        public final static Property Creator = new Property(47, int.class, "creator", false, "CREATOR");
     }
 
 
@@ -132,7 +133,8 @@ public class ProjectFGGDDao extends AbstractDao<ProjectFGGD, Long> {
                 "\"KEYI_B_SYMBOL\" TEXT," + // 43: keyi_b_symbol
                 "\"TIPS\" TEXT," + // 44: tips
                 "\"DETECTION_LIMIT\" TEXT," + // 45: detectionLimit
-                "\"FINISH_STATE\" INTEGER NOT NULL );"); // 46: finishState
+                "\"FINISH_STATE\" INTEGER NOT NULL ," + // 46: finishState
+                "\"CREATOR\" INTEGER NOT NULL );"); // 47: creator
     }
 
     /** Drops the underlying database table. */
@@ -247,6 +249,7 @@ public class ProjectFGGDDao extends AbstractDao<ProjectFGGD, Long> {
             stmt.bindString(46, detectionLimit);
         }
         stmt.bindLong(47, entity.getFinishState() ? 1L: 0L);
+        stmt.bindLong(48, entity.getCreator());
     }
 
     @Override
@@ -355,6 +358,7 @@ public class ProjectFGGDDao extends AbstractDao<ProjectFGGD, Long> {
             stmt.bindString(46, detectionLimit);
         }
         stmt.bindLong(47, entity.getFinishState() ? 1L: 0L);
+        stmt.bindLong(48, entity.getCreator());
     }
 
     @Override
@@ -411,7 +415,8 @@ public class ProjectFGGDDao extends AbstractDao<ProjectFGGD, Long> {
             cursor.isNull(offset + 43) ? null : cursor.getString(offset + 43), // keyi_b_symbol
             cursor.isNull(offset + 44) ? null : cursor.getString(offset + 44), // tips
             cursor.isNull(offset + 45) ? null : cursor.getString(offset + 45), // detectionLimit
-            cursor.getShort(offset + 46) != 0 // finishState
+            cursor.getShort(offset + 46) != 0, // finishState
+            cursor.getInt(offset + 47) // creator
         );
         return entity;
     }
@@ -465,6 +470,7 @@ public class ProjectFGGDDao extends AbstractDao<ProjectFGGD, Long> {
         entity.setTips(cursor.isNull(offset + 44) ? null : cursor.getString(offset + 44));
         entity.setDetectionLimit(cursor.isNull(offset + 45) ? null : cursor.getString(offset + 45));
         entity.setFinishState(cursor.getShort(offset + 46) != 0);
+        entity.setCreator(cursor.getInt(offset + 47));
      }
     
     @Override

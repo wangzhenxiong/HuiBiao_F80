@@ -140,6 +140,10 @@
             android:label="培训"
             android:screenOrientation="landscape" />
         <activity
+            android:name=".mvp.ui.widget.filePicker.LFilePickerActivity"
+            android:label="pleacechosefile"
+            android:screenOrientation="landscape" />
+        <activity
             android:name=".mvp.ui.activity.ExamActivity"
             android:label="考生信息验证"
             android:screenOrientation="landscape" />
@@ -148,9 +152,11 @@
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+               <!-- <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />-->
             </intent-filter>
+           
         </activity>
 
         <service

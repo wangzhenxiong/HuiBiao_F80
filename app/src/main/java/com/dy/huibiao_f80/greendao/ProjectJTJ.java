@@ -1,10 +1,11 @@
 package com.dy.huibiao_f80.greendao;
 
 import com.dy.huibiao_f80.bean.base.BaseProjectMessage;
+import com.dy.huibiao_f80.mvp.ui.widget.OutMoudle;
 
 import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
 
 /**
  * 　 ┏┓　  ┏┓+ +
@@ -97,8 +98,6 @@ public class ProjectJTJ extends BaseProjectMessage {
     private double tB;
     private double c_tA;
     private double c_tB;
-
-
     private int testTime;
 
     //简要提示
@@ -109,15 +108,32 @@ public class ProjectJTJ extends BaseProjectMessage {
      */
     private boolean finishState;
 
+    /**
+     * 创建者，用于导入的时候区分，导入时需要删除自带的，用户新建的检测项目需要保留
+     */
+    private int creator;
+
+
+    public OutMoudle<String> toJxlTitle() {
+        return new OutMoudle<String>("数据库ID,项目名称,曲线名称,曲线序号,是否默认曲线,检测标准,检测方法," +
+                "C值出线值,T线出线值A,T线出线值B,C/T线出线值A,C/T线出线值B"+
+                ",简要提示,方法检出限,创建者"
+        );
+    }
+
+    public OutMoudle<String> toJxlString() {
+        return new OutMoudle<String>(id + "," + projectName + "," + curveName + "," + curveOrder + "," + isdefault + "," + standardName + "," + testMethod + "," +
+                c + "," + tA + "," + tB + "," + c_tA + "," + c_tB  + "," +
+                tips + "," + detectionLimit  + "," + creator );
+    }
 
 
 
-
-    @Generated(hash = 1369740684)
-    public ProjectJTJ(Long id, String projectName, String curveName,
-            int curveOrder, boolean isdefault, String standardName, int testMethod,
-            double c, double tA, double tB, double c_tA, double c_tB, int testTime,
-            String tips, String detectionLimit, boolean finishState) {
+    @Generated(hash = 2053885412)
+    public ProjectJTJ(Long id, String projectName, String curveName, int curveOrder,
+            boolean isdefault, String standardName, int testMethod, double c, double tA,
+            double tB, double c_tA, double c_tB, int testTime, String tips,
+            String detectionLimit, boolean finishState, int creator) {
         this.id = id;
         this.projectName = projectName;
         this.curveName = curveName;
@@ -134,14 +150,12 @@ public class ProjectJTJ extends BaseProjectMessage {
         this.tips = tips;
         this.detectionLimit = detectionLimit;
         this.finishState = finishState;
+        this.creator = creator;
     }
 
     @Generated(hash = 984178824)
     public ProjectJTJ() {
     }
-
-
-
 
 
     public Long getId() {
@@ -294,5 +308,13 @@ public class ProjectJTJ extends BaseProjectMessage {
 
     public void setCurveOrder(int curveOrder) {
         this.curveOrder = curveOrder;
+    }
+
+    public int getCreator() {
+        return creator;
+    }
+
+    public void setCreator(int creator) {
+        this.creator = creator;
     }
 }

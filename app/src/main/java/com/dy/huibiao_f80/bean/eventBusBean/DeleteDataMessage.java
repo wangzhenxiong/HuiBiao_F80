@@ -1,4 +1,4 @@
-package com.dy.huibiao_f80.api.back;
+package com.dy.huibiao_f80.bean.eventBusBean;
 
 /**
  * 　 ┏┓　  ┏┓+ +
@@ -24,26 +24,27 @@ package com.dy.huibiao_f80.api.back;
  * 　　 ┗┻┛ ┗┻┛+ + + +
  *
  * @author: wangzhenxiong
- * @data: 10/23/22 9:04 PM
+ * @data: 10/30/22 11:10 AM
  * Description:
  */
-public class AnalyseSubmit_Back {
-    private String message;
-    private Boolean success;
+public class DeleteDataMessage {
+    private int deleteType;
 
-    public String getMessage() {
-        return message;
+    public String getDeleteproject() {
+        return deleteproject;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setDeleteproject(String deleteproject) {
+        this.deleteproject = deleteproject;
     }
 
-    public Boolean getSuccess() {
-        return success;
+    private String deleteproject;
+
+    public int getDeleteType() {
+        return deleteType;
     }
 
-    public void setSuccess(Boolean success) {
-        this.success = success;
+    public void setDeleteType(int deleteType) {
+        this.deleteType = deleteType;
     }
 }

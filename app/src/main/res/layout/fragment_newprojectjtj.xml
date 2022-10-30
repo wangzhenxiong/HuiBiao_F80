@@ -213,8 +213,16 @@
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
-
-
+        <TextView
+            android:id="@+id/hint_xiaoxian"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="T的值小于A为阳性，T的值大于B为阴性，A-B之间为可疑"/>
+         <TextView
+             android:id="@+id/hint_bise"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:text="T/C的值小于A为阳性，T/C的值大于B为阴性，A-B之间为可疑"/>
     </LinearLayout>
 
     <LinearLayout

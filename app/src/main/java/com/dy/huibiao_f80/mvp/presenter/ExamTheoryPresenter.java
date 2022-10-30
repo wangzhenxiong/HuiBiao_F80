@@ -5,6 +5,7 @@ import android.app.Application;
 import com.apkfuns.logutils.LogUtils;
 import com.dy.huibiao_f80.Constants;
 import com.dy.huibiao_f80.api.back.BeginTheoryExam_Back;
+import com.dy.huibiao_f80.api.back.TheorySubmit_Back;
 import com.dy.huibiao_f80.mvp.contract.ExamTheoryContract;
 import com.jess.arms.di.scope.ActivityScope;
 import com.jess.arms.http.imageloader.ImageLoader;
@@ -65,7 +66,26 @@ public class ExamTheoryPresenter extends BasePresenter<ExamTheoryContract.Model,
                 });
     }
 
-    public void submit() {
-      mRootView.getActivity().finish();
+    public void submit(String examinationId, String examinerId, BeginTheoryExam_Back beginTheoryExamBack) {
+        LogUtils.d(beginTheoryExamBack);
+      mModel.submit(examinationId,examinerId,beginTheoryExamBack,Constants.URL)
+              .doOnSubscribe(disposable -> {
+                  mRootView.showLoading();
+              }).subscribeOn(AndroidSchedulers.mainThread())
+              .doFinally(() -> {
+                  mRootView.hideLoading();
+              }).compose(RxLifecycleUtils.bindToLifecycle(mRootView))
+              .subscribe(new ErrorHandleSubscriber<TheorySubmit_Back>(mErrorHandler) {
+                  @Override
+                  public void onNext(TheorySubmit_Back back) {
+                      LogUtils.d(back);
+                      if (back.getSuccess()){
+                        mRootView.submitSuccess();
+                      }
+
+                      ArmsUtils.snackbarText(back.getMessage());
+
+                  }
+              });
     }
 }

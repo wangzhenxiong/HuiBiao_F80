@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.apkfuns.logutils.LogUtils;
 import com.dy.huibiao_f80.R;
@@ -68,6 +69,10 @@ public class NewProjectJTJFragment extends BaseFragment<NewProjectJTJPresenter> 
     Button mSaveCurve;
     @BindView(R.id.delete_curve)
     Button mDeleteCurve;
+    @BindView(R.id.hint_xiaoxian)
+    TextView mHintXiaoxian;
+    @BindView(R.id.hint_bise)
+    TextView mHintBise;
 
     private ProjectJTJ projectJTJ;
 
@@ -98,8 +103,14 @@ public class NewProjectJTJFragment extends BaseFragment<NewProjectJTJPresenter> 
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
                     mMethodBise.setVisibility(View.GONE);
+                    mMethodXiaoxian.setVisibility(View.VISIBLE);
+                    mHintBise.setVisibility(View.GONE);;
+                   mHintXiaoxian.setVisibility(View.VISIBLE);
                 } else if (position == 1) {
                     mMethodBise.setVisibility(View.VISIBLE);
+                    mMethodXiaoxian.setVisibility(View.GONE);
+                    mHintBise.setVisibility(View.VISIBLE);
+                    mHintXiaoxian.setVisibility(View.GONE);
                 }
             }
 
@@ -292,6 +303,7 @@ public class NewProjectJTJFragment extends BaseFragment<NewProjectJTJPresenter> 
                     }
                 }
                 ArmsUtils.snackbarText("删除成功");
+                setData(null);
             }
         });
         alertDialog.show();
