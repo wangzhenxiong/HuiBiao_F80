@@ -14,6 +14,8 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
@@ -26,6 +28,7 @@ import com.dy.huibiao_f80.greendao.daos.ProjectFGGDDao;
 import com.dy.huibiao_f80.mvp.contract.NewProjectFGGDContract;
 import com.dy.huibiao_f80.mvp.presenter.NewProjectFGGDPresenter;
 import com.dy.huibiao_f80.mvp.ui.adapter.GuidePageAdapter_h;
+import com.dy.huibiao_f80.mvp.ui.adapter.MySpinnerAdapterFGGD;
 import com.jess.arms.base.BaseFragment;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
@@ -102,6 +105,10 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
     AutoCompleteTextView mJcsj;
     @BindView(R.id.unit_input)
     AutoCompleteTextView mUnitInput;
+    @BindView(R.id.new_curve)
+    ImageButton mNewCurve;
+    @BindView(R.id.sp_curegroup)
+    Spinner mSpCuregroup;
     private View methoed_a_page;
     private View methoed_b_page;
     private View methoed_c_page;
@@ -138,7 +145,7 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
 
-
+        LogUtils.d("initData 执行");
         mChosewavalength.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -274,18 +281,81 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
 
     @Override
     public void setData(@Nullable Object data) {
+        LogUtils.d(data);
+        String name;
         if (null == data) {
             projectFGGD = null;
             initMessage(new ProjectFGGD());
+            name = "";
         } else {
             projectFGGD = ((ProjectFGGD) data);
             initMessage(projectFGGD);
+            name = projectFGGD.getCurveName();
+        }
+        initCurve(name);
+
+    }
+
+    private void initCurve(String curvename) {
+        if (null == mSpCuregroup) {
+            return;
+        }
+        if (null == projectFGGD) {
+            mSpCuregroup.setVisibility(View.GONE);
+            mNewCurve.setVisibility(View.GONE);
+            return;
+        } else {
+            mSpCuregroup.setVisibility(View.VISIBLE);
+            mNewCurve.setVisibility(View.VISIBLE);
+        }
+        List<ProjectFGGD> list = DBHelper.getProjectFGGDDao().queryBuilder()
+                .where(ProjectFGGDDao.Properties.ProjectName.eq(projectFGGD.getPjName()))
+                //.where(ProjectFGGDDao.Properties.Isdefault.eq(true))
+                .build().list();
+        /*if (null!=chosedProject_jtj){
+            if (checkmoudle == 2) {
+                list.addAll(DBHelper.getProjectJTJDao().queryBuilder()
+                        .where(ProjectJTJDao.Properties.ProjectName.eq(chosedProject_jtj.getPjName()))
+                        //.where(ProjectJTJDao.Properties.Isdefault.eq(true))
+                        .list());
+            }
+        }*/
+        LogUtils.d(list);
+        LogUtils.d(curvename);
+        MySpinnerAdapterFGGD adapter = new MySpinnerAdapterFGGD(list, getActivity());
+
+
+        mSpCuregroup.setAdapter(adapter);
+        mSpCuregroup.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ProjectFGGD object = list.get(position);
+                LogUtils.d(object);
+                projectFGGD = object;
+                initMessage(projectFGGD);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        if (!curvename.isEmpty()) {
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).getCVName().equals(curvename)) {
+                    mSpCuregroup.setSelection(i);
+                    LogUtils.d(i);
+                }
+            }
         }
 
 
     }
 
     private void initMessage(ProjectFGGD projectFGGD) {
+        if (null == mTestprojectname) {
+            return;
+        }
         mTestprojectname.setText(projectFGGD.getPjName());
         mStandardname.setText(projectFGGD.getStandardName());
         mCureName.setText(projectFGGD.getCurveName());
@@ -298,12 +368,8 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
         mYrsj.setText(projectFGGD.getYuretime() + "");
         mJcsj.setText(projectFGGD.getJiancetime() + "");
         mUnitInput.setText(projectFGGD.getResultUnit() + "");
+        mCheckboxOk.setChecked(projectFGGD.getUser_yin());
         String yin_a_symbol = projectFGGD.getYin_a_symbol();
-        String yin_b_symbol = projectFGGD.getYin_b_symbol();
-        String yang_a_symbol = projectFGGD.getYang_a_symbol();
-        String yang_b_symbol = projectFGGD.getYin_a_symbol();
-        String keyi_a_symbol = projectFGGD.getKeyi_a_symbol();
-        String keyi_b_symbol = projectFGGD.getKeyi_b_symbol();
         switch (yin_a_symbol) {
             case "<":
                 mOkADemarcate.setSelection(0);
@@ -321,6 +387,7 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
                 mOkADemarcate.setSelection(4);
                 break;
         }
+        String yin_b_symbol = projectFGGD.getYin_b_symbol();
         switch (yin_b_symbol) {
             case "<":
                 mOkBDemarcate.setSelection(0);
@@ -337,6 +404,10 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
             case "无":
                 mOkBDemarcate.setSelection(4);
         }
+        mOkA.setText(projectFGGD.getYin_a() + "");
+        mOkB.setText(projectFGGD.getYin_b() + "");
+        mCheckboxNg.setChecked(projectFGGD.getUser_yang());
+        String yang_a_symbol = projectFGGD.getYang_a_symbol();
         switch (yang_a_symbol) {
             case "<":
                 mNgADemarcate.setSelection(0);
@@ -353,6 +424,7 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
             case "无":
                 mNgADemarcate.setSelection(4);
         }
+        String yang_b_symbol = projectFGGD.getYang_b_symbol();
         switch (yang_b_symbol) {
             case "<":
                 mNgBDemarcate.setSelection(0);
@@ -369,6 +441,10 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
             case "无":
                 mNgBDemarcate.setSelection(4);
         }
+        mNgA.setText(projectFGGD.getYang_a() + "");
+        mNgB.setText(projectFGGD.getYang_b() + "");
+        mCheckboxDf.setChecked(projectFGGD.getUser_keyi());
+        String keyi_a_symbol = projectFGGD.getKeyi_a_symbol();
         switch (keyi_a_symbol) {
             case "<":
                 mDfADemarcate.setSelection(0);
@@ -385,6 +461,7 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
             case "无":
                 mDfADemarcate.setSelection(4);
         }
+        String keyi_b_symbol = projectFGGD.getKeyi_b_symbol();
         switch (keyi_b_symbol) {
             case "<":
                 mDfBDemarcate.setSelection(0);
@@ -401,7 +478,8 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
             case "无":
                 mDfBDemarcate.setSelection(4);
         }
-        LogUtils.d(projectFGGD);
+        mDfA.setText(projectFGGD.getKeyi_a() + "");
+        mDfB.setText(projectFGGD.getKeyi_b() + "");
         int method = projectFGGD.getMethod();
         mChosemethod.setSelection(method);
         int waveLength = projectFGGD.getWaveLength();
@@ -427,17 +505,10 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
                 break;
         }
 
-        mCheckboxOk.setChecked(projectFGGD.isUser_yin());
+       /* mCheckboxOk.setChecked(projectFGGD.isUser_yin());
         mCheckboxNg.setChecked(projectFGGD.isUser_yang());
-        mCheckboxDf.setChecked(projectFGGD.isUser_keyi());
+        mCheckboxDf.setChecked(projectFGGD.isUser_keyi());*/
 
-
-        mOkA.setText(projectFGGD.getYin_a() + "");
-        mOkB.setText(projectFGGD.getYin_b() + "");
-        mNgA.setText(projectFGGD.getYang_a() + "");
-        mNgB.setText(projectFGGD.getYang_b() + "");
-        mDfA.setText(projectFGGD.getKeyi_a() + "");
-        mDfB.setText(projectFGGD.getKeyi_b() + "");
 
     }
 
@@ -482,7 +553,7 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
         unbinder.unbind();
     }
 
-    @OnClick({R.id.save_curve, R.id.delete_curve})
+    @OnClick({R.id.save_curve, R.id.delete_curve, R.id.new_curve})
     public void onClick(View view) {
         if (null == projectFGGD) {
             ArmsUtils.snackbarText("请先选择检测项目");
@@ -494,10 +565,58 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
                 break;
             case R.id.delete_curve:
                 deleteCurve();
-                // TODO: 10/16/22删除和新建后需要通知更新表头的曲线组
-                mEvent.onEventFGGD(1, null);
+                break;
+            case R.id.new_curve:
+                newCurve();
                 break;
         }
+    }
+
+    private void newCurve() {
+        if (null == projectFGGD) {
+            ArmsUtils.snackbarText("请先选择检测项目");
+            return;
+        }
+        String pjName = projectFGGD.getPjName();
+        AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+        alertDialog.setTitle("请输入新建曲线的名称");
+        EditText view = new EditText(getActivity());
+        long count;
+        count = DBHelper.getProjectFGGDDao().queryBuilder().where(ProjectFGGDDao.Properties.ProjectName.eq(pjName)).count();
+        view.setText("曲线" + (count + 1));
+
+
+        alertDialog.setView(view);
+        alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String curvename = view.getText().toString();
+                if (curvename.isEmpty()) {
+                    ArmsUtils.snackbarText("请输入新建曲线的名称");
+                    return;
+                }
+
+                ProjectFGGD projectFGGD = new ProjectFGGD();
+                projectFGGD.setId(null);
+                projectFGGD.setProjectName(pjName);
+                projectFGGD.setCurveName(curvename);
+                projectFGGD.setCurveOrder((int) count);
+                projectFGGD.setCreator(1);
+                DBHelper.getProjectFGGDDao().insert(projectFGGD);
+                initCurve(curvename);
+
+
+            }
+        });
+        alertDialog.show();
+
+
     }
 
     private void saveCurve() {
@@ -692,6 +811,8 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
                     return;
                 }
                 projectFGGD.setYin_a(Double.parseDouble(oka));
+            } else {
+                projectFGGD.setYin_a(0);
             }
             String okb = mOkB.getText().toString();
             if (!sysb.equals("无")) {
@@ -701,7 +822,15 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
                     return;
                 }
                 projectFGGD.setYin_b(Double.parseDouble(okb));
+            } else {
+                projectFGGD.setYin_b(0);
             }
+        } else {
+            projectFGGD.setUser_yin(false);
+            projectFGGD.setYin_a_symbol(null);
+            projectFGGD.setYin_b_symbol(null);
+            projectFGGD.setYin_a(0);
+            projectFGGD.setYin_b(0);
         }
         if (mCheckboxNg.isChecked()) {
             projectFGGD.setUser_yang(true);
@@ -717,6 +846,9 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
                     return;
                 }
                 projectFGGD.setYang_a(Double.parseDouble(nga));
+            } else {
+                projectFGGD.setYang_a(0);
+
             }
             String ngb = mNgB.getText().toString();
             if (!sysb.equals("无")) {
@@ -726,7 +858,15 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
                     return;
                 }
                 projectFGGD.setYang_b(Double.parseDouble(ngb));
+            } else {
+                projectFGGD.setYang_b(0);
             }
+        } else {
+            projectFGGD.setUser_yang(false);
+            projectFGGD.setYang_a_symbol(null);
+            projectFGGD.setYang_b_symbol(null);
+            projectFGGD.setYang_a(0);
+            projectFGGD.setYang_b(0);
         }
         if (mCheckboxDf.isChecked()) {
             projectFGGD.setUser_keyi(true);
@@ -742,6 +882,8 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
                     return;
                 }
                 projectFGGD.setKeyi_a(Double.parseDouble(dfa));
+            } else {
+                projectFGGD.setKeyi_a(0);
             }
             String dfb = mDfB.getText().toString();
             if (!sysb.equals("无")) {
@@ -751,7 +893,15 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
                     return;
                 }
                 projectFGGD.setKeyi_b(Double.parseDouble(dfb));
+            } else {
+                projectFGGD.setKeyi_b(0);
             }
+        } else {
+            projectFGGD.setUser_keyi(false);
+            projectFGGD.setKeyi_b(0);
+            projectFGGD.setKeyi_a(0);
+            projectFGGD.setKeyi_a_symbol(null);
+            projectFGGD.setKeyi_b_symbol(null);
         }
 
         projectFGGD.setFinishState(true);
@@ -769,7 +919,7 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
         }
 
         DBHelper.getProjectFGGDDao().update(projectFGGD);
-
+        LogUtils.d(projectFGGD);
         ArmsUtils.snackbarText("保存成功");
     }
 
@@ -787,8 +937,9 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String pjName = projectFGGD.getPjName();
+                boolean isdefault = projectFGGD.isdefault();
                 DBHelper.getProjectFGGDDao().delete(projectFGGD);
-                if (projectFGGD.isdefault()) {
+                if (isdefault) {
                     List<ProjectFGGD> list = DBHelper.getProjectFGGDDao().queryBuilder().where(ProjectFGGDDao.Properties.ProjectName.eq(pjName))
                             .orderDesc(ProjectFGGDDao.Properties.CurveOrder).build().list();
                     if (list.size() > 0) {

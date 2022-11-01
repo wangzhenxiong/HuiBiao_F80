@@ -13,6 +13,8 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -25,6 +27,7 @@ import com.dy.huibiao_f80.greendao.ProjectJTJ;
 import com.dy.huibiao_f80.greendao.daos.ProjectJTJDao;
 import com.dy.huibiao_f80.mvp.contract.NewProjectJTJContract;
 import com.dy.huibiao_f80.mvp.presenter.NewProjectJTJPresenter;
+import com.dy.huibiao_f80.mvp.ui.adapter.MySpinnerAdapterJTJ;
 import com.jess.arms.base.BaseFragment;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
@@ -73,6 +76,10 @@ public class NewProjectJTJFragment extends BaseFragment<NewProjectJTJPresenter> 
     TextView mHintXiaoxian;
     @BindView(R.id.hint_bise)
     TextView mHintBise;
+    @BindView(R.id.new_curve)
+    ImageButton mNewCurve;
+    @BindView(R.id.sp_curegroup)
+    Spinner mSpCuregroup;
 
     private ProjectJTJ projectJTJ;
 
@@ -104,8 +111,9 @@ public class NewProjectJTJFragment extends BaseFragment<NewProjectJTJPresenter> 
                 if (position == 0) {
                     mMethodBise.setVisibility(View.GONE);
                     mMethodXiaoxian.setVisibility(View.VISIBLE);
-                    mHintBise.setVisibility(View.GONE);;
-                   mHintXiaoxian.setVisibility(View.VISIBLE);
+                    mHintBise.setVisibility(View.GONE);
+                    ;
+                    mHintXiaoxian.setVisibility(View.VISIBLE);
                 } else if (position == 1) {
                     mMethodBise.setVisibility(View.VISIBLE);
                     mMethodXiaoxian.setVisibility(View.GONE);
@@ -124,19 +132,81 @@ public class NewProjectJTJFragment extends BaseFragment<NewProjectJTJPresenter> 
     @Override
     public void setData(@Nullable Object data) {
         LogUtils.d(data);
+        String name;
         if (null == data) {
             LogUtils.d("null");
             projectJTJ = null;
             initMessage(new ProjectJTJ());
+            name = "";
         } else {
             projectJTJ = ((ProjectJTJ) data);
+            name = projectJTJ.getCurveName();
             initMessage(projectJTJ);
+        }
+        initCurve(name);
+
+    }
+
+    private void initCurve(String curvename) {
+        if (null == mSpCuregroup) {
+            return;
+        }
+        if (null == projectJTJ) {
+            mSpCuregroup.setVisibility(View.GONE);
+            mNewCurve.setVisibility(View.GONE);
+            return;
+        } else {
+            mSpCuregroup.setVisibility(View.VISIBLE);
+            mNewCurve.setVisibility(View.VISIBLE);
+        }
+        List<ProjectJTJ> list = DBHelper.getProjectJTJDao().queryBuilder()
+                .where(ProjectJTJDao.Properties.ProjectName.eq(projectJTJ.getPjName()))
+                //.where(ProjectFGGDDao.Properties.Isdefault.eq(true))
+                .build().list();
+        /*if (null!=chosedProject_jtj){
+            if (checkmoudle == 2) {
+                list.addAll(DBHelper.getProjectJTJDao().queryBuilder()
+                        .where(ProjectJTJDao.Properties.ProjectName.eq(chosedProject_jtj.getPjName()))
+                        //.where(ProjectJTJDao.Properties.Isdefault.eq(true))
+                        .list());
+            }
+        }*/
+        LogUtils.d(list);
+        LogUtils.d(curvename);
+        MySpinnerAdapterJTJ adapter = new MySpinnerAdapterJTJ(list, getActivity());
+
+
+        mSpCuregroup.setAdapter(adapter);
+        mSpCuregroup.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ProjectJTJ object = list.get(position);
+                LogUtils.d(object);
+                projectJTJ = object;
+                initMessage(projectJTJ);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        if (!curvename.isEmpty()) {
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).getCVName().equals(curvename)) {
+                    mSpCuregroup.setSelection(i);
+                    LogUtils.d(i);
+                }
+            }
         }
 
 
     }
 
     private void initMessage(ProjectJTJ projectJTJ) {
+        if (null == mTestprojectname) {
+            return;
+        }
         LogUtils.d(mTestprojectname);
         mTestprojectname.setText(projectJTJ.getProjectName());
         mCureName.setText(projectJTJ.getCurveName());
@@ -193,14 +263,62 @@ public class NewProjectJTJFragment extends BaseFragment<NewProjectJTJPresenter> 
         super.onDestroyView();
         unbinder.unbind();
     }
+    private void newCurve() {
+        if (null == projectJTJ) {
+            ArmsUtils.snackbarText("请先选择检测项目");
+            return;
+        }
+        String pjName = projectJTJ.getPjName();
+        AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+        alertDialog.setTitle("请输入新建曲线的名称");
+        EditText view = new EditText(getActivity());
+        long count;
+        count = DBHelper.getProjectJTJDao().queryBuilder().where(ProjectJTJDao.Properties.ProjectName.eq(pjName)).count();
+        view.setText("曲线" + (count + 1));
 
-    @OnClick({R.id.save_curve, R.id.delete_curve})
+
+        alertDialog.setView(view);
+        alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String curvename = view.getText().toString();
+                if (curvename.isEmpty()) {
+                    ArmsUtils.snackbarText("请输入新建曲线的名称");
+                    return;
+                }
+
+                ProjectJTJ projectJTJ = new ProjectJTJ();
+                projectJTJ.setId(null);
+                projectJTJ.setProjectName(pjName);
+                projectJTJ.setCurveName(curvename);
+                projectJTJ.setCreator(1);
+                projectJTJ.setCurveOrder((int) count);
+                DBHelper.getProjectJTJDao().insert(projectJTJ);
+                initCurve(curvename);
+
+
+            }
+        });
+        alertDialog.show();
+
+
+    }
+    @OnClick({R.id.save_curve, R.id.delete_curve,R.id.new_curve})
     public void onClick(View view) {
         if (null == projectJTJ) {
             ArmsUtils.snackbarText("请先选择检测项目");
             return;
         }
         switch (view.getId()) {
+            case R.id.new_curve:
+                newCurve();
+                break;
             case R.id.save_curve:
                 String testproject = mTestprojectname.getText().toString();
                 if (testproject.isEmpty()) {
@@ -273,7 +391,7 @@ public class NewProjectJTJFragment extends BaseFragment<NewProjectJTJPresenter> 
                 break;
             case R.id.delete_curve:
                 deleteCurve();
-                mEvent.onEventJTJ(2, null);
+                
                 break;
         }
     }
@@ -303,7 +421,7 @@ public class NewProjectJTJFragment extends BaseFragment<NewProjectJTJPresenter> 
                     }
                 }
                 ArmsUtils.snackbarText("删除成功");
-                setData(null);
+                initCurve(null);
             }
         });
         alertDialog.show();

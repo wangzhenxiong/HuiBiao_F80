@@ -2,6 +2,7 @@ package com.dy.huibiao_f80.mvp.ui.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,14 +14,21 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.apkfuns.logutils.LogUtils;
+import com.dy.huibiao_f80.BuildConfig;
 import com.dy.huibiao_f80.Constants;
 import com.dy.huibiao_f80.R;
+import com.dy.huibiao_f80.app.utils.DataBaseUtil;
+import com.dy.huibiao_f80.app.utils.SPUtils;
+import com.dy.huibiao_f80.bean.UpdateMessage;
 import com.dy.huibiao_f80.di.component.DaggerHomeComponent;
 import com.dy.huibiao_f80.mvp.contract.HomeContract;
 import com.dy.huibiao_f80.mvp.presenter.HomePresenter;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
+
+import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -67,6 +75,7 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
     public void initData(@Nullable Bundle savedInstanceState) {
         mPresenter.setTime();
         sportDialog = new SpotsDialog.Builder().setContext(this).setCancelable(true).build();
+        mPresenter.checkNewVersion();
     }
 
     @Override
@@ -87,6 +96,37 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
         if (sportDialog.isShowing()) {
             sportDialog.dismiss();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        boolean database = (boolean) SPUtils.get(getActivity(), "database", false);
+        if (!database) {
+            getmessageFromAssets();
+            SPUtils.put(getActivity(), "database", true);
+        }
+    }
+    private void getmessageFromAssets() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    //设置农残模块流水号
+                    DataBaseUtil util = new DataBaseUtil(getActivity(), BuildConfig.APPLICATION_ID);
+                    //用户列表
+                    util.copyDataBase(R.raw.f80, "f80.db");
+
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }).start();
+
+
     }
 
     @Override
@@ -121,6 +161,39 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
     @Override
     public Activity getActivity() {
         return this;
+    }
+
+    @Override
+    public void makeDialogNewVersion(UpdateMessage message) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                LogUtils.d("makeDialogNewVersion");
+                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
+                builder.setPositiveButton(getString(R.string.download), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mPresenter.downLoadAPK(message.getResult().getLink());
+
+                        String string = getString(R.string.toasmessage_download);
+                        ArmsUtils.snackbarText(string);
+                    }
+                });
+                builder.setNeutralButton(getString(R.string.cancle), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                builder.setTitle(getString(R.string.newversionmessage))
+                        .setMessage(message.getResult().getDesc())
+                        .setIcon(R.mipmap.ic_launcher)
+                        .setCancelable(false);
+                android.support.v7.app.AlertDialog dialog = builder.create();
+                dialog.setCanceledOnTouchOutside(true);//设置弹出框失去焦点是否隐藏
+                dialog.show();
+            }
+        });
     }
 
     @OnClick({R.id.practice, R.id.train, R.id.exam, R.id.seting})

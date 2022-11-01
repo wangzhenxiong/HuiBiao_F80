@@ -79,52 +79,10 @@
                             style="@style/title_style"
                             android:text="选择检测项目" />
                     </RelativeLayout>
-                     <com.dy.huibiao_f80.mvp.ui.widget.lettersnavigation.search.ClearEditText
-                         android:id="@+id/filter_edit"
-                         android:layout_width="match_parent"
-                         android:layout_height="48dp"
-                         android:layout_marginLeft="15dp"
-                         android:layout_marginRight="15dp"
-                         android:paddingLeft="8dp"
-                         android:paddingRight="8dp"
-                         android:hint="请输入检测项目"
-                         android:textColorHint="#9B9999"
-                         android:maxLines="1"
-                         android:textSize="15dp"/>
-
-                    <RelativeLayout
+                    <FrameLayout
+                        android:id="@+id/project_fram"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <android.support.v7.widget.RecyclerView
-                            android:id="@+id/recylerview"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
-
-                        <com.dy.huibiao_f80.mvp.ui.widget.lettersnavigation.search.CharIndexView
-                            android:id="@+id/charIndexView"
-                            android:layout_width="30dp"
-                            android:layout_height="match_parent"
-                            android:layout_alignParentRight="true"
-                            android:paddingTop="15dp"
-                            android:paddingBottom="15dp"
-                            app:charTextColor="#000000"
-                            app:indexTextColor="#ff00ff"
-                            app:indexTextSize="13sp" />
-
-                        <TextView
-                            android:id="@+id/tv_index"
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
-                            android:layout_centerInParent="true"
-                            android:background="@drawable/bg_index"
-                            android:gravity="center"
-                            android:text="A"
-                            android:textColor="#ffffff"
-                            android:textSize="18sp"
-                            android:visibility="invisible" />
-
-                    </RelativeLayout>
+                        android:layout_height="match_parent"/>
 
                 </LinearLayout>
             </LinearLayout>
@@ -171,34 +129,7 @@
             android:background="@drawable/beijng_radius"
             android:orientation="vertical">
 
-            <RelativeLayout style="@style/title_layout_style">
 
-                <TextView
-                    style="@style/title_style"
-                    android:layout_centerVertical="true"
-                    android:gravity="left|center_vertical"
-                    android:paddingLeft="20dp"
-                    android:text="参数配置" />
-
-                <ImageButton
-                    android:id="@+id/new_curve"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/new_icn" />
-
-                <Spinner
-                    android:id="@+id/sp_curegroup"
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@id/new_curve"
-                    android:entries="@array/names"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:textSize="20dp" />
-            </RelativeLayout>
 
 
             <FrameLayout

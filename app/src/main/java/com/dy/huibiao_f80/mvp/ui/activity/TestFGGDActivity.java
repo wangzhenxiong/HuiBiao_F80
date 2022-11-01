@@ -1,6 +1,6 @@
  package com.dy.huibiao_f80.mvp.ui.activity;
 
-import android.content.Intent;
+ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -223,6 +223,7 @@ public class TestFGGDActivity extends BaseActivity<TestFGGDPresenter> implements
                     GalleryBean galleryBean = dataList.get(i);
                     galleryBean.setCheckd(false);
                     ((TestRecord) galleryBean).setDecisionoutcome(null);
+                    ((TestRecord) galleryBean).setTestresult(null);
                     ((TestRecord) galleryBean).setRetest(0);
                     if (galleryBean.getDowhat() == 1) {
                         galleryBean.setState(1);

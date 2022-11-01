@@ -2,15 +2,19 @@ package com.dy.huibiao_f80.mvp.model;
 
 import android.app.Application;
 
+import com.dy.huibiao_f80.api.HuiBiaoService;
+import com.dy.huibiao_f80.bean.UpdateMessage;
+import com.dy.huibiao_f80.mvp.contract.SystemSetContract;
 import com.google.gson.Gson;
+import com.jess.arms.di.scope.ActivityScope;
 import com.jess.arms.integration.IRepositoryManager;
 import com.jess.arms.mvp.BaseModel;
 
-import com.jess.arms.di.scope.ActivityScope;
-
 import javax.inject.Inject;
 
-import com.dy.huibiao_f80.mvp.contract.SystemSetContract;
+import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
+import me.jessyan.retrofiturlmanager.RetrofitUrlManager;
 
 @ActivityScope
 public class SystemSetModel extends BaseModel implements SystemSetContract.Model {
@@ -29,5 +33,16 @@ public class SystemSetModel extends BaseModel implements SystemSetContract.Model
         super.onDestroy();
         this.mGson = null;
         this.mApplication = null;
+    }
+
+    @Override
+    public Observable<UpdateMessage> checkNewVision(String deviceUpdataName, String url) {
+        RetrofitUrlManager.getInstance().putDomain("upgradeVersion", url);
+        return mRepositoryManager
+                .obtainRetrofitService(HuiBiaoService.class)
+                .checkNewVersion(deviceUpdataName)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io());
+
     }
 }

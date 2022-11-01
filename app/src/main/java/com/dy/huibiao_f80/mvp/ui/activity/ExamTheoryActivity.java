@@ -1,6 +1,8 @@
 package com.dy.huibiao_f80.mvp.ui.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -739,11 +741,54 @@ public class ExamTheoryActivity extends BaseActivity<ExamTheoryPresenter> implem
                 isup = false;
                 break;
             case R.id.btn_submit:
-                mPresenter.submit(examinationId,examinerId,beginTheoryExamBack);
+                 makeDialog();
                 break;
         }
     }
+    private void makeDialog() {
+        int noanswer = 0;
+        BeginTheoryExam_Back.EntityBean entity = beginTheoryExamBack.getEntity();
+        List<BeginTheoryExam_Back.EntityBean.TheoryQuestionJudgeListBean> analysePaperList = entity.getTheoryQuestionJudgeList();
+        for (int i = 0; i < analysePaperList.size(); i++) {
+            BeginTheoryExam_Back.EntityBean.TheoryQuestionJudgeListBean analysePaperListBean = analysePaperList.get(i);
+            if (analysePaperListBean.getStudentAnswer().isEmpty()) {
+                noanswer++;
+            }
+        }
+        List<BeginTheoryExam_Back.EntityBean.TheoryQuestionMultipleListBean> theoryQuestionMultipleList = entity.getTheoryQuestionMultipleList();
+        for (int i = 0; i < theoryQuestionMultipleList.size(); i++) {
+            BeginTheoryExam_Back.EntityBean.TheoryQuestionMultipleListBean analysePaperListBean = theoryQuestionMultipleList.get(i);
+            if (analysePaperListBean.getStudentAnswer().isEmpty()) {
+                noanswer++;
+            }
+        }
+        List<BeginTheoryExam_Back.EntityBean.TheoryQuestionRadioListBean> theoryQuestionRadioList = entity.getTheoryQuestionRadioList();
+        for (int i = 0; i < theoryQuestionRadioList.size(); i++) {
+            BeginTheoryExam_Back.EntityBean.TheoryQuestionRadioListBean analysePaperListBean = theoryQuestionRadioList.get(i);
+            if (analysePaperListBean.getStudentAnswer().isEmpty()) {
+                noanswer++;
+            }
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("提示");
+        builder.setMessage("一共"+(analysePaperList.size()+theoryQuestionMultipleList.size()+theoryQuestionRadioList.size())
+                +"道题，已经完成"+(analysePaperList.size()+theoryQuestionMultipleList.size()+theoryQuestionRadioList.size()-noanswer)+",未完成"+noanswer+"道\r\n"+"确定要交卷吗？");
+        builder.setNegativeButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                mPresenter.submit(examinationId,examinerId,beginTheoryExamBack);
+            }
+        });
+        builder.setNeutralButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.show();
 
+    }
     //下一题
     private void down() {
         LogUtils.d(theoryQuestionRadioList_p + "  " + theoryQuestionMultipleList_p + "  " + theoryQuestionJudgeList_p);

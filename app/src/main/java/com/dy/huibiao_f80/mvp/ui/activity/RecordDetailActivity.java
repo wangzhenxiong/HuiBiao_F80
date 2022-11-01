@@ -99,9 +99,17 @@ public class RecordDetailActivity extends BaseActivity<RecordDetailPresenter> im
             finish();
             return;
         }
+        Long samplingID = testRecord.getSamplingID();
+        Sampling load = DBHelper.getSamplingDao().load(samplingID);
+        if (null!=load){
+            mSamplingname.setText(load.getSamplingName());
+            mSamplingnumber.setText(load.getSamplingNumber());
+            mBeunits.setText(load.getUnitDetected());
+            mSamplingtime.setText(load.getCreationTimeyymmddhhssmm());
+        }
         mSamplename.setText(testRecord.getSamplename());
         mTestproject.setText(testRecord.getTest_project());
-        mTestunit.setText(testRecord.getProsecutedunits());
+        mTestunit.setText(testRecord.getCov_unit());
         mTestmoudle.setText(testRecord.getTest_Moudle());
         mTestresult.setText(testRecord.getTestresult());
         mJudge.setText(testRecord.getDecisionoutcome());

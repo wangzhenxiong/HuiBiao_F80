@@ -11,6 +11,8 @@ import com.jess.arms.di.scope.ActivityScope;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Named;
+
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
@@ -22,8 +24,16 @@ public abstract class StartTestModule {
     abstract StartTestContract.Model bindStartTestModel(StartTestModel model);
 
     @ActivityScope
+    @Named("jtj")
     @Provides
-    static List<BaseProjectMessage> projectMessageList(){
+    static List<BaseProjectMessage> getSportDialog1() {
+        return new ArrayList<>();
+    }
+
+    @ActivityScope
+    @Named("fggd")
+    @Provides
+    static List<BaseProjectMessage> getSportDialog2() {
         return new ArrayList<>();
     }
 
@@ -32,6 +42,8 @@ public abstract class StartTestModule {
     static SortAdapter contactAdapter(List<BaseProjectMessage> list){
         return new SortAdapter(R.layout.project_item_layout,list);
     }
+
+
     @ActivityScope
     @Provides
     static PinyinComparator pinyinComparator(){

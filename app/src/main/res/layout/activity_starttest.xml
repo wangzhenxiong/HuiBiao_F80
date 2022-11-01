@@ -68,8 +68,11 @@
                 android:layout_weight="1"
                 android:background="@drawable/beijng_radius"
                 android:orientation="vertical">
-
-                <RelativeLayout
+                <FrameLayout
+                    android:id="@+id/project_fram"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+               <!-- <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:background="#E6E2E2"
@@ -136,7 +139,7 @@
                         android:textSize="18sp"
                         android:visibility="invisible" />
 
-                </RelativeLayout>
+                </RelativeLayout>-->
 
             </LinearLayout>
         </LinearLayout>

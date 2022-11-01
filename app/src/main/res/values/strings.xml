@@ -92,4 +92,8 @@
     <string name="print_checkpeople1" translatable="false">审核人员：_____</string>
     <string name="print_checkpeople2" translatable="false">审核人员：</string>
     <string name="my_app_name">检测仪器</string>
+    <string name="download">立即下载</string>
+    <string name="toasmessage_download">已转至后台进行下载</string>
+    <string name="newversionmessage">有新版本可以更新</string>
+    <string name="cancle">取消</string>
 </resources>

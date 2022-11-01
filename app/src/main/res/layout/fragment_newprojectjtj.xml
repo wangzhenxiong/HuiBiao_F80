@@ -11,6 +11,36 @@
         android:layout_marginBottom="60dp"
         android:orientation="vertical">
 
+        <RelativeLayout style="@style/title_layout_style">
+
+            <TextView
+                style="@style/title_style"
+                android:layout_centerVertical="true"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="20dp"
+                android:text="参数配置" />
+
+            <ImageButton
+                android:visibility="gone"
+                android:id="@+id/new_curve"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/new_icn" />
+
+            <Spinner
+                android:visibility="gone"
+                android:id="@+id/sp_curegroup"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/new_curve"
+
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:textSize="20dp" />
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -27,10 +57,10 @@
                 android:layout_weight="1">
 
                 <AutoCompleteTextView
-                    android:editable="false"
                     android:id="@+id/testprojectname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:editable="false"
                     android:hint="@string/ed_projectname"
                     android:maxLines="1"
                     android:singleLine="true" />
@@ -171,13 +201,13 @@
         </LinearLayout>
 
         <LinearLayout
-            android:visibility="visible"
             android:id="@+id/method_bise"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_margin="5dp"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="visible">
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="0dp"
@@ -213,16 +243,18 @@
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
+
         <TextView
             android:id="@+id/hint_xiaoxian"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="T的值小于A为阳性，T的值大于B为阴性，A-B之间为可疑"/>
-         <TextView
-             android:id="@+id/hint_bise"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:text="T/C的值小于A为阳性，T/C的值大于B为阴性，A-B之间为可疑"/>
+            android:text="T的值小于A为阳性，T的值大于B为阴性，A-B之间为可疑" />
+
+        <TextView
+            android:id="@+id/hint_bise"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="T/C的值小于A为阳性，T/C的值大于B为阴性，A-B之间为可疑" />
     </LinearLayout>
 
     <LinearLayout

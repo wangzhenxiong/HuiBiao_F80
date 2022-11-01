@@ -177,6 +177,12 @@ public class TestSettingJTJActivity extends BaseActivity<TestSettingTJPresenter>
 
             }
         });
+        for (int i = 0; i < list.size(); i++) {
+            if (((ProjectJTJ) list.get(i)).getIsdefault()) {
+                mCure1.setSelection(i);
+            }
+        }
+
         MySpinnerAdapter adapter2 = new MySpinnerAdapter(list, this);
 
         mCure2.setAdapter(adapter2);

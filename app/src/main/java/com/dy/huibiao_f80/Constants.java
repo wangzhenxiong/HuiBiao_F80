@@ -9,10 +9,10 @@ import com.dy.huibiao_f80.app.utils.CRC8Util;
 import com.dy.huibiao_f80.app.utils.DataUtils;
 import com.dy.huibiao_f80.app.utils.FileUtils;
 import com.dy.huibiao_f80.app.utils.SPUtils;
+import com.dy.huibiao_f80.bean.PrintMessage;
 import com.dy.huibiao_f80.usbhelps.UsbControl;
 import com.google.gson.Gson;
 import com.jess.arms.utils.ArmsUtils;
-
 
 import java.io.File;
 import java.io.IOException;
@@ -46,6 +46,7 @@ import static com.dy.huibiao_f80.app.utils.CRC8Util.FindCRC;
 public class Constants {
 
     public static String URL = "https://devadmin.huibiaoyun.com";
+    public static String URL_TRAINING = "http://www.gzsttc.com";
     public static final String KEY_URL = "KEY_URL";
     /**
      * 免疫荧光积分值统一除以2800
@@ -248,6 +249,7 @@ public class Constants {
 
     public static String PATH_USERBEAN = "/data/data/" + BuildConfig.APPLICATION_ID + "/platfromuser.json";
     public static String PATH_REGISTERBEAN = "/data/data/" + BuildConfig.APPLICATION_ID + "/platfromregister.json";
+    public static String PATH_PRINTMESSAGEBEAN = "/data/data/" + BuildConfig.APPLICATION_ID + "/printmessage.json";
     /**
      * 平台相关 之前设计接入平台可选择，后面改为了不可选择
      */
@@ -1096,6 +1098,38 @@ public class Constants {
 
         }
         return null;
+    }
+
+    public static PrintMessage  CheckPrintMessage() {
+        boolean exists = FileUtils.isFileExists(Constants.PATH_PRINTMESSAGEBEAN);
+        if (exists) {
+            File user = FileUtils.getFileByPath(Constants.PATH_PRINTMESSAGEBEAN);
+            String filetostring = null;
+            try {
+                filetostring = FileUtils.filetostring(user);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return new Gson().fromJson(filetostring, PrintMessage.class);
+
+        }
+        PrintMessage printMessage = new PrintMessage();
+        printMessage.setCheckBox_project(true);
+        printMessage.setCheckBox_gallery(true);
+        printMessage.setCheckBox_samplenum(true);
+        printMessage.setCheckBox_samplename(true);
+        printMessage.setCheckBox_standname(true);
+        printMessage.setCheckBox_resultunit(true);
+        printMessage.setCheckBox_testtime(true);
+        printMessage.setCheckBox_beunit(false);
+        printMessage.setCheckBox_sampleplace(false);
+        printMessage.setCheckBox_testpeople(false);
+        printMessage.setCheckBox_jujdger(false);
+        printMessage.setCheckBox_all(false);
+        printMessage.setEd_sampleplace("");
+        printMessage.setEd_testpeople("");
+        printMessage.setEd_jujdger("");
+        return printMessage;
     }
 
     public static byte MYYGHCMD_HEAD = 0X7E;

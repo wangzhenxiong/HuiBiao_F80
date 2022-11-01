@@ -5,43 +5,34 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.util.SparseArray;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.apkfuns.logutils.LogUtils;
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.bean.base.BaseProjectMessage;
 import com.dy.huibiao_f80.di.component.DaggerStartTestComponent;
-import com.dy.huibiao_f80.greendao.DBHelper;
 import com.dy.huibiao_f80.greendao.daos.ProjectFGGDDao;
 import com.dy.huibiao_f80.greendao.daos.ProjectJTJDao;
 import com.dy.huibiao_f80.mvp.contract.StartTestContract;
 import com.dy.huibiao_f80.mvp.presenter.StartTestPresenter;
-import com.dy.huibiao_f80.mvp.ui.widget.lettersnavigation.search.CharIndexView;
-import com.dy.huibiao_f80.mvp.ui.widget.lettersnavigation.search.ClearEditText;
-import com.dy.huibiao_f80.mvp.ui.widget.lettersnavigation.search.PinyinComparator;
-import com.dy.huibiao_f80.mvp.ui.widget.lettersnavigation.search.PinyinUtils;
+import com.dy.huibiao_f80.mvp.ui.fragment.FGGDProjectFragment;
+import com.dy.huibiao_f80.mvp.ui.fragment.JTJProjectFragment;
 import com.dy.huibiao_f80.mvp.ui.widget.lettersnavigation.search.TitleItemDecoration;
-import com.dy.huibiao_f80.mvp.ui.widget.lettersnavigation.search.adapter.SortAdapter;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -64,29 +55,26 @@ public class StartTestActivity extends BaseActivity<StartTestPresenter> implemen
     TextView mFggd;
     @BindView(R.id.jtj)
     TextView mJtj;
-    @BindView(R.id.ed_seach)
-    ClearEditText mFilterEdit;
-    @BindView(R.id.recycleview)
-    RecyclerView mRecylerview;
-    @BindView(R.id.charIndexView)
-    CharIndexView mCharIndexView;
-    @BindView(R.id.tv_index)
-    TextView mTvIndex;
-    @BindView(R.id.layout1)
-    LinearLayout mLayout1;
+
     @BindView(R.id.btn_nextstep)
     Button mBtnNextstep;
+
+    @Named("fggd")
+    @Inject
+    List<BaseProjectMessage> mDateList_fggd;
+    @Named("jtj")
+    @Inject
+    List<BaseProjectMessage> mDateList_jtj;
+    private SparseArray<String> mSparseTags_Project = new SparseArray<>();
     private ProjectFGGDDao projectFGGDDao;
     private ProjectJTJDao projectJTJDao;
-    @Inject
-    List<BaseProjectMessage> mDateList;
-    @Inject
-    SortAdapter mAdapter;
-    @Inject
-    PinyinComparator mComparator;
+   
     private TitleItemDecoration mDecoration;
     private int checkmoudle = 1;
-    private BaseProjectMessage chosedProject;
+    private BaseProjectMessage chosedProject_FGGD;
+    private BaseProjectMessage chosedProject_JTJ;
+    private FGGDProjectFragment fggdProjectFragment;
+    private JTJProjectFragment jtjProjectFragment;
 
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
@@ -102,126 +90,31 @@ public class StartTestActivity extends BaseActivity<StartTestPresenter> implemen
     public int initView(@Nullable Bundle savedInstanceState) {
         return R.layout.activity_starttest; //如果你不需要框架帮你设置 setContentView(id) 需要自行设置,请返回 0
     }
+    private void initsparr() {
+
+        mSparseTags_Project.put(R.id.fggd, "fggd_project");
+        mSparseTags_Project.put(R.id.jtj, "jtj_project");
+
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mPresenter.loadData(null);
+        //mPresenter.loadFGGD(null);
+        //mPresenter.loadjtj(null);
+    }
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
-        projectFGGDDao = DBHelper.getProjectFGGDDao();
-        projectJTJDao = DBHelper.getProjectJTJDao();
-        initCharIndex();
+
+        fggdProjectFragment = FGGDProjectFragment.newInstance();
+        jtjProjectFragment = JTJProjectFragment.newInstance();
+        initsparr();
         checkFGGD();
     }
 
-    private void initCharIndex() {
-        LinearLayoutManager manager = new LinearLayoutManager(this);
-        manager.setOrientation(LinearLayoutManager.VERTICAL);
-        // 根据a-z进行排序源数据
-        mDecoration = new TitleItemDecoration(this, mDateList);
-        mCharIndexView.setOnCharIndexChangedListener(new CharIndexView.OnCharIndexChangedListener() {
-            @Override
-            public void onCharIndexChanged(char currentIndex) {
-
-            }
-
-            @Override
-            public void onCharIndexSelected(String currentIndex) {
-                LogUtils.d(currentIndex);
-                if (currentIndex == null) {
-                    mTvIndex.setVisibility(View.INVISIBLE);
-                } else {
-                    mTvIndex.setVisibility(View.VISIBLE);
-                    mTvIndex.setText(currentIndex);
-                    //该字母首次出现的位置
-                    int position = mAdapter.getPositionForSection(currentIndex.charAt(0));
-                    if (position != -1) {
-                        manager.scrollToPositionWithOffset(position, 0);
-                    }
-                }
-
-            }
-        });
-
-        mRecylerview.setLayoutManager(manager);
-        mRecylerview.addItemDecoration(mDecoration);
-        mRecylerview.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        mRecylerview.setAdapter(mAdapter);
-        mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                //选中状态处理
-                checkProject(position);
 
 
-            }
-        });
-        //根据输入框输入值的改变来过滤搜索
-        mFilterEdit.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                //当输入框里面的值为空，更新为原来的列表，否则为过滤数据列表
-                if (s.toString().isEmpty()) {
-                    if (checkmoudle == 1) {
-                        checkFGGD();
-                    } else {
-                        checkJTJ();
-                    }
-                } else {
-                    filterData(s.toString());
-                }
-            }
-        });
-    }
-
-    /**
-     * 根据输入框中的值来过滤数据并更新RecyclerView
-     *
-     * @param filterStr
-     */
-    private void filterData(String filterStr) {
-        List<BaseProjectMessage> filterDateList = new ArrayList<>();
-
-        filterDateList.clear();
-        for (BaseProjectMessage sortModel : mDateList) {
-            String name = sortModel.getPjName();
-            if (name.indexOf(filterStr.toString()) != -1 ||
-                    PinyinUtils.getFirstSpell(name).startsWith(filterStr.toString())
-                    //不区分大小写
-                    || PinyinUtils.getFirstSpell(name).toLowerCase().startsWith(filterStr.toString())
-                    || PinyinUtils.getFirstSpell(name).toUpperCase().startsWith(filterStr.toString())
-            ) {
-                filterDateList.add(sortModel);
-            }
-        }
-
-        // 根据a-z进行排序
-        Collections.sort(filterDateList, mComparator);
-        mDateList.clear();
-        mDateList.addAll(filterDateList);
-        mAdapter.notifyDataSetChanged();
-    }
-
-    private void checkProject(int position) {
-        for (int i = 0; i < mDateList.size(); i++) {
-            BaseProjectMessage baseProjectMessage = mDateList.get(i);
-            if (i == position) {
-                chosedProject = baseProjectMessage;
-                baseProjectMessage.check = true;
-            } else {
-                baseProjectMessage.check = false;
-            }
-
-        }
-        mAdapter.notifyDataSetChanged();
-    }
 
 
     @Override
@@ -274,37 +167,60 @@ public class StartTestActivity extends BaseActivity<StartTestPresenter> implemen
     }
 
     private void startTest() {
-        if (null==chosedProject){
-            ArmsUtils.snackbarText("请选择检测项目");
-            return;
-        }
-        if (checkmoudle == 1) {
 
+        if (checkmoudle == 1) {
+            if (null==chosedProject_FGGD){
+                ArmsUtils.snackbarText("请选择检测项目");
+                return;
+            }
             Intent content = new Intent(this, ChoseGalleryFGGDActivity.class);
-            content.putExtra("project",chosedProject.getPjName());
+            content.putExtra("project",chosedProject_FGGD.getPjName());
             ArmsUtils.startActivity(content);
         } else if (checkmoudle == 2) {
+            if (null==chosedProject_JTJ){
+                ArmsUtils.snackbarText("请选择检测项目");
+                return;
+            }
             Intent content = new Intent(this, ChoseGalleryJTJActivity.class);
-            content.putExtra("project",chosedProject.getPjName());
+            content.putExtra("project",chosedProject_JTJ.getPjName());
             ArmsUtils.startActivity(content);
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent1(FGGDProjectFragment.FGGDProjectFragmentEvent tags) {
+        chosedProject_FGGD= tags.getProjectFGGD();
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent2(JTJProjectFragment.JTJProjectFragmentEvent tags) {
+        chosedProject_JTJ= tags.getProjectJTJ();
+    }
+
     private void checkJTJ() {
+
         mJtj.setBackground(getResources().getDrawable(R.color.BAC0));
         mFggd.setBackground(null);
         checkmoudle = 2;
-        mPresenter.getJTJProject(null);
 
-        chosedProject = null;
+        mPresenter.replaceFragment(getSupportFragmentManager(), R.id.project_fram, jtjProjectFragment, mSparseTags_Project.get(R.id.jtj));
+
     }
 
     private void checkFGGD() {
         mFggd.setBackground(getResources().getDrawable(R.color.BAC0));
         mJtj.setBackground(null);
         checkmoudle = 1;
-        mPresenter.getFGGDProject(null);
+        mPresenter.replaceFragment(getSupportFragmentManager(), R.id.project_fram, fggdProjectFragment, mSparseTags_Project.get(R.id.fggd));
 
-        chosedProject = null;
+    }
+
+    @Override
+    public void loadJTJFinish() {
+        jtjProjectFragment.setData(mDateList_jtj);
+    }
+
+    @Override
+    public void loadFGGDFinish() {
+        fggdProjectFragment.setData(mDateList_fggd);
     }
 }

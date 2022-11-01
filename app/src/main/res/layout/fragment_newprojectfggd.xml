@@ -9,6 +9,34 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <RelativeLayout style="@style/title_layout_style">
+
+            <TextView
+                style="@style/title_style"
+                android:layout_centerVertical="true"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="20dp"
+                android:text="参数配置" />
+
+            <ImageButton
+                android:id="@+id/new_curve"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/new_icn" />
+
+            <Spinner
+                android:id="@+id/sp_curegroup"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/new_curve"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:textSize="20dp" />
+        </RelativeLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="60dp"
@@ -183,7 +211,7 @@
                 <AutoCompleteTextView
                     android:id="@+id/unit_input"
                     style="@style/AutoCompleteTextViewStyle"
-                    android:inputType="text"/>
+                    android:inputType="text" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -252,8 +280,7 @@
 
                 <AutoCompleteTextView
                     android:id="@+id/ok_a"
-                    style="@style/AutoCompleteTextViewStyle"
-                     />
+                    style="@style/AutoCompleteTextViewStyle" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -280,8 +307,7 @@
 
                 <AutoCompleteTextView
                     android:id="@+id/ok_b"
-                    style="@style/AutoCompleteTextViewStyle"
-                     />
+                    style="@style/AutoCompleteTextViewStyle" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -313,8 +339,7 @@
 
                 <AutoCompleteTextView
                     android:id="@+id/ng_a"
-                    style="@style/AutoCompleteTextViewStyle"
-                     />
+                    style="@style/AutoCompleteTextViewStyle" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -341,8 +366,7 @@
 
                 <AutoCompleteTextView
                     android:id="@+id/ng_b"
-                    style="@style/AutoCompleteTextViewStyle"
-                     />
+                    style="@style/AutoCompleteTextViewStyle" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -373,8 +397,7 @@
 
                 <AutoCompleteTextView
                     android:id="@+id/df_a"
-                    style="@style/AutoCompleteTextViewStyle"
-                     />
+                    style="@style/AutoCompleteTextViewStyle" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -401,8 +424,7 @@
 
                 <AutoCompleteTextView
                     android:id="@+id/df_b"
-                    style="@style/AutoCompleteTextViewStyle"
-                     />
+                    style="@style/AutoCompleteTextViewStyle" />
 
             </android.support.design.widget.TextInputLayout>
 

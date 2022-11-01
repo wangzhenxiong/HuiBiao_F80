@@ -1,5 +1,7 @@
 package com.dy.huibiao_f80.mvp.ui.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -126,10 +128,43 @@ public class ExamAnalyseActivity extends BaseActivity<ExamAnalysePresenter> impl
             case R.id.toolbar_title:
                 break;
             case R.id.btn_submit:
-                mPresenter.submit(examinationId,examinerId,beginAnalyseExamBack);
+                makeDialog();
+
+
                 break;
         }
     }
+
+    private void makeDialog() {
+        int noanswer = 0;
+        List<BeginAnalyseExam_Back.EntityBean.AnalysePaperListBean> analysePaperList = beginAnalyseExamBack.getEntity().getAnalysePaperList();
+        for (int i = 0; i < analysePaperList.size(); i++) {
+            BeginAnalyseExam_Back.EntityBean.AnalysePaperListBean analysePaperListBean = analysePaperList.get(i);
+            if (analysePaperListBean.getStudentAnswer().isEmpty()) {
+               noanswer++;
+            }
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("提示");
+        builder.setMessage("一共"+analysePaperList.size()
+                +"道题，已经完成"+(analysePaperList.size()-noanswer)+",未完成"+noanswer+"道\r\n"+"确定要交卷吗？");
+        builder.setNegativeButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                mPresenter.submit(examinationId,examinerId,beginAnalyseExamBack);
+            }
+        });
+        builder.setNeutralButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.show();
+
+    }
+
     @Override
     public void killMyself() {
         finish();

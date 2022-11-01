@@ -3,6 +3,7 @@ package com.dy.huibiao_f80.mvp.contract;
 import android.app.Activity;
 
 import com.dy.huibiao_f80.api.back.ExistExam_Back;
+import com.dy.huibiao_f80.bean.UpdateMessage;
 import com.jess.arms.mvp.IModel;
 import com.jess.arms.mvp.IView;
 
@@ -15,6 +16,8 @@ public interface HomeContract {
         void setDataTime(String s);
 
         Activity getActivity();
+
+        void makeDialogNewVersion(UpdateMessage message);
     }
 
     //Model层定义接口,外部只需关心Model返回的数据,无需关心内部细节,即是否使用缓存
@@ -23,5 +26,7 @@ public interface HomeContract {
         Observable<String> getTime();
 
         Observable<ExistExam_Back> existExam(String url, String devicenum);
+
+        Observable<UpdateMessage> checkNewVision(String deviceUpdataName, String url);
     }
 }

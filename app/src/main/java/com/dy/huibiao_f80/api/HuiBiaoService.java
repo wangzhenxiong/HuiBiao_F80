@@ -26,6 +26,7 @@ import com.dy.huibiao_f80.api.back.GetExamPage_Back;
 import com.dy.huibiao_f80.api.back.IsTeacherSubmit_Back;
 import com.dy.huibiao_f80.api.back.TestFormSubmit_Back;
 import com.dy.huibiao_f80.api.back.TheorySubmit_Back;
+import com.dy.huibiao_f80.bean.UpdateMessage;
 
 import io.reactivex.Observable;
 import okhttp3.RequestBody;
@@ -49,6 +50,10 @@ import retrofit2.http.Query;
  * @author wangzhenxiong
  */
 public interface HuiBiaoService {
+
+    @Headers({"Domain-Name: upgradeVersion"}) // 加上 Domain-Name header
+    @POST("/dyfda2/os/java/pub/app/upgradeVersion.shtml")
+    Observable<UpdateMessage> checkNewVersion(@Query("appname") String appName);
     /**
      * 点击考试
      *

@@ -219,14 +219,13 @@ public class ProjectFGGD extends BaseProjectMessage {
 
     public OutMoudle<String> toJxlTitle() {
         return new OutMoudle<String>("数据库ID,项目名称,曲线名称,曲线序号,是否默认曲线,检测标准,检测方法," +
-                "波长,预热时间,检测时间,检测结果单位,A0,BO," +
+                "波长,预热时间,检测时间,检测结果单位,A0,B0," +
                 "C0,D0,FROM0,TO0,A1,B1," +
                 "C1,D1,FROM1,TO1," +
                 "A,B,C,D" +
                 ",启用阴性区间,阴性范围A,阴性范围A对比符号,阴性范围B,阴性范围B对比符号" +
                 ",启用阳性区间,阳性范围A,阳性范围A对比符号,阳性范围B,阳性范围B对比符号" +
                 ",启用可疑区间,可疑范围A,可疑范围A对比符号,可疑范围B,可疑范围B对比符号" +
-                ",启用可疑区间,可疑范围A,可疑范围A对比符号,可疑范围B,可疑范围B对比符号"+
                 ",简要提示,方法检出限,创建者"
         );
     }

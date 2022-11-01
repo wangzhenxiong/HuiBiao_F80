@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.dy.huibiao_f80.BuildConfig;
 import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.api.back.GetExamPage_Back;
 import com.dy.huibiao_f80.di.component.DaggerExamStateComponent;
@@ -130,7 +131,7 @@ public class ExamStateActivity extends BaseActivity<ExamStatePresenter> implemen
         } else if (examStatus == 2) {
 
             mStartexam1.setClickable(false);
-            if (true){
+            if (BuildConfig.DEBUG){
                 mStartexam1.setClickable(true);
             }
             mStartexam1.setBackground(getResources().getDrawable(R.drawable.btn_background_gray));
@@ -141,7 +142,7 @@ public class ExamStateActivity extends BaseActivity<ExamStatePresenter> implemen
             mStartexa2.setBackground(getResources().getDrawable(R.drawable.btn_background_blue));
         } else if (analyseStatus == 2) {
             mStartexa2.setClickable(false);
-            if (true){
+            if (BuildConfig.DEBUG){
                 mStartexa2.setClickable(true);
             }
             mStartexa2.setBackground(getResources().getDrawable(R.drawable.btn_background_gray));
@@ -151,7 +152,7 @@ public class ExamStateActivity extends BaseActivity<ExamStatePresenter> implemen
             mStartexam3.setBackground(getResources().getDrawable(R.drawable.btn_background_blue));
         } else if (operationStatus == 2) {
             mStartexam3.setClickable(false);
-            if (true){
+            if (BuildConfig.DEBUG){
                 mStartexam3.setClickable(true);
             }
             mStartexam3.setBackground(getResources().getDrawable(R.drawable.btn_background_gray));

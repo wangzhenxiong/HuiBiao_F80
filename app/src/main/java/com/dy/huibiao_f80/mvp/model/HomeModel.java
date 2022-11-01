@@ -5,6 +5,7 @@ import android.app.Application;
 import com.dy.huibiao_f80.api.HuiBiaoService;
 import com.dy.huibiao_f80.api.back.ExistExam_Back;
 import com.dy.huibiao_f80.app.utils.DataUtils;
+import com.dy.huibiao_f80.bean.UpdateMessage;
 import com.dy.huibiao_f80.mvp.contract.HomeContract;
 import com.google.gson.Gson;
 import com.jess.arms.di.scope.ActivityScope;
@@ -68,6 +69,16 @@ public class HomeModel extends BaseModel implements HomeContract.Model {
                 .existExam(devicenum)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io());
+    }
+
+    @Override
+    public Observable<UpdateMessage> checkNewVision(String deviceUpdataName, String url) {
+        RetrofitUrlManager.getInstance().putDomain("upgradeVersion", url);
+        return mRepositoryManager
+                .obtainRetrofitService(HuiBiaoService.class)
+                .checkNewVersion(deviceUpdataName)
+                .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io());
     }
 }

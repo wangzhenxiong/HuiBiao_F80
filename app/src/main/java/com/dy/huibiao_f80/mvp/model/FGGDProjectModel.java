@@ -4,12 +4,10 @@ import android.app.Application;
 
 import com.dy.huibiao_f80.greendao.DBHelper;
 import com.dy.huibiao_f80.greendao.ProjectFGGD;
-import com.dy.huibiao_f80.greendao.ProjectJTJ;
 import com.dy.huibiao_f80.greendao.daos.ProjectFGGDDao;
-import com.dy.huibiao_f80.greendao.daos.ProjectJTJDao;
-import com.dy.huibiao_f80.mvp.contract.StartTestContract;
+import com.dy.huibiao_f80.mvp.contract.FGGDProjectContract;
 import com.google.gson.Gson;
-import com.jess.arms.di.scope.ActivityScope;
+import com.jess.arms.di.scope.FragmentScope;
 import com.jess.arms.integration.IRepositoryManager;
 import com.jess.arms.mvp.BaseModel;
 
@@ -26,15 +24,15 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.schedulers.Schedulers;
 
-@ActivityScope
-public class StartTestModel extends BaseModel implements StartTestContract.Model {
+@FragmentScope
+public class FGGDProjectModel extends BaseModel implements FGGDProjectContract.Model {
     @Inject
     Gson mGson;
     @Inject
     Application mApplication;
 
     @Inject
-    public StartTestModel(IRepositoryManager repositoryManager) {
+    public FGGDProjectModel(IRepositoryManager repositoryManager) {
         super(repositoryManager);
     }
 
@@ -55,24 +53,6 @@ public class StartTestModel extends BaseModel implements StartTestContract.Model
                     projectFGGDQueryBuilder = projectFGGDQueryBuilder.where(ProjectFGGDDao.Properties.ProjectName.like("%" + keyword + "%"));
                 }
                 List<ProjectFGGD> list = projectFGGDQueryBuilder.where(ProjectFGGDDao.Properties.Isdefault.eq(true)).build().list();
-                emitter.onNext(list);
-                emitter.onComplete();
-            }
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .unsubscribeOn(Schedulers.io());
-    }
-
-    @Override
-    public Observable<List<ProjectJTJ>> getJTJProject(String keyword) {
-        return Observable.create(new ObservableOnSubscribe<List<ProjectJTJ>>() {
-            @Override
-            public void subscribe(@NonNull ObservableEmitter<List<ProjectJTJ>> emitter) throws Exception {
-                QueryBuilder<ProjectJTJ> projectJTJQueryBuilder = DBHelper.getProjectJTJDao().queryBuilder();
-                if (null != keyword) {
-                    projectJTJQueryBuilder = projectJTJQueryBuilder.where(ProjectJTJDao.Properties.ProjectName.like("%" + keyword + "%"));
-                }
-                List<ProjectJTJ> list = projectJTJQueryBuilder.where(ProjectJTJDao.Properties.Isdefault.eq(true)).build().list();
                 emitter.onNext(list);
                 emitter.onComplete();
             }

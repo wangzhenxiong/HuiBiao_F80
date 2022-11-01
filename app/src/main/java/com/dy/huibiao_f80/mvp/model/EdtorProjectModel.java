@@ -2,7 +2,6 @@ package com.dy.huibiao_f80.mvp.model;
 
 import android.app.Application;
 
-import com.dy.huibiao_f80.bean.base.BaseProjectMessage;
 import com.dy.huibiao_f80.greendao.DBHelper;
 import com.dy.huibiao_f80.greendao.ProjectFGGD;
 import com.dy.huibiao_f80.greendao.ProjectJTJ;
@@ -49,10 +48,10 @@ public class EdtorProjectModel extends BaseModel implements EdtorProjectContract
     }
 
     @Override
-    public Observable<List<? extends BaseProjectMessage>> getFGGDProject(String keyword) {
-        return Observable.create(new ObservableOnSubscribe<List<? extends BaseProjectMessage>>() {
+    public Observable<List<ProjectFGGD>> getFGGDProject(String keyword) {
+        return Observable.create(new ObservableOnSubscribe<List<ProjectFGGD>>() {
             @Override
-            public void subscribe(@NonNull ObservableEmitter<List<? extends BaseProjectMessage>> emitter) throws Exception {
+            public void subscribe(@NonNull ObservableEmitter<List<ProjectFGGD>> emitter) throws Exception {
                 QueryBuilder<ProjectFGGD> projectFGGDQueryBuilder = DBHelper.getProjectFGGDDao().queryBuilder();
                 if (null != keyword) {
                     projectFGGDQueryBuilder = projectFGGDQueryBuilder.where(ProjectFGGDDao.Properties.ProjectName.like("%" + keyword + "%"));
@@ -67,10 +66,10 @@ public class EdtorProjectModel extends BaseModel implements EdtorProjectContract
     }
 
     @Override
-    public Observable<List<? extends BaseProjectMessage>> getJTJProject(String keyword) {
-        return Observable.create(new ObservableOnSubscribe<List<? extends BaseProjectMessage>>() {
+    public Observable<List<ProjectJTJ>> getJTJProject(String keyword) {
+        return Observable.create(new ObservableOnSubscribe<List<ProjectJTJ>>() {
             @Override
-            public void subscribe(@NonNull ObservableEmitter<List<? extends BaseProjectMessage>> emitter) throws Exception {
+            public void subscribe(@NonNull ObservableEmitter<List<ProjectJTJ>> emitter) throws Exception {
                 QueryBuilder<ProjectJTJ> projectJTJQueryBuilder = DBHelper.getProjectJTJDao().queryBuilder();
                 if (null != keyword) {
                     projectJTJQueryBuilder = projectJTJQueryBuilder.where(ProjectJTJDao.Properties.ProjectName.like("%" + keyword + "%"));
