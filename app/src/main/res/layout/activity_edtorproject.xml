@@ -115,6 +115,17 @@
                     android:textColor="#DC000F"
                     android:textSize="18dp"
                     android:visibility="visible" />
+
+                <Button
+                    android:id="@+id/synchronous"
+                    android:layout_width="wrap_content"
+                    android:layout_height="34dp"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/btn_background_blue"
+                    android:text="同步"
+                    android:textColor="#fff"
+                    android:textSize="18dp"
+                    android:visibility="visible" />
             </LinearLayout>
 
         </RelativeLayout>

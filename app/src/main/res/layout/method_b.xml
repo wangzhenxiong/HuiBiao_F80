@@ -81,7 +81,11 @@
                      />
 
             </android.support.design.widget.TextInputLayout>
-
+            <ImageButton
+                android:id="@+id/auto_a"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/auto_curve"/>
 
         </LinearLayout>
 
@@ -157,7 +161,11 @@
                      />
 
             </android.support.design.widget.TextInputLayout>
-
+            <ImageButton
+                android:id="@+id/auto_b"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/auto_curve"/>
 
         </LinearLayout>
 
@@ -175,7 +183,7 @@
                 <AutoCompleteTextView
                     android:id="@+id/jzqxa"
                     style="@style/AutoCompleteTextViewStyle"
-                     />
+                     android:text="1"/>
 
             </android.support.design.widget.TextInputLayout>
 

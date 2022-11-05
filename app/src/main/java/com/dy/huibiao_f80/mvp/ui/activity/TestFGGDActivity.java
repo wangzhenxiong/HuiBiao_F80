@@ -1,6 +1,7 @@
- package com.dy.huibiao_f80.mvp.ui.activity;
+package com.dy.huibiao_f80.mvp.ui.activity;
 
- import android.content.Intent;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -33,6 +34,10 @@ import com.dy.huibiao_f80.mvp.presenter.TestFGGDPresenter;
 import com.dy.huibiao_f80.mvp.ui.adapter.FGGDAdapter;
 import com.dy.huibiao_f80.mvp.ui.adapter.MySpinnerAdapter;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
@@ -135,6 +140,14 @@ public class TestFGGDActivity extends BaseActivity<TestFGGDPresenter> implements
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 baseProjectMessage = list.get(position);
                 // TODO: 10/17/22 根据曲线信息画曲线
+                if (baseProjectMessage.getMethod_sp() == 1) {
+                    double a0 = ((ProjectFGGD) baseProjectMessage).getA0();
+                    double b0 = ((ProjectFGGD) baseProjectMessage).getB0();
+                    double c0 = ((ProjectFGGD) baseProjectMessage).getC0();
+                    double d0 = ((ProjectFGGD) baseProjectMessage).getD0();
+                    LineData data = getData(mChartview, a0, b0, c0, d0);
+                    setupChart(mChartview, data);
+                }
                 LogUtils.d(baseProjectMessage);
                 for (int i = 0; i < dataList.size(); i++) {
                     dataList.get(i).setmProjectMessage(baseProjectMessage);
@@ -152,6 +165,8 @@ public class TestFGGDActivity extends BaseActivity<TestFGGDPresenter> implements
                 mCures.setSelection(i);
             }
         }
+
+
     }
 
     private void getdata() {
@@ -161,11 +176,96 @@ public class TestFGGDActivity extends BaseActivity<TestFGGDPresenter> implements
             if (galleryBean.isCheckd()) {
                 dataList.add(galleryBean);
                 LogUtils.d(galleryBean.getGalleryNum());
-            }else {
+            } else {
                 galleryBean.setState(0);
             }
         }
         fggdAdapter.notifyDataSetChanged();
+    }
+
+    private void setupChart(LineChart chart, LineData data) {
+
+        ((LineDataSet) data.getDataSetByIndex(0)).setCircleHoleColor(Color.rgb(0, 200, 245));
+
+        // no description text
+        chart.getDescription().setEnabled(false);
+
+        // chart.setDrawHorizontalGrid(false);
+        //
+        // enable / disable grid background
+        chart.setDrawGridBackground(false);
+//        chart.getRenderer().getGridPaint().setGridColor(Color.WHITE & 0x70FFFFFF);
+
+        // enable touch gestures
+        chart.setTouchEnabled(true);
+
+        // enable scaling and dragging
+        chart.setDragEnabled(true);
+        chart.setScaleEnabled(true);
+
+        // if disabled, scaling can be done on x- and y-axis separately
+        chart.setPinchZoom(false);
+
+        chart.setBackgroundColor(Color.argb(0, 0, 200, 245));
+
+        // set custom chart offsets (automatic offset calculation is hereby disabled)
+        chart.setViewPortOffsets(10, 0, 10, 0);
+
+        // add data
+        chart.setData(data);
+
+        // get the legend (only possible after setting data)
+        Legend l = chart.getLegend();
+        l.setEnabled(false);
+
+        chart.getAxisLeft().setEnabled(false);
+        chart.getAxisLeft().setSpaceTop(40);
+        chart.getAxisLeft().setSpaceBottom(40);
+        chart.getAxisRight().setEnabled(false);
+
+        chart.getXAxis().setEnabled(false);
+
+        // animate calls invalidate()...
+        chart.animateX(2500);
+        //chart.setMarker(new MyMaker());
+
+    }
+
+    private LineData getData(LineChart mChart, double a, double b, double c, double d) {
+        ArrayList<Entry> values = new ArrayList<>();
+
+        for (int i = 1; i < 100; i++) {
+            values.add(new Entry(i, (float) (a + b * i + c * i * i + d * i * i * i)));
+        }
+
+
+        // create a dataset and give it a type
+        LineDataSet set1;
+        // set1.setFillAlpha(110);
+        // set1.setFillColor(Color.RED);
+
+
+        if (mChart.getData() != null &&
+                mChart.getData().getDataSetCount() > 0) {
+            mChart.getData().removeDataSet(0);
+        }
+        // create a dataset and give it a type
+        set1 = new LineDataSet(values, "");
+
+        set1.setDrawIcons(false);
+        set1.setColor(Color.BLACK);
+        /******************************/
+        set1.setDrawCircleHole(false);
+        set1.setLineWidth(1.75f);
+        set1.setCircleRadius(4f);
+        set1.setCircleHoleRadius(1.5f);
+        //set1.setColor(Color.WHITE);
+        //set1.setCircleColor(Color.WHITE);
+        set1.setHighLightColor(Color.GREEN);
+        set1.setDrawValues(false);
+
+        // create a data object with the data sets
+        return new LineData(set1);
     }
 
     @Override

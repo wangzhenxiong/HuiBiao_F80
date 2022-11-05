@@ -93,4 +93,5 @@ public abstract class BaseService extends Service {
      * 初始化
      */
     abstract public void init();
+
 }

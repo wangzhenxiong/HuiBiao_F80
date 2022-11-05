@@ -10,6 +10,7 @@ import android.speech.tts.TextToSpeech;
 import android.support.multidex.MultiDex;
 
 import com.apkfuns.logutils.LogUtils;
+import com.dy.huibiao_f80.app.service.ExamOperationService;
 import com.dy.huibiao_f80.app.service.SerialDataService;
 import com.dy.huibiao_f80.crash.CaocConfig;
 import com.dy.huibiao_f80.crash.CustomActivityOnCrash;
@@ -51,6 +52,7 @@ import java.util.Locale;
 public class MyAppLocation extends BaseApplication implements TextToSpeech.OnInitListener {
     public static MyAppLocation myAppLocation = null;
     public SerialDataService mSerialDataService;
+    public ExamOperationService mExamOperationService;
     public IMyBinder mPrintCertificateOfConformityBinder;
     private Intent mIntent;
     private Intent mIntent1;
@@ -59,8 +61,8 @@ public class MyAppLocation extends BaseApplication implements TextToSpeech.OnIni
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mSerialDataService = ((SerialDataService.MyBinder) service).getService();
-                mSerialDataService.startFGGDSendthread();
-                mSerialDataService.startGSNCSendthread();
+            mSerialDataService.startFGGDSendthread();
+            mSerialDataService.startGSNCSendthread();
 
         }
 
@@ -70,7 +72,19 @@ public class MyAppLocation extends BaseApplication implements TextToSpeech.OnIni
         }
     };
 
+    private ServiceConnection mConnection1 = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mExamOperationService = ((ExamOperationService.MyBinder) service).getService();
 
+
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            LogUtils.d("ExamOperationService启动失败");
+        }
+    };
     private ServiceConnection mConnection2 = new ServiceConnection() {
 
         @Override
@@ -103,10 +117,12 @@ public class MyAppLocation extends BaseApplication implements TextToSpeech.OnIni
         }
         myAppLocation = this;
         mIntent = new Intent(this, SerialDataService.class);
+        mIntent1 = new Intent(this, ExamOperationService.class);
         mIntent2 = new Intent(this, PosprinterService.class);
         LogUtils.d(isAppProcess());
         if (isAppProcess()) {
             bindService(mIntent, mConnection, BIND_AUTO_CREATE);
+            bindService(mIntent1, mConnection1, BIND_AUTO_CREATE);
             bindService(mIntent2, mConnection2, BIND_AUTO_CREATE);
             initTextToSpeech();
             initImageLoader(getApplicationContext());

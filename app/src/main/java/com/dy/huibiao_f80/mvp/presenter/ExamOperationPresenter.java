@@ -1,11 +1,14 @@
 package com.dy.huibiao_f80.mvp.presenter;
 
+import android.app.AlertDialog;
 import android.app.Application;
+import android.content.DialogInterface;
 
 import com.apkfuns.logutils.LogUtils;
 import com.dy.huibiao_f80.Constants;
-import com.dy.huibiao_f80.api.back.BeginAnalyseExam_Back;
+import com.dy.huibiao_f80.MyAppLocation;
 import com.dy.huibiao_f80.api.back.BeginOperationExam_Back;
+import com.dy.huibiao_f80.api.back.TestFormSubmit_Back;
 import com.dy.huibiao_f80.mvp.contract.ExamOperationContract;
 import com.jess.arms.di.scope.ActivityScope;
 import com.jess.arms.http.imageloader.ImageLoader;
@@ -64,5 +67,61 @@ public class ExamOperationPresenter extends BasePresenter<ExamOperationContract.
                         }
                     }
                 });
+    }
+
+
+
+    public void submitOperation() {
+        if (null==MyAppLocation.myAppLocation.mExamOperationService.getBeginTestForm_back()) {
+            ArmsUtils.snackbarText("请先填写实验报告");
+            return;
+        }
+        if (null==MyAppLocation.myAppLocation.mExamOperationService.getReportBean()){
+          makeDialog();
+        }else {
+            submit();
+        }
+
+    }
+    private void submit(){
+        mModel.submitOperation()
+                .doOnSubscribe(disposable -> {
+                    mRootView.showLoading();
+                }).subscribeOn(AndroidSchedulers.mainThread())
+                .doFinally(() -> {
+                    mRootView.hideLoading();
+                }).compose(RxLifecycleUtils.bindToLifecycle(mRootView))
+                .subscribe(new ErrorHandleSubscriber<TestFormSubmit_Back>(mErrorHandler) {
+                    @Override
+                    public void onNext(TestFormSubmit_Back back) {
+                        LogUtils.d(back);
+                        if (back.isSuccess()){
+                            mRootView.submitSuccess();
+                        }
+
+                        ArmsUtils.snackbarText(back.getMessage());
+
+                    }
+                });
+    }
+
+    private void makeDialog() {
+        AlertDialog.Builder builder=new AlertDialog.Builder(mRootView.getActivity());
+        builder.setTitle("提示");
+        builder.setMessage("实验报告还未填写，确定要提交吗？");
+        builder.setNeutralButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+               dialog.dismiss();
+               submit();
+            }
+        });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }) ;
+        builder.show();
     }
 }

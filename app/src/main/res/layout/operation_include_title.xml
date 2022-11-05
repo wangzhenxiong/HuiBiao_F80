@@ -43,7 +43,7 @@
             android:textSize="20sp" />
 
         <Button
-            android:id="@+id/btn_operationreport"
+            android:id="@+id/btn_submit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
@@ -51,7 +51,7 @@
             android:background="@drawable/btn_background_rad"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:text="填写实验报告"
+            android:text="提交报告"
             android:textColor="@color/white"
             android:textSize="18sp" />
 

@@ -9,6 +9,7 @@ import com.dy.huibiao_f80.BuildConfig;
 import com.dy.huibiao_f80.Constants;
 import com.dy.huibiao_f80.MyAppLocation;
 import com.dy.huibiao_f80.R;
+import com.dy.huibiao_f80.app.service.UploadService;
 import com.dy.huibiao_f80.app.utils.FileUtils;
 import com.dy.huibiao_f80.app.utils.PictureToolUtils;
 import com.dy.huibiao_f80.bean.base.BaseProjectMessage;
@@ -141,6 +142,18 @@ public abstract class GalleryBean implements Parcelable, UsbReadWriteHelper.onUs
     public boolean issend = false;
     public RunnableScheduledFuture<?> mRunnableScheduledFuture;
     public boolean checkd;
+    /**
+     * 自定义曲线需要设置浓度
+     */
+    private double mic;
+
+    public double getMic() {
+        return mic;
+    }
+
+    public void setMic(double mic) {
+        this.mic = mic;
+    }
 
     public boolean isCheckd() {
         return checkd;
@@ -1330,7 +1343,16 @@ public abstract class GalleryBean implements Parcelable, UsbReadWriteHelper.onUs
         //设置状态为检测完成 2
         detection_record_fggd_nc.setState(2);
         //detection_record_fggd_nc.setDowhat(0);
-        DBHelper.getTestRecordDao().insert(detection_record_fggd_nc);
+        if (MyAppLocation.myAppLocation.mExamOperationService.isStartExamOperation()){
+            detection_record_fggd_nc.setExam_id(MyAppLocation.myAppLocation.mExamOperationService.getNowOperationExam().getId());
+            detection_record_fggd_nc.setExaminerId(MyAppLocation.myAppLocation.mExamOperationService.getExaminerId());
+            detection_record_fggd_nc.setExaminationId(MyAppLocation.myAppLocation.mExamOperationService.getExaminationId());
+            DBHelper.getTestRecordDao().insert(detection_record_fggd_nc);
+            UploadService.startUpLoad(MyAppLocation.myAppLocation,detection_record_fggd_nc.getSysCode());
+        }else {
+
+            DBHelper.getTestRecordDao().insert(detection_record_fggd_nc);
+        }
         StringBuilder builder = new StringBuilder(); //使用线程安全的StringBuffer
         for (int i1 = 0; i1 < mUserfullData.size(); i1++) {
             builder.append(mUserfullData.get(i1) + ",");

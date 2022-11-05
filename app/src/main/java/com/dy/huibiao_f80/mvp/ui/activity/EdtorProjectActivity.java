@@ -86,6 +86,8 @@ public class EdtorProjectActivity extends BaseActivity<EdtorProjectPresenter> im
     FrameLayout mProjectFram;
     @Inject
     AlertDialog mSportDialog;
+    @BindView(R.id.synchronous)
+    Button mSynchronous;
     private int checkmoudle = 1;
     private SparseArray<String> mSparseTags = new SparseArray<>();
     private SparseArray<String> mSparseTags_Project = new SparseArray<>();
@@ -115,8 +117,7 @@ public class EdtorProjectActivity extends BaseActivity<EdtorProjectPresenter> im
     protected void onResume() {
         super.onResume();
         mPresenter.loadData(null);
-        //mPresenter.loadFGGD(null);
-        //mPresenter.loadjtj(null);
+
     }
 
     @Override
@@ -131,7 +132,6 @@ public class EdtorProjectActivity extends BaseActivity<EdtorProjectPresenter> im
 
         initsparr();
         checkFGGD();
-        //checkJTJ();
 
         mToolbarTitle.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -141,22 +141,48 @@ public class EdtorProjectActivity extends BaseActivity<EdtorProjectPresenter> im
             }
         });
     }
+
+    /**
+     * 当前所选中的项目
+     */
     BaseProjectMessage projectMessage_fggd;
-    BaseProjectMessage projectMessage_jtj;
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent1(FGGDProjectFragment.FGGDProjectFragmentEvent tags) {
-       LogUtils.d(tags);
-        mPresenter.replaceFragment(getSupportFragmentManager(), R.id.frame, newProjectFGGDFragment, mSparseTags.get(R.id.fggd));
+        LogUtils.d(tags);
         projectMessage_fggd = tags.getProjectFGGD();
+        mPresenter.replaceFragment(getSupportFragmentManager(), R.id.frame, newProjectFGGDFragment, mSparseTags.get(R.id.fggd));
         newProjectFGGDFragment.setData(projectMessage_fggd);
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent1(NewProjectFGGDFragment.FGGDProjectFragmentEvent tags) {
+        if (tags.getPersion() == -1) {
+            mDateList_fggd.remove(projectMessage_fggd);
+            projectMessage_fggd = null;
+            fggdProjectFragment.setData(mDateList_fggd);
+        }
+    }
+
+    BaseProjectMessage projectMessage_jtj;
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent2(JTJProjectFragment.JTJProjectFragmentEvent tags) {
         LogUtils.d(tags);
-        mPresenter.replaceFragment(getSupportFragmentManager(), R.id.frame, newProjectJTJFragment, mSparseTags.get(R.id.jtj));
         projectMessage_jtj = tags.getProjectJTJ();
+        mPresenter.replaceFragment(getSupportFragmentManager(), R.id.frame, newProjectJTJFragment, mSparseTags.get(R.id.jtj));
         newProjectJTJFragment.setData(projectMessage_jtj);
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent1(NewProjectJTJFragment.JTJProjectFragmentEvent tags) {
+        if (tags.getPersion() == -1) {
+            mDateList_jtj.remove(projectMessage_jtj);
+            projectMessage_jtj = null;
+            jtjProjectFragment.setData(mDateList_jtj);
+        }
+    }
+
 
     private void makeExportProjectDialog() {
         AlertDialog alertDialog = new AlertDialog.Builder(this).create();
@@ -224,134 +250,6 @@ public class EdtorProjectActivity extends BaseActivity<EdtorProjectPresenter> im
         }
     }
 
-
-
-
-   /* private void initCurve(String curvename) {
-        if (null == curvename) {
-            mSpCuregroup.setVisibility(View.GONE);
-            mNewCurve.setVisibility(View.GONE);
-            return;
-        } else {
-            mSpCuregroup.setVisibility(View.VISIBLE);
-            mNewCurve.setVisibility(View.VISIBLE);
-        }
-        List<BaseProjectMessage> list = new ArrayList<>();
-        if (null != chosedProject_fggd) {
-            if (checkmoudle == 1) {
-                list.addAll(DBHelper.getProjectFGGDDao().queryBuilder()
-                        .where(ProjectFGGDDao.Properties.ProjectName.eq(chosedProject_fggd.getPjName()))
-                        //.where(ProjectFGGDDao.Properties.Isdefault.eq(true))
-                        .build().list());
-            }
-        }
-        if (null!=chosedProject_jtj){
-              if (checkmoudle == 2) {
-                list.addAll(DBHelper.getProjectJTJDao().queryBuilder()
-                        .where(ProjectJTJDao.Properties.ProjectName.eq(chosedProject_jtj.getPjName()))
-                        //.where(ProjectJTJDao.Properties.Isdefault.eq(true))
-                        .list());
-            }
-        }
-        LogUtils.d(list);
-        LogUtils.d(curvename);
-        MySpinnerAdapter adapter = new MySpinnerAdapter(list, getActivity());
-
-
-        mSpCuregroup.setAdapter(adapter);
-        mSpCuregroup.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                BaseProjectMessage object = list.get(position);
-                LogUtils.d(object);
-                mFrame.setVisibility(View.VISIBLE);
-                if (checkmoudle == 1) {
-                    mPresenter.replaceFragment(getSupportFragmentManager(), R.id.frame, newProjectFGGDFragment, mSparseTags.get(R.id.fggd));
-                    newProjectFGGDFragment.setData(object);
-                } else if (checkmoudle == 2) {
-                    mPresenter.replaceFragment(getSupportFragmentManager(), R.id.frame, newProjectJTJFragment, mSparseTags.get(R.id.jtj));
-                    newProjectJTJFragment.setData(object);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).getCVName().equals(curvename)) {
-                mSpCuregroup.setSelection(i);
-                LogUtils.d(i);
-            }
-        }
-
-    }*/
-
-
-
-
-
-   /* private void checkProject_fggd(int position) {
-
-        for (int i = 0; i < mDateList_fggd.size(); i++) {
-            ProjectFGGD baseProjectMessage = mDateList_fggd.get(i);
-            if (i == position) {
-                chosedProject_fggd = baseProjectMessage;
-                baseProjectMessage.check = true;
-            } else {
-                baseProjectMessage.check = false;
-            }
-
-        }
-        mAdapter_fggd.notifyDataSetChanged();
-    }
-
-    private void checkProject_jtj(int position) {
-
-        for (int i = 0; i < mDateList_jtj.size(); i++) {
-            ProjectJTJ baseProjectMessage = mDateList_jtj.get(i);
-            if (i == position) {
-                chosedProject_jtj = baseProjectMessage;
-                baseProjectMessage.check = true;
-            } else {
-                baseProjectMessage.check = false;
-            }
-
-        }
-        mAdapter_jtj.notifyDataSetChanged();
-    }*/
-
-
-    /**
-     * 根据输入框中的值来过滤数据并更新RecyclerView
-     *
-     * @param filterStr
-     */
-    /*private void filterData_fggd(String filterStr) {
-        List<ProjectFGGD> filterDateList = new ArrayList<>();
-
-        filterDateList.clear();
-        for (ProjectFGGD sortModel : mDateList_fggd) {
-            String name = sortModel.getPjName();
-            if (name.indexOf(filterStr.toString()) != -1 ||
-                    PinyinUtils.getFirstSpell(name).startsWith(filterStr.toString())
-                    //不区分大小写
-                    || PinyinUtils.getFirstSpell(name).toLowerCase().startsWith(filterStr.toString())
-                    || PinyinUtils.getFirstSpell(name).toUpperCase().startsWith(filterStr.toString())
-            ) {
-                filterDateList.add(sortModel);
-            }
-        }
-
-        // 根据a-z进行排序
-        Collections.sort(filterDateList, mComparator);
-        mDateList_fggd.clear();
-        mDateList_fggd.addAll(filterDateList);
-        mAdapter_fggd.notifyDataSetChanged();
-    }
-*/
     private void initsparr() {
         mSparseTags.put(R.id.fggd, "fggd");
         mSparseTags.put(R.id.jtj, "jtj");
@@ -414,83 +312,21 @@ public class EdtorProjectActivity extends BaseActivity<EdtorProjectPresenter> im
                 makeeDialog();
                 break;
             case R.id.deleteproject:
-
                 deleteProject();
                 break;
         }
     }
 
-   /* private void newCurve() {
-        if (null == chosedProject) {
-            ArmsUtils.snackbarText("请先选择检测项目");
-            return;
-        }
-        String pjName = chosedProject.getPjName();
-        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-        alertDialog.setTitle("请输入新建曲线的名称");
-        EditText view = new EditText(EdtorProjectActivity.this);
-        long count;
-        if (checkmoudle == 1) {
-            count = DBHelper.getProjectFGGDDao().queryBuilder().where(ProjectFGGDDao.Properties.ProjectName.eq(pjName)).count();
-            view.setText("曲线" + (count + 1));
-        } else {
-            count = DBHelper.getProjectJTJDao().queryBuilder().where(ProjectJTJDao.Properties.ProjectName.eq(pjName)).count();
-            view.setText("曲线" + (count + 1));
-        }
-
-
-        alertDialog.setView(view);
-        alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String curvename = view.getText().toString();
-                if (curvename.isEmpty()) {
-                    ArmsUtils.snackbarText("请输入新建曲线的名称");
-                    return;
-                }
-                if (checkmoudle == 1) {
-                    ProjectFGGD projectFGGD = new ProjectFGGD();
-                    projectFGGD.setId(null);
-                    projectFGGD.setProjectName(pjName);
-                    projectFGGD.setCurveName(curvename);
-                    projectFGGD.setCurveOrder((int) count);
-                    projectFGGD.setCreator(1);
-                    DBHelper.getProjectFGGDDao().insert(projectFGGD);
-                    initCurve(curvename);
-                } else if (checkmoudle == 2) {
-                    ProjectJTJ projectJTJ = new ProjectJTJ();
-                    projectJTJ.setId(null);
-                    projectJTJ.setProjectName(pjName);
-                    projectJTJ.setCurveName(curvename);
-                    projectJTJ.setCreator(1);
-                    projectJTJ.setCurveOrder((int) count);
-                    DBHelper.getProjectJTJDao().insert(projectJTJ);
-                    initCurve(curvename);
-                }
-
-
-            }
-        });
-        alertDialog.show();
-
-
-    } */
 
     private void deleteProject() {
-        if (checkmoudle==1){
+        if (checkmoudle == 1) {
             if (null == projectMessage_fggd) {
                 ArmsUtils.snackbarText("请选择需要删除的检测项目");
                 return;
             }
         }
 
-        if (checkmoudle==2){
+        if (checkmoudle == 2) {
             if (null == projectMessage_jtj) {
                 ArmsUtils.snackbarText("请选择需要删除的检测项目");
                 return;
@@ -509,20 +345,20 @@ public class EdtorProjectActivity extends BaseActivity<EdtorProjectPresenter> im
         alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (checkmoudle==1){
+                if (checkmoudle == 1) {
                     List<ProjectFGGD> list = DBHelper.getProjectFGGDDao().queryBuilder().where(ProjectFGGDDao.Properties.ProjectName.eq(projectMessage_fggd.getPjName())).list();
                     DBHelper.getProjectFGGDDao().deleteInTx(list);
                     mDateList_fggd.remove(projectMessage_fggd);
                     fggdProjectFragment.setData(mDateList_fggd);
-                    projectMessage_fggd=null;
+                    projectMessage_fggd = null;
                     //删除肯定是选中的项目
                     newProjectFGGDFragment.setData(projectMessage_fggd);
-                }else if (checkmoudle==2){
+                } else if (checkmoudle == 2) {
                     List<ProjectJTJ> list = DBHelper.getProjectJTJDao().queryBuilder().where(ProjectJTJDao.Properties.ProjectName.eq(projectMessage_jtj.getPjName())).list();
                     DBHelper.getProjectJTJDao().deleteInTx(list);
                     mDateList_jtj.remove(projectMessage_jtj);
                     jtjProjectFragment.setData(mDateList_jtj);
-                    projectMessage_jtj=null;
+                    projectMessage_jtj = null;
                     //删除肯定是选中的项目
                     newProjectJTJFragment.setData(projectMessage_jtj);
                 }
@@ -569,7 +405,7 @@ public class EdtorProjectActivity extends BaseActivity<EdtorProjectPresenter> im
                     entity.setCurveOrder(0);
                     entity.setCreator(1);
                     DBHelper.getProjectFGGDDao().insert(entity);
-                     mPresenter.loadData(null);
+                    mPresenter.loadData(null);
                 } else if (checkmoudle == 2) {
                     if (DBHelper.getProjectJTJDao().queryBuilder().where(ProjectJTJDao.Properties.ProjectName.eq(projectname)).count() > 0) {
                         ArmsUtils.snackbarText("该检测项目已经存在，请勿重复新建");

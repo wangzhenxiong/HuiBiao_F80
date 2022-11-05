@@ -1,31 +1,15 @@
 ext {
 
+    //V2.0.5 胶体金老模块会出现检测后不出结果不出卡情况（修改UsbReadWriteHelper 读写共用一个线程池，并且将核心线程改为1）
     android = [
             compileSdkVersion: 28, // 项目依赖的SDK版本
             buildToolsVersion: "28.0.3", // 构建版本
             minSdkVersion    : 19,   //最低运行版本
             targetSdkVersion : 28,   //最高
-            versionCode      : 219,   //版本号
-            greendaoVersion  : 208
-                    //检测记录数据库增加预留字段 6-10  2.0.4版本
-                    + 1
-                    //2020.11.9 安徽省局平台应用检测项目配置 需要把 Project_Jcxm 表的id字段由 long 改成 string
-                    + 1
-                    //2021.01.06 镇江平台抽样单增加type字段 type为1或2表示已经检测过，为空或者其他表示未检测过
-                    + 1
-                    //2021.01.18 越城平台被检单位经营户表增加 fla operatorCode 两个字段 flag表示是否手动添加
-                    + 1 +1+1
-                    //2021.02.20 镇江平台经营户增加jylb 字段
-                    +1
-                    //2021.06.04 苏州亿通科技 平台项目增加  private Long priority;//优先级 字段 ，因为需要增加dy3500p版本 干式农残需要直接选择平台项目
-                    + 1
-                    //增加复检字段，1是否复检，2复检记录的syscode
-                    + 1
-                    //增加胶体金多联卡的信息 检测项目 
-                    + 2
-                    + 2
-            ,   //版本号
-            versionName      : "V2.1.9"  //版本名称
+            versionCode      : 1,   //版本号
+            versionName      : "V1.0.0" , //版本名称
+            greendaoVersion  : 1   //数据库版本号
+
             //205-206 镇江平台问题，兼容https问题
             //206-207 合格证打印模板修改，增加一个模板，改为可选
             //207-208 甲骨文洪江版本 修改 批次信息（不需要保留上次批次信息）
@@ -41,7 +25,6 @@ ext {
             //217-218 打印单挑数据小票时间+时分秒 搜索检测项目 等功能
             //218-219 镇江昆山验收 强制自动上传
     ]
-    //V2.0.5 胶体金老模块会出现检测后不出结果不出卡情况（修改UsbReadWriteHelper 读写共用一个线程池，并且将核心线程改为1）
     version = [
             MPAndroidChartVersion               : "v3.1.0",
             androidSupportSdkVersion            : "28.0.0",

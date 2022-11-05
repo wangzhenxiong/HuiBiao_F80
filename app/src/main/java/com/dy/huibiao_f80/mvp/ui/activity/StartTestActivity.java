@@ -1,5 +1,7 @@
 package com.dy.huibiao_f80.mvp.ui.activity;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,6 +14,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.apkfuns.logutils.LogUtils;
 import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.bean.base.BaseProjectMessage;
 import com.dy.huibiao_f80.di.component.DaggerStartTestComponent;
@@ -65,6 +68,8 @@ public class StartTestActivity extends BaseActivity<StartTestPresenter> implemen
     @Named("jtj")
     @Inject
     List<BaseProjectMessage> mDateList_jtj;
+    @Inject
+    AlertDialog mSportDialog;
     private SparseArray<String> mSparseTags_Project = new SparseArray<>();
     private ProjectFGGDDao projectFGGDDao;
     private ProjectJTJDao projectJTJDao;
@@ -119,12 +124,18 @@ public class StartTestActivity extends BaseActivity<StartTestPresenter> implemen
 
     @Override
     public void showLoading() {
-
+        if (!mSportDialog.isShowing()) {
+            LogUtils.d("show");
+            mSportDialog.show();
+        }
     }
 
     @Override
     public void hideLoading() {
-
+        if (mSportDialog.isShowing()) {
+            LogUtils.d("hide");
+            mSportDialog.dismiss();
+        }
     }
 
     @Override
@@ -217,6 +228,11 @@ public class StartTestActivity extends BaseActivity<StartTestPresenter> implemen
     @Override
     public void loadJTJFinish() {
         jtjProjectFragment.setData(mDateList_jtj);
+    }
+
+    @Override
+    public Activity getActivity() {
+        return this;
     }
 
     @Override

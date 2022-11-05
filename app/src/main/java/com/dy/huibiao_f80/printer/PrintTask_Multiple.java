@@ -6,6 +6,7 @@ import com.dy.huibiao_f80.MyAppLocation;
 import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.android_serialport_api.SerialControl;
 import com.dy.huibiao_f80.app.utils.CharUtils;
+import com.dy.huibiao_f80.bean.PrintMessage;
 import com.dy.huibiao_f80.greendao.TestRecord;
 import com.jess.arms.utils.ArmsUtils;
 
@@ -40,6 +41,7 @@ public class PrintTask_Multiple implements Itask {
     private List<TestRecord> mSamplenumber;
     private int mNumber;
     private String resulttitle = "编号 " + " " + "名称     " + "  " + "结果 " + " " + "判定  " + "\r";
+    private PrintMessage checkPrintMessage;
 
 
     public PrintTask_Multiple(List<TestRecord> samplenumber, int number) {
@@ -50,7 +52,7 @@ public class PrintTask_Multiple implements Itask {
 
     @Override
     public void run() {
-
+        checkPrintMessage = Constants.CheckPrintMessage();
         if (Constants.ISDIRECTION_RECEIPT) {
 
             printlistResult_180(mSamplenumber);
@@ -151,8 +153,12 @@ public class PrintTask_Multiple implements Itask {
         control.send(Constants.CMD_LINEDISTANCE);
         control.send(Constants.CMD_REVERSE);
         control.sendPortData(control, "\r\n");
-        String string = MyAppLocation.myAppLocation.getString(R.string.print_devicename) + ArmsUtils.getString(MyAppLocation.myAppLocation, R.string.my_app_name);
-        CharUtils.splitLine180(control, string);
+
+
+        if (checkPrintMessage.isCheckBox_device()) {
+            String string = MyAppLocation.myAppLocation.getString(R.string.print_devicename) + ArmsUtils.getString(MyAppLocation.myAppLocation, R.string.my_app_name);
+            CharUtils.splitLine180(control, string);
+        }
         String method = nc1.getTest_method();
         if ("0".equals(method)) {
             control.sendPortData(control, MyAppLocation.myAppLocation.getString(R.string.print_mothed1) + "\r");
@@ -170,13 +176,17 @@ public class PrintTask_Multiple implements Itask {
         CharUtils.splitLine180(control, out);
 
 
-        control.sendPortData(control, MyAppLocation.myAppLocation.getString(R.string.print_testdata) + nc1.getdfTestingtimeYY_MM_DD() + "\r");
+        if (checkPrintMessage.isCheckBox_testtime()) {
+            control.sendPortData(control, MyAppLocation.myAppLocation.getString(R.string.print_testdata) + nc1.getdfTestingtimeyy_mm_dd_hh_mm_ss() + "\r");
+        }
 
 
         control.sendPortData(control, MyAppLocation.myAppLocation.getString(R.string.print_testunit) + nc1.getCov_unit() + "\r");
 
-        String trim = (MyAppLocation.myAppLocation.getString(R.string.print_beunits) + nc1.getProsecutedunits()).trim();
-        CharUtils.splitLine180(control, trim);
+        if (checkPrintMessage.isCheckBox_beunit()) {
+            String trim = (MyAppLocation.myAppLocation.getString(R.string.print_beunits) + nc1.getProsecutedunits()).trim();
+            CharUtils.splitLine180(control, trim);
+        }
 
         control.sendPortData(control, resulttitle);
         control.sendPortData(control, "--------------------------------");
@@ -207,12 +217,19 @@ public class PrintTask_Multiple implements Itask {
             control.sendPortData(control, "反应液滴数：△A=".trim() + nc1.getEveryresponse() + "\r");
         }
 
-        String testpeople = MyAppLocation.myAppLocation.getString(R.string.print_testpeople).trim() + nc1.getInspector();
-        CharUtils.splitLine180(control, testpeople);
-        if (Constants.CHECKPEOPLE.equals("")) {
-            control.sendPortData(control, MyAppLocation.myAppLocation.getString(R.string.print_checkpeople1).trim() + "\r");
-        } else {
-            control.sendPortData(control, (MyAppLocation.myAppLocation.getString(R.string.print_checkpeople2) + Constants.CHECKPEOPLE).trim() + "\r");
+        if (checkPrintMessage.isCheckBox_sampleplace()) {
+            String sampleplace = MyAppLocation.myAppLocation.getString(R.string.print_sampleplace).trim()+checkPrintMessage.getEd_sampleplace()+"\r";
+            CharUtils.splitLine180(control, sampleplace);
+        }
+        if (checkPrintMessage.isCheckBox_testpeople()) {
+            String testpeople = MyAppLocation.myAppLocation.getString(R.string.print_testpeople).trim() + checkPrintMessage.getEd_testpeople()+"\r";
+            CharUtils.splitLine180(control, testpeople);
+        }
+
+
+        if (checkPrintMessage.isCheckBox_jujdger()) {
+            String testpeople = MyAppLocation.myAppLocation.getString(R.string.print_checkpeople1).trim() + checkPrintMessage.getEd_jujdger()+"\r";
+            CharUtils.splitLine180(control, testpeople);
         }
         PrintPlaceHolder.printPlace(mNumber, control);
 
@@ -225,7 +242,7 @@ public class PrintTask_Multiple implements Itask {
 
     public synchronized void printlistResult(List<TestRecord> fgNcList) {
 
-
+        TestRecord nc1 = fgNcList.get(0);
         // LogUtils.d(fgNcList);
         LogUtils.d("开始打印多条");
 
@@ -234,17 +251,19 @@ public class PrintTask_Multiple implements Itask {
 
         control.send(Constants.CMD_RESET);
         control.send(Constants.CMD_LINEDISTANCE);
-        if (Constants.CHECKPEOPLE.equals("")) {
-            control.sendPortData(control, MyAppLocation.myAppLocation.getString(R.string.print_checkpeople1).trim() + "\r");
-        } else {
-            control.sendPortData(control, (MyAppLocation.myAppLocation.getString(R.string.print_checkpeople1) + Constants.CHECKPEOPLE).trim() + "\r");
+        if (checkPrintMessage.isCheckBox_jujdger()) {
+            String testpeople = MyAppLocation.myAppLocation.getString(R.string.print_checkpeople1).trim() + checkPrintMessage.getEd_jujdger()+"\r";
+            CharUtils.splitLine(control, testpeople);
+        }
+        if (checkPrintMessage.isCheckBox_testpeople()) {
+            String testpeople = MyAppLocation.myAppLocation.getString(R.string.print_testpeople).trim() + checkPrintMessage.getEd_testpeople()+"\r";
+            CharUtils.splitLine(control, testpeople);
+        }
+        if (checkPrintMessage.isCheckBox_sampleplace()) {
+            String sampleplace = MyAppLocation.myAppLocation.getString(R.string.print_sampleplace).trim()+checkPrintMessage.getEd_sampleplace()+"\r";
+            CharUtils.splitLine(control, sampleplace);
         }
 
-        TestRecord nc1 = fgNcList.get(0);
-        String testpeople;
-
-        testpeople = MyAppLocation.myAppLocation.getString(R.string.print_testpeople).trim() + nc1.getInspector();
-        CharUtils.splitLine(control, testpeople);
 
 
         String method = nc1.getTest_method();
@@ -282,13 +301,17 @@ public class PrintTask_Multiple implements Itask {
 
 
         control.sendPortData(control, resulttitle);
-        String trim = (MyAppLocation.myAppLocation.getString(R.string.print_beunits) + nc1.getProsecutedunits()).trim();
-        CharUtils.splitLine(control, trim);
+
+        if (checkPrintMessage.isCheckBox_beunit()){
+            String trim = (MyAppLocation.myAppLocation.getString(R.string.print_beunits) + nc1.getProsecutedunits()).trim();
+            CharUtils.splitLine(control, trim);
+        }
 
 
         control.sendPortData(control, MyAppLocation.myAppLocation.getString(R.string.print_testunit) + nc1.getCov_unit() + "\r");
-
-        control.sendPortData(control, MyAppLocation.myAppLocation.getString(R.string.print_testdata) + nc1.getdfTestingtimeYY_MM_DD() + "\r");
+        if (checkPrintMessage.isCheckBox_testtime()){
+            control.sendPortData(control, MyAppLocation.myAppLocation.getString(R.string.print_testdata) + nc1.getdfTestingtimeyy_mm_dd_hh_mm_ss() + "\r");
+        }
 
 
         String out = "检测依据：" + nc1.getStand_num();
@@ -313,10 +336,11 @@ public class PrintTask_Multiple implements Itask {
                 control.sendPortData(control, MyAppLocation.myAppLocation.getString(R.string.print_bise) + "\r");
             }
         }
-
-
-        String string = MyAppLocation.myAppLocation.getString(R.string.print_devicename) + ArmsUtils.getString(MyAppLocation.myAppLocation, R.string.my_app_name);
-        CharUtils.splitLine(control, string, 33, 34);
+        
+        if (checkPrintMessage.isCheckBox_device()){
+            String string = MyAppLocation.myAppLocation.getString(R.string.print_devicename) + ArmsUtils.getString(MyAppLocation.myAppLocation, R.string.my_app_name);
+            CharUtils.splitLine(control, string);
+        }
 
         control.sendPortData(control, "\r");
         control.send(Constants.CMD_RESET);

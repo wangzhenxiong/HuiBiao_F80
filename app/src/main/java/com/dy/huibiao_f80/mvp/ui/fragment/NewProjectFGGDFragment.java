@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,18 +22,29 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import com.apkfuns.logutils.LogUtils;
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.dy.huibiao_f80.MyAppLocation;
 import com.dy.huibiao_f80.R;
+import com.dy.huibiao_f80.app.utils.CurveFitter;
+import com.dy.huibiao_f80.app.utils.NumberUtils;
+import com.dy.huibiao_f80.bean.GalleryBean;
+import com.dy.huibiao_f80.bean.eventBusBean.FGTestMessageBean;
 import com.dy.huibiao_f80.di.component.DaggerNewProjectFGGDComponent;
 import com.dy.huibiao_f80.greendao.DBHelper;
 import com.dy.huibiao_f80.greendao.ProjectFGGD;
 import com.dy.huibiao_f80.greendao.daos.ProjectFGGDDao;
 import com.dy.huibiao_f80.mvp.contract.NewProjectFGGDContract;
 import com.dy.huibiao_f80.mvp.presenter.NewProjectFGGDPresenter;
+import com.dy.huibiao_f80.mvp.ui.adapter.GetCureAdapter;
 import com.dy.huibiao_f80.mvp.ui.adapter.GuidePageAdapter_h;
 import com.dy.huibiao_f80.mvp.ui.adapter.MySpinnerAdapterFGGD;
 import com.jess.arms.base.BaseFragment;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -121,6 +134,7 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
     private int method_checked_flag = 0;
     private int wavalength_checked_flag = 0;
     private ProjectFGGD projectFGGD;
+    private GetCureAdapter getCureAdapter = new GetCureAdapter(R.layout.getcure_item_layout, MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList);
 
     public static NewProjectFGGDFragment newInstance() {
         NewProjectFGGDFragment fragment = new NewProjectFGGDFragment();
@@ -247,7 +261,178 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
 
         mViewHolderb.mJzqxa.setText(projectFGGD.getA() + "");
         mViewHolderb.mJzqxb.setText(projectFGGD.getB() + "");
+        mViewHolderb.mAutoA.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int wave = 0;
+                if (wavalength_checked_flag==0){
+                 wave=410;
+                }else if (wavalength_checked_flag==1){
+                    wave=536;
+                }else if (wavalength_checked_flag==2){
+                    wave=595;
+                }else if (wavalength_checked_flag==3){
+                    wave=620;
+                }
+                makeDialogGetCurve(wave,"a");
+            }
+        });
+        mViewHolderb.mAutoB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int wave = 0;
+                if (wavalength_checked_flag==0){
+                    wave=410;
+                }else if (wavalength_checked_flag==1){
+                    wave=536;
+                }else if (wavalength_checked_flag==2){
+                    wave=595;
+                }else if (wavalength_checked_flag==3){
+                    wave=620;
+                }
+                makeDialogGetCurve(wave,"b");
+            }
+        });
 
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(FGTestMessageBean tags) {
+        switch (tags.tag) {
+            case 0:
+
+                getCureAdapter.notifyDataSetChanged();
+
+                break;
+        }
+    }
+
+    private void makeDialogGetCurve(int wavelength, String b) {
+        for (int i = 0; i < MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.size(); i++) {
+            MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(i).setCheckd(false);
+            MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(i).setMic(0);
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        View inflate = LayoutInflater.from(getActivity()).inflate(R.layout.getcurve_layout, null);
+
+        inflate.findViewById(R.id.btn_clean).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (int i = 0; i < MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.size(); i++) {
+                    MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(i).setClearn(true);
+                }
+            }
+        });
+        RecyclerView recyclerView = (RecyclerView) inflate.findViewById(R.id.recylerview);
+        ArmsUtils.configRecyclerView(recyclerView, new GridLayoutManager(getActivity(), 1));
+        recyclerView.setAdapter(getCureAdapter);
+        getCureAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                if (view.getId() == R.id.checkbox) {
+                    GalleryBean galleryBean = MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(position);
+                    if (galleryBean.isCheckd()) {
+                        galleryBean.setCheckd(false);
+                    } else {
+                        galleryBean.setCheckd(true);
+                    }
+                } else if (view.getId() == R.id.mic) {
+                    makeInputMicDialog(position);
+                }
+            }
+        });
+
+
+        builder.setView(inflate);
+        AlertDialog dialog = builder.create();
+
+
+        inflate.findViewById(R.id.btn_getcurve).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<GalleryBean> list = new ArrayList<>();
+                for (int i = 0; i < MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.size(); i++) {
+                    GalleryBean galleryBean = MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(i);
+                    if (galleryBean.isCheckd()) {
+                        list.add(galleryBean);
+                    }
+                }
+                if (list.size() < 4) {
+                    ArmsUtils.snackbarText("请至少选中4个通道");
+                } else {
+                    double[] doublex = new double[list.size()];
+                    double[] doubley = new double[list.size()];
+                    for (int i = 0; i < list.size(); i++) {
+                        GalleryBean galleryBean = list.get(i);
+                        double mic = galleryBean.getMic();
+                        double abs = 0;
+                        if (wavelength == 410) {
+                            abs = galleryBean.getAbsorbance1();
+                        } else if (wavelength == 536) {
+                            abs = galleryBean.getAbsorbance2();
+                        } else if (wavelength == 595) {
+                            abs = galleryBean.getAbsorbance3();
+                        } else if (wavelength == 620) {
+                            abs = galleryBean.getAbsorbance4();
+                        }
+                        doublex[i]=abs;
+                        doubley[i]=mic;
+                    }
+
+                    CurveFitter curveFitter = new CurveFitter(doublex,doubley);
+                    //CurveFitter curveFitter = new CurveFitter(new double[]{0.1,0.3,0.8,1.1,1.5},new double[]{50,100,150,200,250});
+                    curveFitter.doFit(2);
+                    curveFitter.getFit();
+                    double[] string1 = curveFitter.getResultString1();
+                    LogUtils.d(string1);
+                    if (b.equals("a")){
+                        mViewHolderb.mAx0.setText(NumberUtils.four(string1[0]) + "");
+                        mViewHolderb.mAx1.setText(NumberUtils.four(string1[1])+ "");
+                        mViewHolderb.mAx2.setText(NumberUtils.four(string1[2])+ "");
+                        mViewHolderb.mAx3.setText(NumberUtils.four(string1[3]) + "");
+                    }else if (b.equals("b")){
+                        mViewHolderb.mBx0.setText(NumberUtils.four(string1[0]) + "");
+                        mViewHolderb.mBx1.setText(NumberUtils.four(string1[1]) + "");
+                        mViewHolderb.mBx2.setText(NumberUtils.four(string1[2]) + "");
+                        mViewHolderb.mBx3.setText(NumberUtils.four(string1[3]) + "");
+                    }
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+
+    }
+
+    private void makeInputMicDialog(int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        View inflate = LayoutInflater.from(getActivity()).inflate(R.layout.edtextview_layout, null);
+        AutoCompleteTextView textView = (AutoCompleteTextView) inflate.findViewById(R.id.textinput_counter);
+        builder.setTitle("预设浓度值");
+        builder.setView(inflate);
+        AlertDialog dialog = builder.create();
+        dialog.setButton(DialogInterface.BUTTON_NEUTRAL, "确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String s = textView.getText().toString();
+                if (s.isEmpty()) {
+                    ArmsUtils.snackbarText("请输入浓度值");
+                } else {
+                    MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(position).setMic(Double.parseDouble(s));
+                    dialog.dismiss();
+                }
+            }
+        });
+        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
     }
 
     private void initpages_c() {
@@ -282,25 +467,26 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
     @Override
     public void setData(@Nullable Object data) {
         LogUtils.d(data);
+        ProjectFGGD prject;
         String name;
         if (null == data) {
-            projectFGGD = null;
+            prject = null;
             initMessage(new ProjectFGGD());
             name = "";
         } else {
-            projectFGGD = ((ProjectFGGD) data);
-            initMessage(projectFGGD);
-            name = projectFGGD.getCurveName();
+            prject = ((ProjectFGGD) data);
+            //initMessage(projectFGGD);
+            name = prject.getCurveName();
         }
-        initCurve(name);
+        initCurve(name, prject);
 
     }
 
-    private void initCurve(String curvename) {
+    private void initCurve(String curvename, ProjectFGGD data) {
         if (null == mSpCuregroup) {
             return;
         }
-        if (null == projectFGGD) {
+        if (null == data) {
             mSpCuregroup.setVisibility(View.GONE);
             mNewCurve.setVisibility(View.GONE);
             return;
@@ -309,17 +495,8 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
             mNewCurve.setVisibility(View.VISIBLE);
         }
         List<ProjectFGGD> list = DBHelper.getProjectFGGDDao().queryBuilder()
-                .where(ProjectFGGDDao.Properties.ProjectName.eq(projectFGGD.getPjName()))
-                //.where(ProjectFGGDDao.Properties.Isdefault.eq(true))
+                .where(ProjectFGGDDao.Properties.ProjectName.eq(data.getPjName()))
                 .build().list();
-        /*if (null!=chosedProject_jtj){
-            if (checkmoudle == 2) {
-                list.addAll(DBHelper.getProjectJTJDao().queryBuilder()
-                        .where(ProjectJTJDao.Properties.ProjectName.eq(chosedProject_jtj.getPjName()))
-                        //.where(ProjectJTJDao.Properties.Isdefault.eq(true))
-                        .list());
-            }
-        }*/
         LogUtils.d(list);
         LogUtils.d(curvename);
         MySpinnerAdapterFGGD adapter = new MySpinnerAdapterFGGD(list, getActivity());
@@ -609,7 +786,7 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
                 projectFGGD.setCurveOrder((int) count);
                 projectFGGD.setCreator(1);
                 DBHelper.getProjectFGGDDao().insert(projectFGGD);
-                initCurve(curvename);
+                initCurve(curvename, projectFGGD);
 
 
             }
@@ -924,6 +1101,10 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
     }
 
     private void deleteCurve() {
+        if (null == projectFGGD) {
+            ArmsUtils.snackbarText("请先选择检测项目");
+            return;
+        }
         AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
         alertDialog.setTitle("确定要删除该曲线吗");
 
@@ -939,23 +1120,57 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
                 String pjName = projectFGGD.getPjName();
                 boolean isdefault = projectFGGD.isdefault();
                 DBHelper.getProjectFGGDDao().delete(projectFGGD);
-                if (isdefault) {
-                    List<ProjectFGGD> list = DBHelper.getProjectFGGDDao().queryBuilder().where(ProjectFGGDDao.Properties.ProjectName.eq(pjName))
-                            .orderDesc(ProjectFGGDDao.Properties.CurveOrder).build().list();
-                    if (list.size() > 0) {
-                        ProjectFGGD projectFGGD = list.get(0);
+                projectFGGD = null;
+                //删除后还有没有剩余曲线
+                List<ProjectFGGD> list = DBHelper.getProjectFGGDDao().queryBuilder().where(ProjectFGGDDao.Properties.ProjectName.eq(pjName))
+                        .orderDesc(ProjectFGGDDao.Properties.CurveOrder).build().list();
+                if (list.size() > 0) {
+                    ProjectFGGD projectFGGD = list.get(0);
+                    if (isdefault) {
                         projectFGGD.setIsdefault(true);
                         DBHelper.getProjectFGGDDao().update(projectFGGD);
                     }
+
+                    setData(projectFGGD);
+                } else {
+                    //删除了最后一个曲线，需要重新进行数据加载
+                    EventBus.getDefault().post(new NewProjectFGGDFragment.FGGDProjectFragmentEvent(-1, null));
                 }
+
+
                 ArmsUtils.snackbarText("删除成功");
-                setData(null);
+
             }
         });
         alertDialog.show();
 
     }
 
+    public static class FGGDProjectFragmentEvent {
+        private int persion;
+        private ProjectFGGD projectFGGD;
+
+        public FGGDProjectFragmentEvent(int persion, ProjectFGGD projectFGGD) {
+            this.persion = persion;
+            this.projectFGGD = projectFGGD;
+        }
+
+        public int getPersion() {
+            return persion;
+        }
+
+        public void setPersion(int persion) {
+            this.persion = persion;
+        }
+
+        public ProjectFGGD getProjectFGGD() {
+            return projectFGGD;
+        }
+
+        public void setProjectFGGD(ProjectFGGD projectFGGD) {
+            this.projectFGGD = projectFGGD;
+        }
+    }
 
     static
     class ViewHoldera {
@@ -997,6 +1212,10 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
         AutoCompleteTextView mJzqxa;
         @BindView(R.id.jzqxb)
         AutoCompleteTextView mJzqxb;
+        @BindView(R.id.auto_a)
+        ImageButton mAutoA;
+        @BindView(R.id.auto_b)
+        ImageButton mAutoB;
 
 
         ViewHolderb(View view) {

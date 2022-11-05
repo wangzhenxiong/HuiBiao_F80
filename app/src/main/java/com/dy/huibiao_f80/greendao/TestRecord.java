@@ -68,6 +68,9 @@ public class TestRecord extends GalleryBean implements Parcelable, IExpandable, 
     private String test_unit_name;//检测单位名称
     private String test_unit_reserved;//检测单位预留字段
 
+    private String exam_id;//检测单位预留字段
+    private String examinationId;
+    private String examinerId;
 
     /**
      * 0 正常数据
@@ -139,6 +142,9 @@ public class TestRecord extends GalleryBean implements Parcelable, IExpandable, 
         retest = in.readInt();
         parentSysCode = in.readString();
         sn = in.readString();
+        exam_id = in.readString();
+        examinerId = in.readString();
+        examinationId = in.readString();
         mExpandable = in.readByte() != 0;
         mSubItems = in.createTypedArrayList(DetectionDetail.CREATOR);
     }
@@ -189,6 +195,9 @@ public class TestRecord extends GalleryBean implements Parcelable, IExpandable, 
         dest.writeInt(retest);
         dest.writeString(parentSysCode);
         dest.writeString(sn);
+        dest.writeString(exam_id);
+        dest.writeString(examinerId);
+        dest.writeString(examinationId);
         dest.writeByte((byte) (mExpandable ? 1 : 0));
         dest.writeTypedList(mSubItems);
     }
@@ -692,21 +701,37 @@ public class TestRecord extends GalleryBean implements Parcelable, IExpandable, 
 
 
     public String getTest_method() {
-        if (test_method == null) {
-            return "";
-        } else {
-            if ("0".equals(test_method)) {
-                return MyAppLocation.myAppLocation.getString(R.string.mothod1);
-            } else if ("1".equals(test_method)) {
-                return MyAppLocation.myAppLocation.getString(R.string.mothod2);
-            } else if ("2".equals(test_method)) {
-                return MyAppLocation.myAppLocation.getString(R.string.mothod3);
-            } else if ("3".equals(test_method)) {
-                return MyAppLocation.myAppLocation.getString(R.string.mothod4);
+        String test_moudle = getTest_Moudle();
+        if (test_moudle.equals("分光光度")) {
+            if (test_method == null) {
+                return "";
             } else {
-                return test_method;
+                if ("0".equals(test_method)) {
+                    return MyAppLocation.myAppLocation.getString(R.string.mothod1);
+                } else if ("1".equals(test_method)) {
+                    return MyAppLocation.myAppLocation.getString(R.string.mothod2);
+                } else if ("2".equals(test_method)) {
+                    return MyAppLocation.myAppLocation.getString(R.string.mothod3);
+                } else if ("3".equals(test_method)) {
+                    return MyAppLocation.myAppLocation.getString(R.string.mothod4);
+                } else {
+                    return test_method;
+                }
+            }
+        } else {
+            if (test_method == null) {
+                return "";
+            } else {
+                if ("0".equals(test_method)) {
+                    return "消线法";
+                } else if ("1".equals(test_method)) {
+                    return "比色法";
+                } else {
+                    return test_method;
+                }
             }
         }
+
     }
 
     public void setTest_method(String test_method) {
@@ -767,7 +792,7 @@ public class TestRecord extends GalleryBean implements Parcelable, IExpandable, 
     public TestRecord() {
     }
 
-    @Generated(hash = 406305382)
+    @Generated(hash = 1095680771)
     public TestRecord(Long id, String sysCode, int gallery, String samplenum, String samplename,
             String sampletype, String foodCode, String symbol, String cov, String cov_unit,
             String stand_num, String prosecutedunits, String prosecutedunits_adress,
@@ -775,8 +800,9 @@ public class TestRecord extends GalleryBean implements Parcelable, IExpandable, 
             String testresult, String decisionoutcome, String inspector, Long testingtime,
             double longitude, double latitude, String testsite, String test_method,
             String test_project, String test_moudle, int isupload, String unique_testproject,
-            String test_unit_name, String test_unit_reserved, int retest, String parentSysCode,
-            String methodsDetectionLimit, Long samplingID) {
+            String test_unit_name, String test_unit_reserved, String exam_id, String examinationId,
+            String examinerId, int retest, String parentSysCode, String methodsDetectionLimit,
+            Long samplingID) {
         this.id = id;
         this.sysCode = sysCode;
         this.gallery = gallery;
@@ -808,6 +834,9 @@ public class TestRecord extends GalleryBean implements Parcelable, IExpandable, 
         this.unique_testproject = unique_testproject;
         this.test_unit_name = test_unit_name;
         this.test_unit_reserved = test_unit_reserved;
+        this.exam_id = exam_id;
+        this.examinationId = examinationId;
+        this.examinerId = examinerId;
         this.retest = retest;
         this.parentSysCode = parentSysCode;
         this.methodsDetectionLimit = methodsDetectionLimit;
@@ -885,4 +914,27 @@ public class TestRecord extends GalleryBean implements Parcelable, IExpandable, 
         this.test_moudle = test_moudle;
     }
 
+    public String getExam_id() {
+        return exam_id == null ? "" : exam_id;
+    }
+
+    public void setExam_id(String exam_id) {
+        this.exam_id = exam_id == null ? "" : exam_id;
+    }
+
+    public String getExaminationId() {
+        return examinationId == null ? "" : examinationId;
+    }
+
+    public void setExaminationId(String examinationId) {
+        this.examinationId = examinationId == null ? "" : examinationId;
+    }
+
+    public String getExaminerId() {
+        return examinerId == null ? "" : examinerId;
+    }
+
+    public void setExaminerId(String examinerId) {
+        this.examinerId = examinerId == null ? "" : examinerId;
+    }
 }

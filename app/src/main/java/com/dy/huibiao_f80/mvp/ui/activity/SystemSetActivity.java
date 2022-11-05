@@ -14,6 +14,7 @@ import android.view.View;
 import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -167,6 +168,17 @@ public class SystemSetActivity extends BaseActivity<SystemSetPresenter> implemen
         CheckBox checkBox_testpeople = (CheckBox) inflate.findViewById(R.id.check_testpeople);
         CheckBox checkBox_jujdger = (CheckBox) inflate.findViewById(R.id.check_jujdger);
         CheckBox checkBox_all = (CheckBox) inflate.findViewById(R.id.check_all);
+        checkBox_all.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                checkBox_device.setChecked(isChecked);
+                checkBox_testtime.setChecked(isChecked);
+                checkBox_beunit.setChecked(isChecked);
+                checkBox_sampleplace.setChecked(isChecked);
+                checkBox_testpeople.setChecked(isChecked);
+                checkBox_jujdger.setChecked(isChecked);
+            }
+        });
         EditText ed_sampleplace = (EditText) inflate.findViewById(R.id.ed_sampleplace);
         EditText ed_testpeople = (EditText) inflate.findViewById(R.id.ed_testpeople);
         EditText ed_jujdger = (EditText) inflate.findViewById(R.id.ed_jujdger);

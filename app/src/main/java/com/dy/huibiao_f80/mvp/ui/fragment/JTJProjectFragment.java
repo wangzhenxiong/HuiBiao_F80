@@ -131,6 +131,10 @@ public class JTJProjectFragment extends BaseFragment<JTJProjectPresenter> implem
                 LogUtils.d("afterTextChanged" + s.toString());
                 //当输入框里面的值为空，更新为原来的列表，否则为过滤数据列表
                 if (s.toString().isEmpty()) {
+                    if (lastCheck!=-1){
+                        mDateList.get(lastCheck).check=false;
+                        lastCheck=-1;
+                    }
                     mDateList.clear();
                     mDateList.addAll(mDateList_state);
                     mAdapter.notifyDataSetChanged();
@@ -201,7 +205,10 @@ public class JTJProjectFragment extends BaseFragment<JTJProjectPresenter> implem
                 filterDateList.add(sortModel);
             }
         }
-
+        if (lastCheck!=-1){
+            mDateList.get(lastCheck).check=false;
+            lastCheck=-1;
+        }
         // 根据a-z进行排序
         Collections.sort(filterDateList, mComparator);
         mDateList.clear();

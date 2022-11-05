@@ -1,7 +1,10 @@
 package com.dy.huibiao_f80.di.module;
 
+import android.app.AlertDialog;
+
 import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.bean.base.BaseProjectMessage;
+import com.dy.huibiao_f80.mvp.contract.EdtorProjectContract;
 import com.dy.huibiao_f80.mvp.contract.StartTestContract;
 import com.dy.huibiao_f80.mvp.model.StartTestModel;
 import com.dy.huibiao_f80.mvp.ui.widget.lettersnavigation.search.PinyinComparator;
@@ -16,12 +19,19 @@ import javax.inject.Named;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
+import dmax.dialog.SpotsDialog;
 
 @Module
 public abstract class StartTestModule {
 
     @Binds
     abstract StartTestContract.Model bindStartTestModel(StartTestModel model);
+
+    @ActivityScope
+    @Provides
+    static AlertDialog getSportDialog(StartTestContract.View view) {
+        return new SpotsDialog.Builder().setContext(view.getActivity()).setCancelable(true).build();
+    }
 
     @ActivityScope
     @Named("jtj")

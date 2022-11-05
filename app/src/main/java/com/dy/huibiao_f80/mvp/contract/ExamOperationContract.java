@@ -1,6 +1,9 @@
 package com.dy.huibiao_f80.mvp.contract;
 
+import android.app.Activity;
+
 import com.dy.huibiao_f80.api.back.BeginOperationExam_Back;
+import com.dy.huibiao_f80.api.back.TestFormSubmit_Back;
 import com.jess.arms.mvp.IModel;
 import com.jess.arms.mvp.IView;
 
@@ -11,11 +14,17 @@ public interface ExamOperationContract {
     interface View extends IView {
 
         void showExamTitle(BeginOperationExam_Back back);
+
+        void submitSuccess();
+
+        Activity getActivity();
     }
 
     //Model层定义接口,外部只需关心Model返回的数据,无需关心内部细节,即是否使用缓存
     interface Model extends IModel {
 
         Observable<BeginOperationExam_Back> beginOperationExam(String URL, String examinationId, String examinerId);
+
+        Observable<TestFormSubmit_Back> submitOperation();
     }
 }

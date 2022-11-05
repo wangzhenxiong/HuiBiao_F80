@@ -19,7 +19,7 @@
             <AutoCompleteTextView
                 android:id="@+id/jzqxa"
                 style="@style/AutoCompleteTextViewStyle"
-                 />
+                 android:text="1"/>
 
         </android.support.design.widget.TextInputLayout>
         <android.support.design.widget.TextInputLayout

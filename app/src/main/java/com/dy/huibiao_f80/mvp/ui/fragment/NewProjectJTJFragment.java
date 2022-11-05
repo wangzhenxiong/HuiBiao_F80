@@ -32,6 +32,8 @@ import com.jess.arms.base.BaseFragment;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -132,26 +134,26 @@ public class NewProjectJTJFragment extends BaseFragment<NewProjectJTJPresenter> 
     @Override
     public void setData(@Nullable Object data) {
         LogUtils.d(data);
+        ProjectJTJ project;
         String name;
         if (null == data) {
             LogUtils.d("null");
-            projectJTJ = null;
+            project = null;
             initMessage(new ProjectJTJ());
             name = "";
         } else {
-            projectJTJ = ((ProjectJTJ) data);
-            name = projectJTJ.getCurveName();
-            initMessage(projectJTJ);
+            project = ((ProjectJTJ) data);
+            name = project.getCurveName();
         }
-        initCurve(name);
+        initCurve(name,project);
 
     }
 
-    private void initCurve(String curvename) {
+    private void initCurve(String curvename, ProjectJTJ data) {
         if (null == mSpCuregroup) {
             return;
         }
-        if (null == projectJTJ) {
+        if (null == data) {
             mSpCuregroup.setVisibility(View.GONE);
             mNewCurve.setVisibility(View.GONE);
             return;
@@ -160,17 +162,9 @@ public class NewProjectJTJFragment extends BaseFragment<NewProjectJTJPresenter> 
             mNewCurve.setVisibility(View.VISIBLE);
         }
         List<ProjectJTJ> list = DBHelper.getProjectJTJDao().queryBuilder()
-                .where(ProjectJTJDao.Properties.ProjectName.eq(projectJTJ.getPjName()))
-                //.where(ProjectFGGDDao.Properties.Isdefault.eq(true))
+                .where(ProjectJTJDao.Properties.ProjectName.eq(data.getPjName()))
                 .build().list();
-        /*if (null!=chosedProject_jtj){
-            if (checkmoudle == 2) {
-                list.addAll(DBHelper.getProjectJTJDao().queryBuilder()
-                        .where(ProjectJTJDao.Properties.ProjectName.eq(chosedProject_jtj.getPjName()))
-                        //.where(ProjectJTJDao.Properties.Isdefault.eq(true))
-                        .list());
-            }
-        }*/
+
         LogUtils.d(list);
         LogUtils.d(curvename);
         MySpinnerAdapterJTJ adapter = new MySpinnerAdapterJTJ(list, getActivity());
@@ -300,7 +294,7 @@ public class NewProjectJTJFragment extends BaseFragment<NewProjectJTJPresenter> 
                 projectJTJ.setCreator(1);
                 projectJTJ.setCurveOrder((int) count);
                 DBHelper.getProjectJTJDao().insert(projectJTJ);
-                initCurve(curvename);
+                initCurve(curvename, projectJTJ);
 
 
             }
@@ -397,6 +391,10 @@ public class NewProjectJTJFragment extends BaseFragment<NewProjectJTJPresenter> 
     }
 
     private void deleteCurve() {
+        if (null == projectJTJ) {
+            ArmsUtils.snackbarText("请先选择检测项目");
+            return;
+        }
         AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
         alertDialog.setTitle("确定要删除该曲线吗");
 
@@ -410,18 +408,29 @@ public class NewProjectJTJFragment extends BaseFragment<NewProjectJTJPresenter> 
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String pjName = projectJTJ.getPjName();
+                boolean isdefault = projectJTJ.isdefault();
                 DBHelper.getProjectJTJDao().delete(projectJTJ);
-                if (projectJTJ.isdefault()) {
-                    List<ProjectJTJ> list = DBHelper.getProjectJTJDao().queryBuilder().where(ProjectJTJDao.Properties.ProjectName.eq(pjName))
-                            .orderDesc(ProjectJTJDao.Properties.CurveOrder).build().list();
-                    if (list.size() > 0) {
-                        ProjectJTJ P = list.get(0);
+                projectJTJ=null;
+                List<ProjectJTJ> list = DBHelper.getProjectJTJDao().queryBuilder().where(ProjectJTJDao.Properties.ProjectName.eq(pjName))
+                        .orderDesc(ProjectJTJDao.Properties.CurveOrder).build().list();
+
+                if (list.size() > 0) {
+                    ProjectJTJ P = list.get(0);
+
+                    if (isdefault) {
+
                         P.setIsdefault(true);
                         DBHelper.getProjectJTJDao().update(P);
                     }
+                    setData(P);
+                }else {
+                    //删除了最后一个曲线，需要重新进行数据加载
+                    EventBus.getDefault().post(new NewProjectJTJFragment.JTJProjectFragmentEvent(-1, null));
                 }
+
                 ArmsUtils.snackbarText("删除成功");
-                initCurve(null);
+                //initCurve(null, project);
+
             }
         });
         alertDialog.show();
@@ -429,13 +438,30 @@ public class NewProjectJTJFragment extends BaseFragment<NewProjectJTJPresenter> 
     }
 
 
-    public void setOnEventListenner(OnEventJTJ onEvent) {
-        mEvent = onEvent;
-    }
+    public static class JTJProjectFragmentEvent {
+        private int persion;
+        private ProjectJTJ projectJTJ;
 
-    OnEventJTJ mEvent;
+        public JTJProjectFragmentEvent(int persion, ProjectJTJ projectFGGD) {
+            this.persion = persion;
+            this.projectJTJ = projectFGGD;
+        }
 
-    public interface OnEventJTJ {
-        void onEventJTJ(int what, Object o);
+        public int getPersion() {
+            return persion;
+        }
+
+        public void setPersion(int persion) {
+            this.persion = persion;
+        }
+
+        public ProjectJTJ getProjectJTJ() {
+            return projectJTJ;
+        }
+
+        public void setProjectFGGD(ProjectJTJ projectFGGD) {
+
+            this.projectJTJ = projectFGGD;
+        }
     }
 }

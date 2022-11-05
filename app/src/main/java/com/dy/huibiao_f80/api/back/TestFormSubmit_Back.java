@@ -28,4 +28,22 @@ package com.dy.huibiao_f80.api.back;
  * Description:
  */
 public class TestFormSubmit_Back {
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
+
+    public String getMessage() {
+        return message == null ? "" : message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message == null ? "" : message;
+    }
+
+    private boolean  success;
+    private String  message;
 }

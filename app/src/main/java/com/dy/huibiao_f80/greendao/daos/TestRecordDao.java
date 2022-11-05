@@ -55,10 +55,13 @@ public class TestRecordDao extends AbstractDao<TestRecord, Long> {
         public final static Property Unique_testproject = new Property(28, String.class, "unique_testproject", false, "UNIQUE_TESTPROJECT");
         public final static Property Test_unit_name = new Property(29, String.class, "test_unit_name", false, "TEST_UNIT_NAME");
         public final static Property Test_unit_reserved = new Property(30, String.class, "test_unit_reserved", false, "TEST_UNIT_RESERVED");
-        public final static Property Retest = new Property(31, int.class, "retest", false, "RETEST");
-        public final static Property ParentSysCode = new Property(32, String.class, "parentSysCode", false, "PARENT_SYS_CODE");
-        public final static Property MethodsDetectionLimit = new Property(33, String.class, "methodsDetectionLimit", false, "METHODS_DETECTION_LIMIT");
-        public final static Property SamplingID = new Property(34, Long.class, "samplingID", false, "SAMPLING_ID");
+        public final static Property Exam_id = new Property(31, String.class, "exam_id", false, "EXAM_ID");
+        public final static Property ExaminationId = new Property(32, String.class, "examinationId", false, "EXAMINATION_ID");
+        public final static Property ExaminerId = new Property(33, String.class, "examinerId", false, "EXAMINER_ID");
+        public final static Property Retest = new Property(34, int.class, "retest", false, "RETEST");
+        public final static Property ParentSysCode = new Property(35, String.class, "parentSysCode", false, "PARENT_SYS_CODE");
+        public final static Property MethodsDetectionLimit = new Property(36, String.class, "methodsDetectionLimit", false, "METHODS_DETECTION_LIMIT");
+        public final static Property SamplingID = new Property(37, Long.class, "samplingID", false, "SAMPLING_ID");
     }
 
 
@@ -105,10 +108,13 @@ public class TestRecordDao extends AbstractDao<TestRecord, Long> {
                 "\"UNIQUE_TESTPROJECT\" TEXT," + // 28: unique_testproject
                 "\"TEST_UNIT_NAME\" TEXT," + // 29: test_unit_name
                 "\"TEST_UNIT_RESERVED\" TEXT," + // 30: test_unit_reserved
-                "\"RETEST\" INTEGER NOT NULL ," + // 31: retest
-                "\"PARENT_SYS_CODE\" TEXT," + // 32: parentSysCode
-                "\"METHODS_DETECTION_LIMIT\" TEXT," + // 33: methodsDetectionLimit
-                "\"SAMPLING_ID\" INTEGER);"); // 34: samplingID
+                "\"EXAM_ID\" TEXT," + // 31: exam_id
+                "\"EXAMINATION_ID\" TEXT," + // 32: examinationId
+                "\"EXAMINER_ID\" TEXT," + // 33: examinerId
+                "\"RETEST\" INTEGER NOT NULL ," + // 34: retest
+                "\"PARENT_SYS_CODE\" TEXT," + // 35: parentSysCode
+                "\"METHODS_DETECTION_LIMIT\" TEXT," + // 36: methodsDetectionLimit
+                "\"SAMPLING_ID\" INTEGER);"); // 37: samplingID
     }
 
     /** Drops the underlying database table. */
@@ -251,21 +257,36 @@ public class TestRecordDao extends AbstractDao<TestRecord, Long> {
         if (test_unit_reserved != null) {
             stmt.bindString(31, test_unit_reserved);
         }
-        stmt.bindLong(32, entity.getRetest());
+ 
+        String exam_id = entity.getExam_id();
+        if (exam_id != null) {
+            stmt.bindString(32, exam_id);
+        }
+ 
+        String examinationId = entity.getExaminationId();
+        if (examinationId != null) {
+            stmt.bindString(33, examinationId);
+        }
+ 
+        String examinerId = entity.getExaminerId();
+        if (examinerId != null) {
+            stmt.bindString(34, examinerId);
+        }
+        stmt.bindLong(35, entity.getRetest());
  
         String parentSysCode = entity.getParentSysCode();
         if (parentSysCode != null) {
-            stmt.bindString(33, parentSysCode);
+            stmt.bindString(36, parentSysCode);
         }
  
         String methodsDetectionLimit = entity.getMethodsDetectionLimit();
         if (methodsDetectionLimit != null) {
-            stmt.bindString(34, methodsDetectionLimit);
+            stmt.bindString(37, methodsDetectionLimit);
         }
  
         Long samplingID = entity.getSamplingID();
         if (samplingID != null) {
-            stmt.bindLong(35, samplingID);
+            stmt.bindLong(38, samplingID);
         }
     }
 
@@ -403,21 +424,36 @@ public class TestRecordDao extends AbstractDao<TestRecord, Long> {
         if (test_unit_reserved != null) {
             stmt.bindString(31, test_unit_reserved);
         }
-        stmt.bindLong(32, entity.getRetest());
+ 
+        String exam_id = entity.getExam_id();
+        if (exam_id != null) {
+            stmt.bindString(32, exam_id);
+        }
+ 
+        String examinationId = entity.getExaminationId();
+        if (examinationId != null) {
+            stmt.bindString(33, examinationId);
+        }
+ 
+        String examinerId = entity.getExaminerId();
+        if (examinerId != null) {
+            stmt.bindString(34, examinerId);
+        }
+        stmt.bindLong(35, entity.getRetest());
  
         String parentSysCode = entity.getParentSysCode();
         if (parentSysCode != null) {
-            stmt.bindString(33, parentSysCode);
+            stmt.bindString(36, parentSysCode);
         }
  
         String methodsDetectionLimit = entity.getMethodsDetectionLimit();
         if (methodsDetectionLimit != null) {
-            stmt.bindString(34, methodsDetectionLimit);
+            stmt.bindString(37, methodsDetectionLimit);
         }
  
         Long samplingID = entity.getSamplingID();
         if (samplingID != null) {
-            stmt.bindLong(35, samplingID);
+            stmt.bindLong(38, samplingID);
         }
     }
 
@@ -460,10 +496,13 @@ public class TestRecordDao extends AbstractDao<TestRecord, Long> {
             cursor.isNull(offset + 28) ? null : cursor.getString(offset + 28), // unique_testproject
             cursor.isNull(offset + 29) ? null : cursor.getString(offset + 29), // test_unit_name
             cursor.isNull(offset + 30) ? null : cursor.getString(offset + 30), // test_unit_reserved
-            cursor.getInt(offset + 31), // retest
-            cursor.isNull(offset + 32) ? null : cursor.getString(offset + 32), // parentSysCode
-            cursor.isNull(offset + 33) ? null : cursor.getString(offset + 33), // methodsDetectionLimit
-            cursor.isNull(offset + 34) ? null : cursor.getLong(offset + 34) // samplingID
+            cursor.isNull(offset + 31) ? null : cursor.getString(offset + 31), // exam_id
+            cursor.isNull(offset + 32) ? null : cursor.getString(offset + 32), // examinationId
+            cursor.isNull(offset + 33) ? null : cursor.getString(offset + 33), // examinerId
+            cursor.getInt(offset + 34), // retest
+            cursor.isNull(offset + 35) ? null : cursor.getString(offset + 35), // parentSysCode
+            cursor.isNull(offset + 36) ? null : cursor.getString(offset + 36), // methodsDetectionLimit
+            cursor.isNull(offset + 37) ? null : cursor.getLong(offset + 37) // samplingID
         );
         return entity;
     }
@@ -501,10 +540,13 @@ public class TestRecordDao extends AbstractDao<TestRecord, Long> {
         entity.setUnique_testproject(cursor.isNull(offset + 28) ? null : cursor.getString(offset + 28));
         entity.setTest_unit_name(cursor.isNull(offset + 29) ? null : cursor.getString(offset + 29));
         entity.setTest_unit_reserved(cursor.isNull(offset + 30) ? null : cursor.getString(offset + 30));
-        entity.setRetest(cursor.getInt(offset + 31));
-        entity.setParentSysCode(cursor.isNull(offset + 32) ? null : cursor.getString(offset + 32));
-        entity.setMethodsDetectionLimit(cursor.isNull(offset + 33) ? null : cursor.getString(offset + 33));
-        entity.setSamplingID(cursor.isNull(offset + 34) ? null : cursor.getLong(offset + 34));
+        entity.setExam_id(cursor.isNull(offset + 31) ? null : cursor.getString(offset + 31));
+        entity.setExaminationId(cursor.isNull(offset + 32) ? null : cursor.getString(offset + 32));
+        entity.setExaminerId(cursor.isNull(offset + 33) ? null : cursor.getString(offset + 33));
+        entity.setRetest(cursor.getInt(offset + 34));
+        entity.setParentSysCode(cursor.isNull(offset + 35) ? null : cursor.getString(offset + 35));
+        entity.setMethodsDetectionLimit(cursor.isNull(offset + 36) ? null : cursor.getString(offset + 36));
+        entity.setSamplingID(cursor.isNull(offset + 37) ? null : cursor.getLong(offset + 37));
      }
     
     @Override

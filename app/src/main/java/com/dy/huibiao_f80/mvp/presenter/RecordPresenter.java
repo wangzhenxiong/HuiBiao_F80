@@ -64,8 +64,8 @@ public class RecordPresenter extends BasePresenter<RecordContract.Model, RecordC
     }
 
 
-    public void load() {
-        mModel.load()
+    public void load(String examinationId,String examinerId,String examId) {
+        mModel.load(examinationId,examinerId,examId)
                 .subscribeOn(Schedulers.io())
                 .doOnSubscribe(disposable -> {
                     mRootView.showLoading();
@@ -189,8 +189,8 @@ public class RecordPresenter extends BasePresenter<RecordContract.Model, RecordC
         alertDialog.show();
     }
 
-    public void seach(String testmoudle, String testproject, String jujdger) {
-        mModel.seach(testmoudle, testproject, jujdger).subscribeOn(Schedulers.io())
+    public void seach( String testmoudle, String testproject, String jujdger,String examinationId,String examinerId,String examId) {
+        mModel.seach(testmoudle, testproject, jujdger,examinationId,examinerId,examId).subscribeOn(Schedulers.io())
                 .doOnSubscribe(disposable -> {
                     mRootView.showLoading();
                 }).subscribeOn(AndroidSchedulers.mainThread())

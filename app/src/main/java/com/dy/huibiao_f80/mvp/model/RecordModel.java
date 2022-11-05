@@ -50,11 +50,24 @@ public class RecordModel extends BaseModel implements RecordContract.Model {
     }
 
     @Override
-    public Observable<List<TestRecord>> load() {
+    public Observable<List<TestRecord>> load(String examinationId,String examinerId,String examId) {
         return Observable.create(new ObservableOnSubscribe<List<TestRecord>>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<TestRecord>> emitter) throws Exception {
-                List<TestRecord> list = DBHelper.getTestRecordDao().queryBuilder().orderDesc(TestRecordDao.Properties.Testingtime).list();
+                QueryBuilder<TestRecord> testRecordQueryBuilder = DBHelper.getTestRecordDao().queryBuilder();
+                if (!examinationId.isEmpty()) {
+                    testRecordQueryBuilder= testRecordQueryBuilder
+                            .where(TestRecordDao.Properties.ExaminationId.eq(examinationId));
+                }
+                if (!examinerId.isEmpty()) {
+                    testRecordQueryBuilder= testRecordQueryBuilder
+                            .where(TestRecordDao.Properties.ExaminerId.eq(examinerId));
+                }
+                if (!examId.isEmpty()) {
+                    testRecordQueryBuilder= testRecordQueryBuilder
+                            .where(TestRecordDao.Properties.Exam_id.eq(examId));
+                }
+                List<TestRecord> list = testRecordQueryBuilder.orderDesc(TestRecordDao.Properties.Testingtime).list();
                 emitter.onNext(list);
                 emitter.onComplete();
             }
@@ -99,7 +112,7 @@ public class RecordModel extends BaseModel implements RecordContract.Model {
     }
 
     @Override
-    public Observable<List<TestRecord>> seach(String testmoudle, String testproject, String jujdger) {
+    public Observable<List<TestRecord>> seach(String testmoudle, String testproject, String jujdger,String examinationId,String examinerId,String examId) {
         return Observable.create(new ObservableOnSubscribe<List<TestRecord>>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<TestRecord>> emitter) throws Exception {
@@ -112,6 +125,18 @@ public class RecordModel extends BaseModel implements RecordContract.Model {
                 }
                 if (!jujdger.equals("选择判定结果")) {
                     testRecordQueryBuilder=testRecordQueryBuilder.where(TestRecordDao.Properties.Decisionoutcome.eq(jujdger));
+                }
+                if (!examinationId.isEmpty()) {
+                    testRecordQueryBuilder= testRecordQueryBuilder
+                            .where(TestRecordDao.Properties.ExaminationId.eq(examinationId));
+                }
+                if (!examinerId.isEmpty()) {
+                    testRecordQueryBuilder= testRecordQueryBuilder
+                            .where(TestRecordDao.Properties.ExaminerId.eq(examinerId));
+                }
+                if (!examId.isEmpty()) {
+                    testRecordQueryBuilder= testRecordQueryBuilder
+                            .where(TestRecordDao.Properties.Exam_id.eq(examId));
                 }
                 List<TestRecord> list = testRecordQueryBuilder.orderDesc(TestRecordDao.Properties.Testingtime).list();
                 emitter.onNext(list);

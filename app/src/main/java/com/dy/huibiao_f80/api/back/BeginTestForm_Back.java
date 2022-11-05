@@ -31,6 +31,7 @@ import java.util.List;
  */
 public class BeginTestForm_Back {
 
+
     private String message;
     private Boolean success;
     private EntityBean entity;

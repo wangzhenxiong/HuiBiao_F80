@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.dy.huibiao_f80">
+
     <!-- 开机启动权限 -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" /> <!-- 摄像头权限 -->
     <uses-permission android:name="android.permission.CAMERA" /> <!-- 陀螺仪使用权限 -->
@@ -40,17 +41,36 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".mvp.ui.activity.ExamOperationActivity"
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+        <service
+            android:name=".app.service.UploadService"
+            android:exported="false"></service>
+        <service
+            android:name=".app.service.ExamOperationService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity
+            android:name=".mvp.ui.activity.PrintReportActivity"
+            android:label="填写实验报告"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".mvp.ui.activity.AutoCurveActivity"
+            android:label="生成曲线"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".mvp.ui.activity.ExamOperationActivity"
             android:label="实操考试"
-            android:screenOrientation="landscape"/>
-        <activity android:name=".mvp.ui.activity.ExamAnalyseActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".mvp.ui.activity.ExamAnalyseActivity"
             android:label="分析题考试"
-            android:screenOrientation="landscape"/>
-        <activity android:name=".mvp.ui.activity.ExamTheoryActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".mvp.ui.activity.ExamTheoryActivity"
             android:label="理论考试"
-            android:screenOrientation="landscape"/>
+            android:screenOrientation="landscape" />
         <activity
             android:name=".mvp.ui.activity.ExamStateActivity"
             android:label="考试内容"
@@ -154,11 +174,13 @@
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
-               <!-- <category android:name="android.intent.category.HOME" />
-                <category android:name="android.intent.category.DEFAULT" />-->
+                <!--
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
+                -->
             </intent-filter>
-           
         </activity>
 
         <service

@@ -22,10 +22,10 @@ public interface RecordContract {
     //Model层定义接口,外部只需关心Model返回的数据,无需关心内部细节,即是否使用缓存
     interface Model extends IModel {
 
-        Observable<List<TestRecord>> load();
+        Observable<List<TestRecord>> load(String examinationId,String examinerId,String examId);
 
         Observable<List<String>> loadLocaProject(String s);
 
-        Observable<List<TestRecord>> seach(String testmoudle, String testproject, String jujdger);
+        Observable<List<TestRecord>> seach( String testmoudle, String testproject, String jujdger,String examinationId,String examinerId,String examId);
     }
 }

@@ -24,6 +24,7 @@ import com.dy.huibiao_f80.api.back.CheckExaminer_Back;
 import com.dy.huibiao_f80.api.back.ExistExam_Back;
 import com.dy.huibiao_f80.api.back.GetExamPage_Back;
 import com.dy.huibiao_f80.api.back.IsTeacherSubmit_Back;
+import com.dy.huibiao_f80.api.back.OperationTestRecord_Back;
 import com.dy.huibiao_f80.api.back.TestFormSubmit_Back;
 import com.dy.huibiao_f80.api.back.TheorySubmit_Back;
 import com.dy.huibiao_f80.bean.UpdateMessage;
@@ -32,7 +33,6 @@ import io.reactivex.Observable;
 import okhttp3.RequestBody;
 import retrofit2.Retrofit;
 import retrofit2.http.Body;
-import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
@@ -120,8 +120,8 @@ public interface HuiBiaoService {
      * @return
      */
     @Headers({"Domain-Name: xxx"})
-    @POST("/examPath/quickCheck/examination/beginOperationExam")
-    Observable<BeginOperationExam_Back> beginOperationExam(@Query("examinationId") String examinationId, @Query("examinerId") String examinerId, @Query("identificationNumber") String identificationNumber);
+    @POST("examPath/quickCheck/examination/getOperationExam")
+    Observable<BeginOperationExam_Back> getOperationExam(@Query("examinationId") String examinationId, @Query("examinerId") String examinerId, @Query("identificationNumber") String identificationNumber);
 
     /**
      * 获取实践报告数据
@@ -152,20 +152,29 @@ public interface HuiBiaoService {
 
     /**
      * 实践报告-提交报告
-     * @param testFormSubmit 实践报告记录实体
+     * @param requestBody 实践报告记录实体
      * @return
      */
     @Headers({"Domain-Name: xxx"})
     @POST("/examPath/quickCheck/examination/testFormSubmit")
-    Observable<TestFormSubmit_Back> testFormSubmit(@Query("testFormSubmit") String testFormSubmit);
+    Observable<TestFormSubmit_Back> testFormSubmit(@Body RequestBody requestBody);
 
     /**
      * 判断考评员是否提交分数
-     * @param contenttype
-     * @param body
+     * @param examinerId
      * @return
      */
     @Headers({"Domain-Name: xxx"})
     @POST("/examPath/quickCheck/examination/isTeacherSubmit")
-    Observable<IsTeacherSubmit_Back> isTeacherSubmit(@Header("Content-Type") String contenttype, @Body RequestBody body);
+    Observable<IsTeacherSubmit_Back> isTeacherSubmit(@Query("examinerId") String examinerId);
+
+
+    /**
+     * 实操考试-提交实验结果
+     * @param requestBody
+     * @return
+     */
+    @Headers({"Domain-Name: xxx"})
+    @POST("/examPath/quickCheck/examiner/operationTestRecord")
+    Observable<OperationTestRecord_Back> operationTestRecord(@Body RequestBody requestBody);
 }

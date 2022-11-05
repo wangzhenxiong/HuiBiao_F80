@@ -117,7 +117,7 @@ public class ProjectFGGD extends BaseProjectMessage {
     private double from1;
     private double to1;
 
-    private double a;
+    private double a=1;
     private double b;
     private double c;
     private double d;

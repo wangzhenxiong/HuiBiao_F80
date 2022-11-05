@@ -20,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.dy.huibiao_f80.MyAppLocation;
 import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.bean.GalleryBean;
 import com.dy.huibiao_f80.di.component.DaggerRecordComponent;
@@ -77,6 +78,9 @@ public class RecordActivity extends BaseActivity<RecordPresenter> implements Rec
     @Inject
     AlertDialog sportDialog;
     private boolean isSeaching = false;
+    private String examinationId = "";
+    private String examinerId = "";
+    private String examId = "";
 
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
@@ -95,6 +99,12 @@ public class RecordActivity extends BaseActivity<RecordPresenter> implements Rec
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
+        Intent intent = getIntent();
+        examId = intent.getStringExtra("examId") == null ? "" : intent.getStringExtra("examId");
+        if (MyAppLocation.myAppLocation.mExamOperationService.isStartExamOperation()) {
+            examinationId = MyAppLocation.myAppLocation.mExamOperationService.getExaminationId();
+            examinerId = MyAppLocation.myAppLocation.mExamOperationService.getExaminerId();
+        }
         ArmsUtils.configRecyclerView(mRecylerview, new GridLayoutManager(this, 1));
         testRecrdAdapter.setEmptyView(R.layout.emptyview, (ViewGroup) mRecylerview.getParent());
         testRecrdAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
@@ -111,7 +121,6 @@ public class RecordActivity extends BaseActivity<RecordPresenter> implements Rec
             }
         });
         mRecylerview.setAdapter(testRecrdAdapter);
-
         mChoseall.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -121,7 +130,6 @@ public class RecordActivity extends BaseActivity<RecordPresenter> implements Rec
                 testRecrdAdapter.notifyDataSetChanged();
             }
         });
-        mPresenter.load();
         testRecrdAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
@@ -131,6 +139,7 @@ public class RecordActivity extends BaseActivity<RecordPresenter> implements Rec
                 ArmsUtils.startActivity(content);
             }
         });
+        mPresenter.load(examinationId, examinerId, examId);
     }
 
 
@@ -195,7 +204,7 @@ public class RecordActivity extends BaseActivity<RecordPresenter> implements Rec
                     mTestmoudle.setText("选择检测方式");
                     mTestprojectname.setText("选择检测项目");
                     mJujdger.setText("选择判定结果");
-                    mPresenter.load();
+                    mPresenter.load(examinationId, examinerId, examId);
                 } else {
                     String testmoudle = mTestmoudle.getText().toString();
                     String testproject = mTestprojectname.getText().toString();
@@ -208,7 +217,7 @@ public class RecordActivity extends BaseActivity<RecordPresenter> implements Rec
                     }
                     isSeaching = true;
                     mSeach.setText("取消");
-                    mPresenter.seach(testmoudle, testproject, jujdger);
+                    mPresenter.seach(testmoudle, testproject, jujdger, examinationId, examinerId, examId);
                 }
                 break;
             case R.id.print:
@@ -261,9 +270,9 @@ public class RecordActivity extends BaseActivity<RecordPresenter> implements Rec
                 DBHelper.getTestRecordDao().deleteInTx(checkSamples);
                 ArmsUtils.snackbarText("删除成功");
                 if (isSeaching) {
-                    mPresenter.seach(mTestmoudle.getText().toString(), mTestprojectname.getText().toString(), mJujdger.getText().toString());
+                    mPresenter.seach(mTestmoudle.getText().toString(), mTestprojectname.getText().toString(), mJujdger.getText().toString(), examinationId, examinerId, examId);
                 } else {
-                    mPresenter.load();
+                    mPresenter.load(examinationId, examinerId, examId);
                 }
                 dialog.dismiss();
             }

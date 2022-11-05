@@ -178,9 +178,15 @@ public class RecordDetailActivity extends BaseActivity<RecordDetailPresenter> im
             case R.id.btn_save:
                 if (null!=sampling){
                     testRecord.setSamplingID(sampling.getId());
+                    testRecord.setProsecutedunits(sampling.getUnitDetected());
+                    testRecord.setSamplename(sampling.getSamplingName());
+                    testRecord.setSamplenum(sampling.getSamplingNumber());
+
+
                     sampling.setTestingTime(testRecord.getTestingtime());
                     sampling.setTestResult(testRecord.getDecisionoutcome());
                     DBHelper.getSamplingDao().update(sampling);
+                    DBHelper.getTestRecordDao().update(testRecord);
                     ArmsUtils.snackbarText("已将检测信息同步至采样单");
                 }
 

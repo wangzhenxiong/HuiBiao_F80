@@ -25,6 +25,8 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.WindowManager;
 
 import com.apkfuns.logutils.LogUtils;
@@ -47,10 +49,13 @@ import com.dy.huibiao_f80.bean.eventBusBean.FGTestMessageBean;
 import com.dy.huibiao_f80.greendao.DBHelper;
 import com.dy.huibiao_f80.greendao.ProjectFGGD;
 import com.dy.huibiao_f80.greendao.TestRecord;
+import com.dy.huibiao_f80.mvp.ui.activity.ExamOperationActivity;
 import com.dy.huibiao_f80.usbhelps.UsbControl;
 import com.dy.huibiao_f80.usbhelps.UsbReadWriteHelper;
 import com.jess.arms.base.BaseService;
 import com.jess.arms.utils.ArmsUtils;
+import com.yhao.floatwindow.FloatWindow;
+import com.yhao.floatwindow.Screen;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -58,7 +63,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Timer;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -133,11 +137,12 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
     boolean zjds_balance_flag = false;
     boolean zjds_startseach_flag = false;
     boolean zjds_CountDown_flag = false;
-    private Timer mZJDSTemp;
 
 
     public UsbDevice mUsbDevice_multicard;
     private Handler mHandler;
+    private boolean runflag;
+    private int operationExamTime;
 
 
     @Nullable
@@ -177,6 +182,31 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
 
         FileUtils.deleteDir(path);
         mHandler = new Handler(Looper.getMainLooper());
+
+    }
+
+
+
+
+    public void initDialog() {
+        if (null != FloatWindow.get()) {
+            return;
+        }
+        View inflate = LayoutInflater.from(MyAppLocation.myAppLocation).inflate(R.layout.method_a, null);
+        FloatWindow
+                .with(getApplicationContext())
+                .setView(inflate)
+                .setWidth(300)
+                .setHeight(150)
+                .setX(0)                                   //设置控件初始位置
+                .setY(Screen.height, 0f)
+                .setDesktopShow(true)
+                //.setTag(id)
+                //桌面显示
+                //.setViewStateListener(mViewStateListener)    //监听悬浮控件状态改变
+                //.setPermissionListener(mPermissionListener)  //监听权限申请结果
+                .setFilter(false, ExamOperationActivity.class)
+                .build();
     }
 
 
@@ -672,8 +702,16 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
         detection_record_fggd_nc.setState(2);
         //detection_record_fggd_nc.setDowhat(0);
 
+        if (MyAppLocation.myAppLocation.mExamOperationService.isStartExamOperation()){
+            detection_record_fggd_nc.setExam_id(MyAppLocation.myAppLocation.mExamOperationService.getNowOperationExam().getId());
+            detection_record_fggd_nc.setExaminerId(MyAppLocation.myAppLocation.mExamOperationService.getExaminerId());
+            detection_record_fggd_nc.setExaminationId(MyAppLocation.myAppLocation.mExamOperationService.getExaminationId());
+            long insert = DBHelper.getTestRecordDao().insert(detection_record_fggd_nc);
+            UploadService.startUpLoad(this,detection_record_fggd_nc.getSysCode());
+        } else {
 
-        long insert = DBHelper.getTestRecordDao().insert(detection_record_fggd_nc);
+            long insert = DBHelper.getTestRecordDao().insert(detection_record_fggd_nc);
+        }
 
         //检测完成后的操作，自动打印，自动上传等
         // printAndUpload(detection_record_fggd_nc, insert);
@@ -986,8 +1024,16 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
         //设置状态为检测完成 2
         detection_record_fggd_nc.setState(2);
         //detection_record_fggd_nc.setDowhat(0);
+        if (MyAppLocation.myAppLocation.mExamOperationService.isStartExamOperation()){
+            detection_record_fggd_nc.setExam_id(MyAppLocation.myAppLocation.mExamOperationService.getNowOperationExam().getId());
+            detection_record_fggd_nc.setExaminerId(MyAppLocation.myAppLocation.mExamOperationService.getExaminerId());
+            detection_record_fggd_nc.setExaminationId(MyAppLocation.myAppLocation.mExamOperationService.getExaminationId());
+            long insert = DBHelper.getTestRecordDao().insert(detection_record_fggd_nc);
+            UploadService.startUpLoad(this,detection_record_fggd_nc.getSysCode());
+        } else {
 
-        long insert = DBHelper.getTestRecordDao().insert(detection_record_fggd_nc);
+            long insert = DBHelper.getTestRecordDao().insert(detection_record_fggd_nc);
+        }
 
         //检测完成后的操作，自动打印，自动上传等
         //printAndUpload(detection_record_fggd_nc, insert);
@@ -1119,7 +1165,16 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
         //设置状态为检测完成 2
         detection_record_fggd_nc.setState(2);
         //detection_record_fggd_nc.setDowhat(0);
-        long insert = DBHelper.getTestRecordDao().insert(detection_record_fggd_nc);
+        if (MyAppLocation.myAppLocation.mExamOperationService.isStartExamOperation()){
+            detection_record_fggd_nc.setExam_id(MyAppLocation.myAppLocation.mExamOperationService.getNowOperationExam().getId());
+            detection_record_fggd_nc.setExaminerId(MyAppLocation.myAppLocation.mExamOperationService.getExaminerId());
+            detection_record_fggd_nc.setExaminationId(MyAppLocation.myAppLocation.mExamOperationService.getExaminationId());
+            long insert = DBHelper.getTestRecordDao().insert(detection_record_fggd_nc);
+            UploadService.startUpLoad(this,detection_record_fggd_nc.getSysCode());
+        } else {
+
+            long insert = DBHelper.getTestRecordDao().insert(detection_record_fggd_nc);
+        }
 
         //检测完成后的操作，自动打印，自动上传等
         //printAndUpload(detection_record_fggd_nc, insert);
@@ -1172,7 +1227,16 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
         //设置状态为检测完成 2
         //detection_record_fggd_nc.setDowhat(0);
         detection_record_fggd_nc.setState(2);
-        long insert = DBHelper.getTestRecordDao().insert(detection_record_fggd_nc);
+        if (MyAppLocation.myAppLocation.mExamOperationService.isStartExamOperation()){
+            detection_record_fggd_nc.setExam_id(MyAppLocation.myAppLocation.mExamOperationService.getNowOperationExam().getId());
+            detection_record_fggd_nc.setExaminerId(MyAppLocation.myAppLocation.mExamOperationService.getExaminerId());
+            detection_record_fggd_nc.setExaminationId(MyAppLocation.myAppLocation.mExamOperationService.getExaminationId());
+            long insert = DBHelper.getTestRecordDao().insert(detection_record_fggd_nc);
+            UploadService.startUpLoad(this,detection_record_fggd_nc.getSysCode());
+        } else {
+
+            long insert = DBHelper.getTestRecordDao().insert(detection_record_fggd_nc);
+        }
 
         //检测完成后的操作，自动打印，自动上传等
         //printAndUpload(detection_record_fggd_nc, insert);

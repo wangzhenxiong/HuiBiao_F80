@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:background="@drawable/beijing_img">
+    <include layout="@layout/include_title"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="800dp"
+            android:layout_height="550dp"
+           android:layout_centerHorizontal="true"
+            android:background="@drawable/beijng_radius">
+            <LinearLayout
+                android:id="@+id/parent_ll"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <!--<android.support.design.widget.TextInputLayout
+                    style="@style/TextInputLayoutStyle"
+                    android:hint="@string/jiaozhunb">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/jzqxb"
+                        style="@style/AutoCompleteTextViewStyle"
+                        />
+
+                </android.support.design.widget.TextInputLayout>-->
+            </LinearLayout>
+        </ScrollView>
+        <Button
+            android:id="@+id/btn_save"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/btn_background_blue"
+            android:text="保存"
+            android:textColor="@color/white"
+            android:layout_below="@id/scrollView"
+            android:layout_centerHorizontal="true"
+            android:textSize="18dp" />
+    </RelativeLayout>
+
+
+</LinearLayout>

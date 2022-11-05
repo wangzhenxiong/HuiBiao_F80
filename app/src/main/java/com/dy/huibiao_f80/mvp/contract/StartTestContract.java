@@ -1,5 +1,7 @@
 package com.dy.huibiao_f80.mvp.contract;
 
+import android.app.Activity;
+
 import com.dy.huibiao_f80.greendao.ProjectFGGD;
 import com.dy.huibiao_f80.greendao.ProjectJTJ;
 import com.jess.arms.mvp.IModel;
@@ -16,6 +18,8 @@ public interface StartTestContract {
         void loadFGGDFinish();
 
         void loadJTJFinish();
+
+        Activity getActivity();
     }
 
     //Model层定义接口,外部只需关心Model返回的数据,无需关心内部细节,即是否使用缓存

@@ -89,6 +89,7 @@
     <string name="print_beunits" translatable="false">被检单位：</string>
     <string name="print_duizhaozhi" translatable="false">对照值：△A=</string>
     <string name="print_testpeople" translatable="false">检测人员：</string>
+    <string name="print_sampleplace" translatable="false">样品产地：</string>
     <string name="print_checkpeople1" translatable="false">审核人员：_____</string>
     <string name="print_checkpeople2" translatable="false">审核人员：</string>
     <string name="my_app_name">检测仪器</string>
