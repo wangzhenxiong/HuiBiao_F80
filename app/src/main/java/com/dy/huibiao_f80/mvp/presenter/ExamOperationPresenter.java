@@ -111,18 +111,23 @@ public class ExamOperationPresenter extends BasePresenter<ExamOperationContract.
 
 
     public void submitOperation() {
-        Map<String, GetTestForm_Back> getTestForm_backMap = MyAppLocation.myAppLocation.mExamOperationService.getGetTestForm_backMap();
-        Map<String, ReportBean> reportBeanMap = MyAppLocation.myAppLocation.mExamOperationService.getReportBeanMap();
-        Set<String>  getTestForm_backMapkeys= getTestForm_backMap.keySet();
-        Set<String>  reportBeanMapkeys= reportBeanMap.keySet();
-        LogUtils.d(getTestForm_backMap);
-        LogUtils.d(reportBeanMap);
-        int i = getTestForm_backMapkeys.size() - reportBeanMapkeys.size();
-        if (i >0) {
-            makeDialog(i);
-        }else{
-            submit();
+        if (MyAppLocation.myAppLocation.mExamOperationService.isTeacherSubmit){
+            Map<String, GetTestForm_Back> getTestForm_backMap = MyAppLocation.myAppLocation.mExamOperationService.getGetTestForm_backMap();
+            Map<String, ReportBean> reportBeanMap = MyAppLocation.myAppLocation.mExamOperationService.getReportBeanMap();
+            Set<String>  getTestForm_backMapkeys= getTestForm_backMap.keySet();
+            Set<String>  reportBeanMapkeys= reportBeanMap.keySet();
+            LogUtils.d(getTestForm_backMap);
+            LogUtils.d(reportBeanMap);
+            int i = getTestForm_backMapkeys.size() - reportBeanMapkeys.size();
+            if (i >0) {
+                makeDialog(i);
+            }else{
+                submit();
+            }
+        }else {
+          ArmsUtils.snackbarText("请联系考评员评分后提交");
         }
+
 
 
     }

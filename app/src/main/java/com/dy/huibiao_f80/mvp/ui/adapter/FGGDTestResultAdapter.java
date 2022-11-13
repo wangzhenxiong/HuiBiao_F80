@@ -61,7 +61,8 @@ public class FGGDTestResultAdapter extends BaseQuickAdapter<GalleryBean, BaseVie
 
         String decisionoutcome = item1.getDecisionoutcome();
         if (decisionoutcome.isEmpty()){
-            decisionoutcome=item.getRemainingtime()+"";
+            int remainingtime = item.getRemainingtime();
+            decisionoutcome= remainingtime==0?"":remainingtime +"";
         }
         helper.setText(R.id.gallery_num,item.getGalleryNum()+""+(item.getDowhat()==2?"(对照)":""))
                 .setText(R.id.samplename,item1.getSamplename())

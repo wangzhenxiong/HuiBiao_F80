@@ -41,7 +41,7 @@ public class ExamOperationService extends BaseService {
     private IBinder bind = new ExamOperationService.MyBinder();
     private ScheduledThreadPoolExecutor mScheduledThreadPoolExecutor;
     private Integer operationExamTime;
-    private boolean isTeacherSubmit;
+    public boolean isTeacherSubmit;
     /**
      * 实操题实体
      */
@@ -134,7 +134,7 @@ public class ExamOperationService extends BaseService {
                                 isTeacherSubmit = isTeacherSubmit_back.getSuccess();
                                 if (isTeacherSubmit) {
                                     // TODO: 11/3/22 考评员分数已提交，结束考试
-                                    ArmsUtils.snackbarText("考评员分数已提交,考试已结束");
+                                    ArmsUtils.snackbarText("考评员分数已提交");
                                     //ArmsUtils.startActivity(new Intent());
                                 }
                             }
@@ -210,7 +210,7 @@ public class ExamOperationService extends BaseService {
                         // mToolbarTime.setText("剩余时间  " + (i < 10 ? "0" + i : "" + i) + ":" + (i1 < 10 ? "0" + i1 : "" + i1));
                         ExamOperationServiceEventBean event = new ExamOperationServiceEventBean();
                         event.setTime(operationExamTime);
-                        event.setTimestring((i < 10 ? "0" + i : "" + i) + ":" + (i1 < 10 ? "0" + i1 : "" + i1));
+                        event.setTimestring("剩余时间  " +(i < 10 ? "0" + i : "" + i) + ":" + (i1 < 10 ? "0" + i1 : "" + i1));
                         EventBus.getDefault().post(event);
                         operationExamTime--;
                     } else {

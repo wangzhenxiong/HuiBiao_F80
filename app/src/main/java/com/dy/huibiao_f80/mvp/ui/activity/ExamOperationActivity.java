@@ -38,6 +38,7 @@ import com.yhao.floatwindow.IFloatWindow;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
@@ -145,6 +146,7 @@ public class ExamOperationActivity extends BaseActivity<ExamOperationPresenter> 
     }
 
     List<BeginOperationExam_Back.EntityBean.OperationPaperListBean> operationPaperList;
+    List<TextView> textviewTitleList = new ArrayList<>();
 
     @Override
     public void showExamTitle(BeginOperationExam_Back back) {
@@ -160,6 +162,7 @@ public class ExamOperationActivity extends BaseActivity<ExamOperationPresenter> 
             viewById.setId(i);
             viewById.setOnClickListener(chardClick());
             viewById.setText("第" + (i + 1) + "题" + "(共" + operationPaperListBean.getAllScore() + "分)");
+            textviewTitleList.add(viewById);
             mExamTitle.addView(inflate);
         }
         Integer operationExamTime = entity.getExamination().getOperationExamTime() * 60;
@@ -168,9 +171,9 @@ public class ExamOperationActivity extends BaseActivity<ExamOperationPresenter> 
         MyAppLocation.myAppLocation.mExamOperationService.setExaminationId(examinationId);
         MyAppLocation.myAppLocation.mExamOperationService.setExaminerId(examinerId);
 
-        MyAppLocation.myAppLocation.mExamOperationService.startExamOperation( operationExamTime);
+        MyAppLocation.myAppLocation.mExamOperationService.startExamOperation(operationExamTime);
 
-        initExamCont(operationPaperList.get(0));
+        initExamCont(operationPaperList.get(0),0);
 
     }
 
@@ -191,11 +194,19 @@ public class ExamOperationActivity extends BaseActivity<ExamOperationPresenter> 
 
     BeginOperationExam_Back.EntityBean.OperationPaperListBean onoeperationPaper;
 
-    private void initExamCont(BeginOperationExam_Back.EntityBean.OperationPaperListBean operationPaperListBean) {
+    private void initExamCont(BeginOperationExam_Back.EntityBean.OperationPaperListBean operationPaperListBean,int index) {
+        for (int i = 0; i < textviewTitleList.size(); i++) {
+            if (index==i){
+                textviewTitleList.get(i).setTextColor(getResources().getColor(R.color.red));
+            }else {
+                textviewTitleList.get(i).setTextColor(getResources().getColor(R.color.black));
+            }
+        }
+
         MyAppLocation.myAppLocation.mExamOperationService.setNowOperationExam(operationPaperListBean);
         onoeperationPaper = operationPaperListBean;
         String content = operationPaperListBean.getContent();
-        content = content.replaceAll("\\\\", "");
+        //content = content.replaceAll("\\\\", "");
         LogUtils.d(content);
         CharSequence spanned = Html.fromHtml(content, new URLImageGetter(mExamtitle), null);
         mExamtitle.setText(spanned);
@@ -207,7 +218,7 @@ public class ExamOperationActivity extends BaseActivity<ExamOperationPresenter> 
             @Override
             public void onClick(View v) {
                 BeginOperationExam_Back.EntityBean.OperationPaperListBean operationPaperListBean = operationPaperList.get(v.getId());
-                initExamCont(operationPaperListBean);
+                initExamCont(operationPaperListBean,v.getId());
             }
         };
     }
@@ -219,7 +230,7 @@ public class ExamOperationActivity extends BaseActivity<ExamOperationPresenter> 
         ButterKnife.bind(this);
     }
 
-    @OnClick({R.id.btn_starttest, R.id.btn_testrecord, R.id.btn_report,R.id.btn_submit})
+    @OnClick({R.id.btn_starttest, R.id.btn_testrecord, R.id.btn_report, R.id.btn_submit})
     public void onClick(View view) {
         String id = onoeperationPaper.getId();
         switch (view.getId()) {
