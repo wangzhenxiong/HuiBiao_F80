@@ -46,6 +46,7 @@ public class TestRecrdAdapter extends BaseQuickAdapter<TestRecord, BaseViewHolde
         helper.addOnClickListener(R.id.checkbox);
      helper.setChecked(R.id.checkbox,item.checkd);
      helper.setText(R.id.samplename,item.getSamplename())
+             .setText(R.id.samplenumber,item.getSamplenum())
              .setText(R.id.testmoudle,item.getTest_Moudle())
              .setText(R.id.testprojectname,item.getTest_project())
              .setText(R.id.gallery,item.getGallery()+"")

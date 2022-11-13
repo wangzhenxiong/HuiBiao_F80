@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.dy.huibiao_f80">
-
     <!-- 开机启动权限 -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" /> <!-- 摄像头权限 -->
     <uses-permission android:name="android.permission.CAMERA" /> <!-- 陀螺仪使用权限 -->
@@ -43,9 +42,29 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".mvp.ui.activity.ShowPDFActivity"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".mvp.ui.activity.StandMessageActivity"
+            android:label="标准信息"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".mvp.ui.activity.VideoActivity"
+            android:label="操作视频"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".mvp.ui.activity.StepActivity"
+            android:label="操作文档"
+            android:screenOrientation="landscape"/>
+        <activity
+            android:name=".mvp.ui.activity.BalanceCalibrationActivity"
+            android:label="仪器水平调节"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".mvp.ui.activity.BaiduMapActivity"
+            android:label="位置信息"
+            android:screenOrientation="landscape" />
+
         <service
             android:name=".app.service.UploadService"
-            android:exported="false"></service>
+            android:exported="false" />
         <service
             android:name=".app.service.ExamOperationService"
             android:enabled="true"
@@ -62,6 +81,7 @@
         <activity
             android:name=".mvp.ui.activity.ExamOperationActivity"
             android:label="实操考试"
+            android:launchMode="singleTask"
             android:screenOrientation="landscape" />
         <activity
             android:name=".mvp.ui.activity.ExamAnalyseActivity"
@@ -201,6 +221,14 @@
         <meta-data
             android:name="com.dy.huibiao_f80.app.GlobalConfiguration"
             android:value="ConfigModule" />
+        <receiver
+            android:name=".mvp.ui.receiver.DownLoadCompleteReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

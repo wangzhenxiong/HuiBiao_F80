@@ -23,6 +23,7 @@ import com.apkfuns.logutils.LogUtils;
 import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.app.utils.DataUtils;
 import com.dy.huibiao_f80.app.utils.JxlUtils;
+import com.dy.huibiao_f80.bean.UpdateFileMessage;
 import com.dy.huibiao_f80.bean.base.BaseProjectMessage;
 import com.dy.huibiao_f80.di.component.DaggerEdtorProjectComponent;
 import com.dy.huibiao_f80.greendao.DBHelper;
@@ -43,6 +44,8 @@ import com.jess.arms.utils.ArmsUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -299,7 +302,7 @@ public class EdtorProjectActivity extends BaseActivity<EdtorProjectPresenter> im
         ButterKnife.bind(this);
     }
 
-    @OnClick({R.id.fggd, R.id.jtj, R.id.newproject, R.id.deleteproject})
+    @OnClick({R.id.fggd, R.id.jtj, R.id.newproject, R.id.deleteproject,R.id.synchronous})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.fggd:
@@ -313,6 +316,9 @@ public class EdtorProjectActivity extends BaseActivity<EdtorProjectPresenter> im
                 break;
             case R.id.deleteproject:
                 deleteProject();
+                break;
+            case R.id.synchronous:
+                mPresenter.checkNewVersion(checkmoudle);
                 break;
         }
     }
@@ -350,15 +356,19 @@ public class EdtorProjectActivity extends BaseActivity<EdtorProjectPresenter> im
                     DBHelper.getProjectFGGDDao().deleteInTx(list);
                     mDateList_fggd.remove(projectMessage_fggd);
                     fggdProjectFragment.setData(mDateList_fggd);
+                    fggdProjectFragment.lastCheck=-1;
                     projectMessage_fggd = null;
                     //删除肯定是选中的项目
                     newProjectFGGDFragment.setData(projectMessage_fggd);
+
                 } else if (checkmoudle == 2) {
                     List<ProjectJTJ> list = DBHelper.getProjectJTJDao().queryBuilder().where(ProjectJTJDao.Properties.ProjectName.eq(projectMessage_jtj.getPjName())).list();
                     DBHelper.getProjectJTJDao().deleteInTx(list);
                     mDateList_jtj.remove(projectMessage_jtj);
                     jtjProjectFragment.setData(mDateList_jtj);
+                    jtjProjectFragment.lastCheck=-1;
                     projectMessage_jtj = null;
+
                     //删除肯定是选中的项目
                     newProjectJTJFragment.setData(projectMessage_jtj);
                 }
@@ -489,6 +499,48 @@ public class EdtorProjectActivity extends BaseActivity<EdtorProjectPresenter> im
     @Override
     public void loadFGGDFinish() {
         fggdProjectFragment.setData(mDateList_fggd);
+    }
+
+    @Override
+    public void makeDialogNewVersion(String filename, String local, int checkmoudle, String linkurl, UpdateFileMessage message) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                LogUtils.d("makeDialogNewVersion");
+                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
+                builder.setPositiveButton(getString(R.string.download), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mPresenter.downLoadProject(filename, checkmoudle, linkurl);
+
+                    }
+                });
+                builder.setNeutralButton(getString(R.string.cancle), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                builder.setTitle(getString(R.string.projectversionnmessage))
+                        .setMessage(getString(R.string.serviceversion) + filename + "\r\n" + getString(R.string.localversion) + (local.equals("") ? getString(R.string.whihoutnewversion) : local))
+                        .setIcon(R.mipmap.ic_launcher)
+                        .setCancelable(false);
+                android.support.v7.app.AlertDialog dialog = builder.create();
+                dialog.setCanceledOnTouchOutside(true);//设置弹出框失去焦点是否隐藏
+                dialog.show();
+            }
+        });
+    }
+
+    @Override
+    public void inputProject(File file, String filename, int checkmoudle) {
+        List<String> list = new ArrayList<>();
+        list.add(file.getAbsolutePath());
+        if (1==checkmoudle) {
+            mPresenter.inputFGGDProject(list);
+        } else if (2==checkmoudle) {
+            mPresenter.inputJTJProject(list);
+        }
     }
 
 

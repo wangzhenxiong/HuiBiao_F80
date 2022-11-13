@@ -4,7 +4,7 @@ import android.app.Application;
 
 import com.apkfuns.logutils.LogUtils;
 import com.dy.huibiao_f80.Constants;
-import com.dy.huibiao_f80.api.back.BeginTestForm_Back;
+import com.dy.huibiao_f80.api.back.GetTestForm_Back;
 import com.dy.huibiao_f80.mvp.contract.PrintReportContract;
 import com.jess.arms.di.scope.ActivityScope;
 import com.jess.arms.http.imageloader.ImageLoader;
@@ -44,17 +44,17 @@ public class PrintReportPresenter extends BasePresenter<PrintReportContract.Mode
         this.mApplication = null;
     }
 
-    public void getReportMoudle(String examinerId, String examinationId) {
-      mModel.beginTestForm(Constants.URL,examinationId)
+    public void getReportMoudle(String examinerId,String examinationId,String operationPaperId) {
+      mModel.getTestForm(Constants.URL,operationPaperId)
               .doOnSubscribe(disposable -> {
                   mRootView.showLoading();
               }).subscribeOn(AndroidSchedulers.mainThread())
               .doFinally(() -> {
                   mRootView.hideLoading();
               }).compose(RxLifecycleUtils.bindToLifecycle(mRootView))
-              .subscribe(new ErrorHandleSubscriber<BeginTestForm_Back>(mErrorHandler) {
+              .subscribe(new ErrorHandleSubscriber<GetTestForm_Back>(mErrorHandler) {
                   @Override
-                  public void onNext(BeginTestForm_Back back) {
+                  public void onNext(GetTestForm_Back back) {
                       LogUtils.d(back);
                       if (back.getSuccess()){
                           mRootView.showReports(back);
@@ -64,4 +64,34 @@ public class PrintReportPresenter extends BasePresenter<PrintReportContract.Mode
                   }
               });
     }
+
+    /*public void submit(String operationPaperId) {
+        if (null== MyAppLocation.myAppLocation.mExamOperationService.getGetTestFormBackList()) {
+            ArmsUtils.snackbarText("请先填写实验报告");
+            return;
+        }
+        submits(operationPaperId);
+    }*/
+
+   /* private void submits(String operationPaperId){
+        mModel.submitOperation(operationPaperId)
+                .doOnSubscribe(disposable -> {
+                    mRootView.showLoading();
+                }).subscribeOn(AndroidSchedulers.mainThread())
+                .doFinally(() -> {
+                    mRootView.hideLoading();
+                }).compose(RxLifecycleUtils.bindToLifecycle(mRootView))
+                .subscribe(new ErrorHandleSubscriber<TestFormSubmit_Back>(mErrorHandler) {
+                    @Override
+                    public void onNext(TestFormSubmit_Back back) {
+                        LogUtils.d(back);
+                        if (back.isSuccess()){
+                            mRootView.submitSuccess();
+                        }
+
+                        ArmsUtils.snackbarText(back.getMessage());
+
+                    }
+                });
+    }*/
 }

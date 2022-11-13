@@ -16,7 +16,6 @@ import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.apkfuns.logutils.LogUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.dy.huibiao_f80.Constants;
 import com.dy.huibiao_f80.MyAppLocation;
@@ -69,6 +68,10 @@ public class TestResultFGGDActivity extends BaseActivity<TestResultFGGDPresenter
     Button mBtnRestart;
     @BindView(R.id.btn_record)
     Button mBtnRecord;
+    @BindView(R.id.btn_backhome)
+    Button mBtnBackhome;
+    @BindView(R.id.btn_writereport)
+    Button mBtnWritereport;
     private List<GalleryBean> dataList = new ArrayList<>();
     private FGGDTestResultAdapter fggdAdapter;
     String pjName;
@@ -103,11 +106,11 @@ public class TestResultFGGDActivity extends BaseActivity<TestResultFGGDPresenter
         fggdAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                if (view.getId()==R.id.checkbox) {
+                if (view.getId() == R.id.checkbox) {
                     GalleryBean galleryBean = dataList.get(position);
                     if (galleryBean.isCheckd()) {
-                       galleryBean.setCheckd(false);
-                    }else {
+                        galleryBean.setCheckd(false);
+                    } else {
                         galleryBean.setCheckd(true);
                     }
                 }
@@ -124,6 +127,10 @@ public class TestResultFGGDActivity extends BaseActivity<TestResultFGGDPresenter
                 fggdAdapter.notifyDataSetChanged();
             }
         });
+        if (MyAppLocation.myAppLocation.mExamOperationService.isStartExamOperation()){
+            mBtnWritereport.setVisibility(View.VISIBLE);
+            mBtnBackhome.setVisibility(View.VISIBLE);
+        }
     }
 
 
@@ -131,7 +138,7 @@ public class TestResultFGGDActivity extends BaseActivity<TestResultFGGDPresenter
         dataList.clear();
         for (int i = 0; i < MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.size(); i++) {
             GalleryBean galleryBean = MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(i);
-            if (galleryBean.getState()!=0) {
+            if (galleryBean.getState() != 0) {
                 dataList.add(galleryBean);
             }
         }
@@ -183,7 +190,7 @@ public class TestResultFGGDActivity extends BaseActivity<TestResultFGGDPresenter
         switch (tags.tag) {
             case 0:
                 fggdAdapter.notifyDataSetChanged();
-                LogUtils.d(MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList);
+                //LogUtils.d(MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList);
 
                 if (dataList.size() > 0) {
                     BaseProjectMessage baseProjectMessage = dataList.get(0).getmProjectMessage();
@@ -205,16 +212,36 @@ public class TestResultFGGDActivity extends BaseActivity<TestResultFGGDPresenter
         }
     }
 
-    @OnClick({R.id.btn_retest, R.id.btn_restart, R.id.btn_record})
+    @OnClick({R.id.btn_retest, R.id.btn_restart, R.id.btn_record,R.id.btn_backhome,R.id.btn_writereport})
     public void onClick(View view) {
         Intent intent = new Intent();
         intent.putExtra("project", pjName);
         switch (view.getId()) {
-            case R.id.btn_retest://复检
+            case R.id.btn_backhome:
+                ArmsUtils.startActivity(new Intent(this,ExamOperationActivity.class));
 
-                intent.setClass(TestResultFGGDActivity.this, TestFGGDActivity.class);
-                ArmsUtils.startActivity(intent);
-                this.finish();
+                break;
+            case R.id.btn_writereport:
+                Intent intent1 = new Intent(this, PrintReportActivity.class);
+                intent1.putExtra("examinationId", MyAppLocation.myAppLocation.mExamOperationService.getExaminationId());
+                intent1.putExtra("examinerId", MyAppLocation.myAppLocation.mExamOperationService.getExaminerId());
+                intent1.putExtra("operationPaperId", MyAppLocation.myAppLocation.mExamOperationService.getNowOperationExam().getId());
+                startActivity(intent1);
+
+                break;
+            case R.id.btn_retest://复检
+                for (int i = 0; i < dataList.size(); i++) {
+                    GalleryBean galleryBean = dataList.get(i);
+                    if (galleryBean.checkd){
+                        intent.setClass(TestResultFGGDActivity.this, TestFGGDActivity.class);
+                        ArmsUtils.startActivity(intent);
+                        this.finish();
+                       return;
+
+                    }
+                }
+                ArmsUtils.snackbarText("请选择需要复检的数据");
+
                 break;
             case R.id.btn_restart:
                 intent.setClass(TestResultFGGDActivity.this, ChoseGalleryFGGDActivity.class);
@@ -232,6 +259,6 @@ public class TestResultFGGDActivity extends BaseActivity<TestResultFGGDPresenter
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-
+        ArmsUtils.startActivity(this, StartTestActivity.class);
     }
 }

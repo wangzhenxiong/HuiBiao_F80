@@ -97,9 +97,26 @@
 
     <style name="rect_style">
         <item name="android:layout_width">800dp</item>
-        <item name="android:layout_height">300dp</item>
+        <item name="android:layout_height">600dp</item>
         <item name="android:background">@drawable/beijng_radius</item>
-        <item name="android:orientation">horizontal</item>
+        <item name="android:orientation">vertical</item>
+
+
+    </style>
+
+    <style name="MarqueeTextView">
+
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:focusable">true</item>
+        <item name="android:marqueeRepeatLimit">-1</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">#E47C99</item>
+        <item name="android:textSize">18dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:focusableInTouchMode">true</item>
 
 
     </style>

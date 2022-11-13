@@ -55,8 +55,7 @@ public class ExamTheoryActivity extends BaseActivity<ExamTheoryPresenter> implem
     Toolbar mToolbar;
     @BindView(R.id.toolbarly)
     AppBarLayout mToolbarly;
-    @BindView(R.id.examname)
-    TextView mExamname;
+
     @BindView(R.id.exam_title)
     LinearLayout mExamTitle;
     @BindView(R.id.titletype)
@@ -409,7 +408,7 @@ public class ExamTheoryActivity extends BaseActivity<ExamTheoryPresenter> implem
             }
         }, 0, 1000, TimeUnit.MILLISECONDS);
 
-        mExamname.setText(theoryPaper.getName() + "(一共" + theoryPaper.getQuestionNum() + "题，总分" + theoryPaper.getAllScore() + "分)");
+        //mExamname.setText(theoryPaper.getName() + "(一共" + theoryPaper.getQuestionNum() + "题，总分" + theoryPaper.getAllScore() + "分)");
 
         //单选题
         theoryQuestionRadioList = entity.getTheoryQuestionRadioList();

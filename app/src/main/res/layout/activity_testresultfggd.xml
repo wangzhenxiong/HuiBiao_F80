@@ -111,7 +111,34 @@
                 android:textSize="20dp"
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="20dp"/>
-
+            <Button
+                android:visibility="gone"
+                android:id="@+id/btn_backhome"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="40dp"
+                android:background="@drawable/btn_background_blue"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="回到首页"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:layout_toLeftOf="@id/btn_writereport"
+                android:layout_marginRight="40dp"/>
+            <Button
+                android:visibility="gone"
+                android:id="@+id/btn_writereport"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="40dp"
+                android:background="@drawable/btn_background_blue"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="报告填写"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:layout_toLeftOf="@id/btn_restart"
+                android:layout_marginRight="40dp"/>
             <Button
                 android:id="@+id/btn_restart"
                 android:layout_width="100dp"

@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dy.huibiao_f80.R;
@@ -38,6 +39,14 @@ public class PracticeActivity extends BaseActivity<PracticePresenter> implements
     TextView mStartingtest;
     @BindView(R.id.record)
     TextView mRecord;
+    @BindView(R.id.toolbar_back)
+    RelativeLayout mToolbarBack;
+    @BindView(R.id.videos)
+    TextView mVideos;
+    @BindView(R.id.document)
+    TextView mDocument;
+    @BindView(R.id.standard)
+    TextView mStandard;
 
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
@@ -93,17 +102,28 @@ public class PracticeActivity extends BaseActivity<PracticePresenter> implements
         ButterKnife.bind(this);
     }
 
-    @OnClick({R.id.samplingofsingle, R.id.startingtest, R.id.record})
+    @OnClick({R.id.samplingofsingle, R.id.startingtest, R.id.record,R.id.videos, R.id.document, R.id.standard})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.samplingofsingle:
-                ArmsUtils.startActivity(new Intent(getActivity(),SamplingActivity.class));
+                ArmsUtils.startActivity(new Intent(getActivity(), SamplingActivity.class));
                 break;
             case R.id.startingtest:
-                ArmsUtils.startActivity(new Intent(getActivity(),StartTestActivity.class));
+                ArmsUtils.startActivity(new Intent(getActivity(), StartTestActivity.class));
                 break;
             case R.id.record:
-                ArmsUtils.startActivity(new Intent(getActivity(),RecordActivity.class));
+                ArmsUtils.startActivity(new Intent(getActivity(), RecordActivity.class));
+                break;
+            case R.id.videos:
+                ArmsUtils.startActivity(new Intent(getActivity(),VideoActivity.class));
+                break;
+            case R.id.document:
+                ArmsUtils.startActivity(new Intent(getActivity(),StepActivity.class));
+
+                break;
+            case R.id.standard:
+                ArmsUtils.startActivity(new Intent(getActivity(),StandMessageActivity.class));
+
                 break;
         }
     }
@@ -112,4 +132,6 @@ public class PracticeActivity extends BaseActivity<PracticePresenter> implements
     public Activity getActivity() {
         return this;
     }
+
+
 }

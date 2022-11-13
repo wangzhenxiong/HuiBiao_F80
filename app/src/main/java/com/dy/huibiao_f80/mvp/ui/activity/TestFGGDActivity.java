@@ -34,7 +34,7 @@ import com.dy.huibiao_f80.mvp.presenter.TestFGGDPresenter;
 import com.dy.huibiao_f80.mvp.ui.adapter.FGGDAdapter;
 import com.dy.huibiao_f80.mvp.ui.adapter.MySpinnerAdapter;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -146,7 +146,7 @@ public class TestFGGDActivity extends BaseActivity<TestFGGDPresenter> implements
                     double c0 = ((ProjectFGGD) baseProjectMessage).getC0();
                     double d0 = ((ProjectFGGD) baseProjectMessage).getD0();
                     LineData data = getData(mChartview, a0, b0, c0, d0);
-                    setupChart(mChartview, data);
+                    setupChart(mChartview, data,a0,b0,c0,d0);
                 }
                 LogUtils.d(baseProjectMessage);
                 for (int i = 0; i < dataList.size(); i++) {
@@ -183,17 +183,21 @@ public class TestFGGDActivity extends BaseActivity<TestFGGDPresenter> implements
         fggdAdapter.notifyDataSetChanged();
     }
 
-    private void setupChart(LineChart chart, LineData data) {
+    private void setupChart(LineChart chart, LineData data, double a0, double b0, double c0, double d0) {
 
         ((LineDataSet) data.getDataSetByIndex(0)).setCircleHoleColor(Color.rgb(0, 200, 245));
 
         // no description text
-        chart.getDescription().setEnabled(false);
-
+        chart.getDescription().setEnabled(true);
+        Description desc = new Description();
+        desc.setTextColor(getResources().getColor(R.color.red));
+        desc.setTextSize(16);
+        desc.setText("y="+a0+"+"+b0+"*X+"+c0+"*X^2+"+d0+"*X^3");
+        chart.setDescription(desc);
         // chart.setDrawHorizontalGrid(false);
         //
         // enable / disable grid background
-        chart.setDrawGridBackground(false);
+        /*chart.setDrawGridBackground(false);
 //        chart.getRenderer().getGridPaint().setGridColor(Color.WHITE & 0x70FFFFFF);
 
         // enable touch gestures
@@ -209,24 +213,24 @@ public class TestFGGDActivity extends BaseActivity<TestFGGDPresenter> implements
         chart.setBackgroundColor(Color.argb(0, 0, 200, 245));
 
         // set custom chart offsets (automatic offset calculation is hereby disabled)
-        chart.setViewPortOffsets(10, 0, 10, 0);
+        chart.setViewPortOffsets(10, 0, 10, 0);*/
 
         // add data
         chart.setData(data);
 
         // get the legend (only possible after setting data)
-        Legend l = chart.getLegend();
+        /*Legend l = chart.getLegend();
         l.setEnabled(false);
 
-        chart.getAxisLeft().setEnabled(false);
+        chart.getAxisLeft().setEnabled(true);
         chart.getAxisLeft().setSpaceTop(40);
         chart.getAxisLeft().setSpaceBottom(40);
-        chart.getAxisRight().setEnabled(false);
+        chart.getAxisRight().setEnabled(true);
 
-        chart.getXAxis().setEnabled(false);
+        chart.getXAxis().setEnabled(true);
 
         // animate calls invalidate()...
-        chart.animateX(2500);
+        chart.animateX(2500);*/
         //chart.setMarker(new MyMaker());
 
     }

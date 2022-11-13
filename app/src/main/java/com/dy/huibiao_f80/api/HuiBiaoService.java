@@ -23,6 +23,7 @@ import com.dy.huibiao_f80.api.back.BeginTheoryExam_Back;
 import com.dy.huibiao_f80.api.back.CheckExaminer_Back;
 import com.dy.huibiao_f80.api.back.ExistExam_Back;
 import com.dy.huibiao_f80.api.back.GetExamPage_Back;
+import com.dy.huibiao_f80.api.back.GetTestForm_Back;
 import com.dy.huibiao_f80.api.back.IsTeacherSubmit_Back;
 import com.dy.huibiao_f80.api.back.OperationTestRecord_Back;
 import com.dy.huibiao_f80.api.back.TestFormSubmit_Back;
@@ -33,6 +34,7 @@ import io.reactivex.Observable;
 import okhttp3.RequestBody;
 import retrofit2.Retrofit;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
@@ -132,6 +134,16 @@ public interface HuiBiaoService {
     @POST("/examPath/quickCheck/examination/beginTestForm")
     Observable<BeginTestForm_Back> beginTestForm(@Query("examinationId") String examinationId);
 
+
+    /**
+     * 获取实践报告数据
+     * @param operationPaperId  实操题主键
+     * @return
+     */
+    @Headers({"Domain-Name: xxx"})
+    @GET("/examPath/quickCheck/examination/getTestForm")
+    Observable<GetTestForm_Back> getTestForm(@Query("operationPaperId") String operationPaperId);
+
     /**
      * 理论试卷-交卷
      * @param requestBody 考生理论考试答案记录实体
@@ -177,4 +189,5 @@ public interface HuiBiaoService {
     @Headers({"Domain-Name: xxx"})
     @POST("/examPath/quickCheck/examiner/operationTestRecord")
     Observable<OperationTestRecord_Back> operationTestRecord(@Body RequestBody requestBody);
+
 }

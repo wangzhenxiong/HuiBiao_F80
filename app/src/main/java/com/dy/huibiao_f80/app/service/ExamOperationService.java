@@ -9,7 +9,7 @@ import com.dy.huibiao_f80.Constants;
 import com.dy.huibiao_f80.MyAppLocation;
 import com.dy.huibiao_f80.api.HuiBiaoService;
 import com.dy.huibiao_f80.api.back.BeginOperationExam_Back;
-import com.dy.huibiao_f80.api.back.BeginTestForm_Back;
+import com.dy.huibiao_f80.api.back.GetTestForm_Back;
 import com.dy.huibiao_f80.api.back.IsTeacherSubmit_Back;
 import com.dy.huibiao_f80.api.back.TestFormSubmit_Back;
 import com.dy.huibiao_f80.app.utils.DataUtils;
@@ -22,7 +22,10 @@ import com.jess.arms.utils.ArmsUtils;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -46,9 +49,11 @@ public class ExamOperationService extends BaseService {
     /**
      * 实验报告实体
      */
-    private BeginTestForm_Back beginTestForm_back;
-    private ReportBean reportBean;
-
+    private Map<String, GetTestForm_Back> getTestForm_backMap = new HashMap<>();
+    /**
+     * 填写过的实验报告
+     */
+    private Map<String, ReportBean> reportBeanMap = new HashMap<>();
     /**
      * 考试id
      */
@@ -75,20 +80,19 @@ public class ExamOperationService extends BaseService {
     /**
      * 开始考试
      *
-     * @param startExamOperation
      * @param examTime
      */
-    public void startExamOperation(boolean startExamOperation, int examTime) {
-        isStartExamOperation = startExamOperation;
+    public void startExamOperation(int examTime) {
+        isStartExamOperation = true;
         operationExamTime = examTime;
-        if (startExamOperation) {
+        if (isStartExamOperation) {
             countDownOperationExamTime(examTime);
             isTeacherSubmit();
-            getReportData();
+            //getReportData();
         }
     }
 
-    private void getReportData() {
+   /* private void getReportData() {
         RetrofitUrlManager.getInstance().putDomain("xxx", Constants.URL);
         ArmsUtils.obtainAppComponentFromContext(ExamOperationService.this)
                 .repositoryManager().obtainRetrofitService(HuiBiaoService.class)
@@ -106,7 +110,7 @@ public class ExamOperationService extends BaseService {
                 }
             }
         });
-    }
+    }*/
 
     /**
      * 5秒一次轮询考评员是否提交分数
@@ -125,12 +129,13 @@ public class ExamOperationService extends BaseService {
                             .unsubscribeOn(Schedulers.io()).subscribe(new ErrorHandleSubscriber<IsTeacherSubmit_Back>(ArmsUtils.obtainAppComponentFromContext(ExamOperationService.this).rxErrorHandler()) {
                         @Override
                         public void onNext(@NonNull IsTeacherSubmit_Back isTeacherSubmit_back) {
+                            LogUtils.d(isTeacherSubmit_back);
                             if (null != isTeacherSubmit_back) {
                                 isTeacherSubmit = isTeacherSubmit_back.getSuccess();
                                 if (isTeacherSubmit) {
                                     // TODO: 11/3/22 考评员分数已提交，结束考试
-                                    ArmsUtils.snackbarText("考试已结束");
-                                    ArmsUtils.startActivity(ExamStateActivity.class);
+                                    ArmsUtils.snackbarText("考评员分数已提交,考试已结束");
+                                    //ArmsUtils.startActivity(new Intent());
                                 }
                             }
                         }
@@ -151,8 +156,29 @@ public class ExamOperationService extends BaseService {
     public void finishOperationExam() {
         isStartExamOperation = false;
         beginOperationExam_back = null;
-        beginTestForm_back = null;
-        reportBean = null;
+        getTestForm_backMap.clear();
+        reportBeanMap.clear();
+    }
+
+    public void cleanMaps() {
+        getTestForm_backMap.clear();
+        reportBeanMap.clear();
+    }
+
+    public void addGetTestForm_BackMap(String operationPaperId, GetTestForm_Back back) {
+        getTestForm_backMap.put(operationPaperId, back);
+    }
+
+    public ReportBean getReportBeanByID(String operationPaperId) {
+        return reportBeanMap.get(operationPaperId);
+    }
+
+    public void addReportBeanMap(String operationPaperId, ReportBean reportBean) {
+        reportBeanMap.put(operationPaperId, reportBean);
+    }
+
+    public GetTestForm_Back getGetTestFormByID(String operationPaperId) {
+        return getTestForm_backMap.get(operationPaperId);
     }
 
     public class MyBinder extends Binder {
@@ -199,45 +225,36 @@ public class ExamOperationService extends BaseService {
     }
 
     private void forceUploadReport() {
-        RetrofitUrlManager.getInstance().putDomain("xxx", Constants.URL);
-        ArmsUtils.obtainAppComponentFromContext(ExamOperationService.this)
-                .repositoryManager().obtainRetrofitService(HuiBiaoService.class)
-                .testFormSubmit(getTestFormSubmit())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .unsubscribeOn(Schedulers.io())
-                .subscribe(new ErrorHandleSubscriber<TestFormSubmit_Back>(ArmsUtils.obtainAppComponentFromContext(ExamOperationService.this).rxErrorHandler()) {
-            @Override
-            public void onNext(@NonNull TestFormSubmit_Back back) {
-                if (null != back) {
-                    isTeacherSubmit = back.isSuccess();
-                    if (isTeacherSubmit) {
-                        ArmsUtils.snackbarText("考试已结束");
-                        ArmsUtils.startActivity(ExamStateActivity.class);
-                    }else {
-                        forceUploadReport();
-                    }
-                }
+
+        Set<String> strings = getTestForm_backMap.keySet();
+        for (int i = 0; i < strings.size(); i++) {
+            if (strings.iterator().hasNext()) {
+                String next = strings.iterator().next();
+                uploadReport(next);
             }
-        });
+        }
+
+
     }
 
-    private RequestBody getTestFormSubmit() {
-        ReportBean reportBean = MyAppLocation.myAppLocation.mExamOperationService.getReportBean();
-        if (null==reportBean) {
-            BeginTestForm_Back beginTestForm_back = MyAppLocation.myAppLocation.mExamOperationService.getBeginTestForm_back();
-            ReportBean bean=new ReportBean();
+    private void uploadReport(String next) {
+        RequestBody requestBody;
+        ReportBean reportBean = MyAppLocation.myAppLocation.mExamOperationService.getReportBeanByID(next);
+        if (null == reportBean) {
+            GetTestForm_Back beginTestForm_back = MyAppLocation.myAppLocation.mExamOperationService.getGetTestFormByID(next);
+            ReportBean bean = new ReportBean();
             bean.setExaminerId(MyAppLocation.myAppLocation.mExamOperationService.getExaminerId());
             bean.setExaminationId(MyAppLocation.myAppLocation.mExamOperationService.getExaminationId());
+            bean.setOperationPaperId(next);
             bean.setCreateTime(DataUtils.getNowtimeyyymmddhhmmss());
             ArrayList<ReportBean.TestFormDetail> testFormDetailList = new ArrayList<>();
-            List<BeginTestForm_Back.EntityBean.TestFormListBean> testFormList = beginTestForm_back.getEntity().getTestFormList();
+            List<GetTestForm_Back.EntityBean.TestFormListBean> testFormList = beginTestForm_back.getEntity().getTestFormList();
             for (int i = 0; i < testFormList.size(); i++) {
-                BeginTestForm_Back.EntityBean.TestFormListBean testFormListBean = testFormList.get(i);
-                List<BeginTestForm_Back.EntityBean.TestFormListBean.TestFormDetailListBean> testFormDetailList1 = testFormListBean.getTestFormDetailList();
+                GetTestForm_Back.EntityBean.TestFormListBean testFormListBean = testFormList.get(i);
+                List<GetTestForm_Back.EntityBean.TestFormListBean.TestFormDetailListBean> testFormDetailList1 = testFormListBean.getTestFormDetailList();
                 for (int i1 = 0; i1 < testFormDetailList1.size(); i1++) {
-                    BeginTestForm_Back.EntityBean.TestFormListBean.TestFormDetailListBean testFormDetailListBean = testFormDetailList1.get(i1);
-                    ReportBean.TestFormDetail detail=new ReportBean.TestFormDetail();
+                    GetTestForm_Back.EntityBean.TestFormListBean.TestFormDetailListBean testFormDetailListBean = testFormDetailList1.get(i1);
+                    ReportBean.TestFormDetail detail = new ReportBean.TestFormDetail();
                     detail.setTestFormDetailId(testFormDetailListBean.getId());
                     detail.setTestFormId(testFormDetailListBean.getTestFormId());
                     detail.setFieldName(testFormDetailListBean.getFieldName());
@@ -248,12 +265,39 @@ public class ExamOperationService extends BaseService {
             bean.setTestFormDetailList(testFormDetailList);
             String s = new Gson().toJson(bean);
             LogUtils.d(s);
-            return RequestBody.create(MediaType.parse("application/json"), s);
-        }else {
+            requestBody = RequestBody.create(MediaType.parse("application/json"), s);
+        } else {
             String content = new Gson().toJson(reportBean);
             LogUtils.d(content);
-            return RequestBody.create(MediaType.parse("application/json"), content);
+            requestBody = RequestBody.create(MediaType.parse("application/json"), content);
         }
+
+        RetrofitUrlManager.getInstance().putDomain("xxx", Constants.URL);
+        ArmsUtils.obtainAppComponentFromContext(ExamOperationService.this)
+                .repositoryManager().obtainRetrofitService(HuiBiaoService.class)
+                .testFormSubmit(requestBody)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(new ErrorHandleSubscriber<TestFormSubmit_Back>(ArmsUtils.obtainAppComponentFromContext(ExamOperationService.this).rxErrorHandler()) {
+                    @Override
+                    public void onNext(@NonNull TestFormSubmit_Back back) {
+                        if (null != back) {
+                            isTeacherSubmit = back.isSuccess();
+                            if (isTeacherSubmit) {
+                                getTestForm_backMap.remove(next);
+                                if (getTestForm_backMap.keySet().size() == 0) {
+                                    finishOperationExam();
+                                    ArmsUtils.snackbarText("考试已结束");
+                                    ArmsUtils.startActivity(ExamStateActivity.class);
+                                }
+
+                            } else {
+                                uploadReport(next);
+                            }
+                        }
+                    }
+                });
     }
 
 
@@ -265,13 +309,6 @@ public class ExamOperationService extends BaseService {
         this.beginOperationExam_back = beginOperationExam_back;
     }
 
-    public BeginTestForm_Back getBeginTestForm_back() {
-        return beginTestForm_back;
-    }
-
-    public void setBeginTestForm_back(BeginTestForm_Back beginTestForm_back) {
-        this.beginTestForm_back = beginTestForm_back;
-    }
 
     public String getExaminationId() {
         return examinationId == null ? "" : examinationId;
@@ -296,6 +333,16 @@ public class ExamOperationService extends BaseService {
     public void setNowOperationExam(BeginOperationExam_Back.EntityBean.OperationPaperListBean nowOperationExam) {
         this.nowOperationExam = nowOperationExam;
     }
+
+    public Map<String, GetTestForm_Back> getGetTestForm_backMap() {
+        return getTestForm_backMap;
+    }
+
+
+    public Map<String, ReportBean> getReportBeanMap() {
+        return reportBeanMap;
+    }
+
 
     public class ExamOperationServiceEventBean {
         private int state;
@@ -329,11 +376,5 @@ public class ExamOperationService extends BaseService {
         }
     }
 
-    public ReportBean getReportBean() {
-        return reportBean;
-    }
 
-    public void setReportBean(ReportBean reportBean) {
-        this.reportBean = reportBean;
-    }
 }

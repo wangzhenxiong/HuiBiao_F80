@@ -3,6 +3,7 @@ package com.dy.huibiao_f80.mvp.contract;
 import android.app.Activity;
 
 import com.dy.huibiao_f80.api.back.BeginOperationExam_Back;
+import com.dy.huibiao_f80.api.back.GetTestForm_Back;
 import com.dy.huibiao_f80.api.back.TestFormSubmit_Back;
 import com.jess.arms.mvp.IModel;
 import com.jess.arms.mvp.IView;
@@ -25,6 +26,10 @@ public interface ExamOperationContract {
 
         Observable<BeginOperationExam_Back> beginOperationExam(String URL, String examinationId, String examinerId);
 
-        Observable<TestFormSubmit_Back> submitOperation();
+        //Observable<TestFormSubmit_Back> submitOperation();
+
+        Observable<GetTestForm_Back> getReportMessage(String id);
+
+        Observable<TestFormSubmit_Back> submitOperation(String string);
     }
 }

@@ -67,6 +67,10 @@ public class RecordDetailActivity extends BaseActivity<RecordDetailPresenter> im
     Button mBtnStarttest;
     @BindView(R.id.methodlimit)
     TextView mMethodlimit;
+    @BindView(R.id.testsite)
+    TextView mTestsite;
+    @BindView(R.id.latitudeandlongitude)
+    TextView mLatitudeandlongitude;
 
     private TestRecord testRecord;
 
@@ -101,7 +105,7 @@ public class RecordDetailActivity extends BaseActivity<RecordDetailPresenter> im
         }
         Long samplingID = testRecord.getSamplingID();
         Sampling load = DBHelper.getSamplingDao().load(samplingID);
-        if (null!=load){
+        if (null != load) {
             mSamplingname.setText(load.getSamplingName());
             mSamplingnumber.setText(load.getSamplingNumber());
             mBeunits.setText(load.getUnitDetected());
@@ -115,6 +119,8 @@ public class RecordDetailActivity extends BaseActivity<RecordDetailPresenter> im
         mJudge.setText(testRecord.getDecisionoutcome());
         mStandnum.setText(testRecord.getStand_num());
         mMethodlimit.setText(testRecord.getMethodsDetectionLimit());
+        mTestsite.setText(testRecord.getTestsite());
+        mLatitudeandlongitude.setText(testRecord.getLatitude()+","+testRecord.getLongitude());
 
     }
 
@@ -151,32 +157,36 @@ public class RecordDetailActivity extends BaseActivity<RecordDetailPresenter> im
         // TODO: add setContentView(...) invocation
         ButterKnife.bind(this);
     }
+
     Sampling sampling;
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-       if (resultCode== Activity.RESULT_OK){
-           long id = data.getLongExtra("id", 0L);
-           sampling = DBHelper.getSamplingDao().load(id);
-           if (null==sampling){
-               return;
-           }
-           mSamplingname.setText(sampling.getSamplingName());
-           mSamplingnumber.setText(sampling.getSamplingNumber());
-           mBeunits.setText(sampling.getUnitDetected());
-           mSamplingtime.setText(sampling.getCreationTimeyymmddhhssmm());
-       }
+        if (resultCode == Activity.RESULT_OK) {
+            long id = data.getLongExtra("id", 0L);
+            sampling = DBHelper.getSamplingDao().load(id);
+            if (null == sampling) {
+                return;
+            }
+            mSamplingname.setText(sampling.getSamplingName());
+            mSamplingnumber.setText(sampling.getSamplingNumber());
+            mBeunits.setText(sampling.getUnitDetected());
+            mSamplingtime.setText(sampling.getCreationTimeyymmddhhssmm());
+        }
     }
-    public static int  REQUESTCODE=100;
+
+    public static int REQUESTCODE = 100;
+
     @OnClick({R.id.btn_chosesampling, R.id.btn_save})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_chosesampling:
                 Intent intent = new Intent(this, SamplingActivity.class);
-                intent.putExtra("requestcode",REQUESTCODE);
-                startActivityForResult(intent,REQUESTCODE);
+                intent.putExtra("requestcode", REQUESTCODE);
+                startActivityForResult(intent, REQUESTCODE);
                 break;
             case R.id.btn_save:
-                if (null!=sampling){
+                if (null != sampling) {
                     testRecord.setSamplingID(sampling.getId());
                     testRecord.setProsecutedunits(sampling.getUnitDetected());
                     testRecord.setSamplename(sampling.getSamplingName());

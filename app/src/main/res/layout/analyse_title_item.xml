@@ -4,16 +4,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/exam_titlelayout"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
+    android:layout_height="wrap_content"
     android:layout_marginTop="10dp"
-    android:gravity="center"
+    android:gravity="center|left"
     android:orientation="vertical">
-
+    <TextView
+        android:id="@+id/title_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:text="题目一"
+        android:padding="20dp"/>
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20dp"
+        android:textSize="18dp"
         android:text="题目一"
         android:padding="20dp"/>
 </LinearLayout>

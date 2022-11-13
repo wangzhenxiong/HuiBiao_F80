@@ -16,6 +16,7 @@
         android:background="@color/colorAccent"
         app:contentInsetStart="0dp">
         <RelativeLayout
+            android:visibility="gone"
             android:id="@+id/toolbar_back"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -30,6 +31,22 @@
                 android:layout_marginRight="10dp"
                 android:src="@mipmap/ic_arrow_back_white_24dp"/>
         </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:text="考培云"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:textSize="26sp" />
+
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/toolbar_title"
@@ -39,16 +56,6 @@
             android:layout_marginLeft="10dp"
             android:textColor="@color/white"
             android:textSize="20sp" />
-        <Button
-            android:id="@+id/seting"
-            android:clickable="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="设置"
-            android:layout_gravity="right"
-            android:background="@drawable/btn_background_write"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:textSize="20sp"/>
+
     </android.support.v7.widget.Toolbar>
 </android.support.design.widget.AppBarLayout>

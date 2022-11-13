@@ -104,6 +104,10 @@ public class TestResultJTJActivity extends BaseActivity<TestResultJTJPresenter> 
     AutoCompleteTextView mSamplename1;
     @BindView(R.id.samplename2)
     AutoCompleteTextView mSamplename2;
+    @BindView(R.id.btn_backhome)
+    Button mBtnBackhome;
+    @BindView(R.id.btn_writereport)
+    Button mBtnWritereport;
     private Typeface mTf;
     private String pjName;
 
@@ -151,7 +155,10 @@ public class TestResultJTJActivity extends BaseActivity<TestResultJTJPresenter> 
             GalleryBean galleryBean = mJTJGalleryBeanList.get(i);
             galleryBean.setCheckd(false);
         }
-
+        if (MyAppLocation.myAppLocation.mExamOperationService.isStartExamOperation()) {
+            mBtnWritereport.setVisibility(View.VISIBLE);
+            mBtnBackhome.setVisibility(View.VISIBLE);
+        }
 
         //showLoading();
 
@@ -204,9 +211,21 @@ public class TestResultJTJActivity extends BaseActivity<TestResultJTJPresenter> 
         return this;
     }
 
-    @OnClick({R.id.gallery2, R.id.btn_checkrecord, R.id.btn_retest})
+    @OnClick({R.id.gallery2, R.id.btn_checkrecord, R.id.btn_retest, R.id.btn_backhome, R.id.btn_writereport})
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.btn_backhome:
+                ArmsUtils.startActivity(new Intent(this, ExamOperationActivity.class));
+
+                break;
+            case R.id.btn_writereport:
+
+                Intent intent1 = new Intent(this, PrintReportActivity.class);
+                intent1.putExtra("examinationId", MyAppLocation.myAppLocation.mExamOperationService.getExaminationId());
+                intent1.putExtra("examinerId", MyAppLocation.myAppLocation.mExamOperationService.getExaminerId());
+                intent1.putExtra("operationPaperId", MyAppLocation.myAppLocation.mExamOperationService.getNowOperationExam().getId());
+                startActivity(intent1);
+                break;
             case R.id.gallery2:
                 break;
             case R.id.btn_checkrecord:
@@ -214,20 +233,25 @@ public class TestResultJTJActivity extends BaseActivity<TestResultJTJPresenter> 
                 ArmsUtils.startActivity(getActivity(), RecordActivity.class);
                 break;
             case R.id.btn_retest:
-                for (int i = 0; i < checklist.size(); i++) {
-                    checklist.get(i).setCheckd(true);
-                    checklist.get(i).cardGet_Argmen();
-                    checklist.get(i).cardInNotScan();
-                    checklist.get(i).getJTJRWHelper().sendMessage(Constants.COLLAURUM_ENT_SCANNING_REQUEST_P, true);
-                    checklist.get(i).getJTJRWHelper().stratReadData_P(2000, true);
-                }
-                Intent intent = new Intent();
-                intent.setClass(getActivity(), TestSettingJTJActivity.class);
-                intent.putExtra("project", pjName);
-                ArmsUtils.startActivity(intent);
-                getActivity().finish();
+                retest();
+
                 break;
         }
+    }
+
+    private void retest() {
+        for (int i = 0; i < checklist.size(); i++) {
+            checklist.get(i).setCheckd(true);
+            checklist.get(i).cardGet_Argmen();
+            checklist.get(i).cardInNotScan();
+            checklist.get(i).getJTJRWHelper().sendMessage(Constants.COLLAURUM_ENT_SCANNING_REQUEST_P, true);
+            checklist.get(i).getJTJRWHelper().stratReadData_P(2000, true);
+        }
+        Intent intent = new Intent();
+        intent.setClass(getActivity(), TestSettingJTJActivity.class);
+        intent.putExtra("project", pjName);
+        ArmsUtils.startActivity(intent);
+        getActivity().finish();
     }
 
     @Override

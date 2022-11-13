@@ -8,7 +8,9 @@ import com.apkfuns.logutils.LogUtils;
 import com.dy.huibiao_f80.Constants;
 import com.dy.huibiao_f80.MyAppLocation;
 import com.dy.huibiao_f80.api.back.BeginOperationExam_Back;
+import com.dy.huibiao_f80.api.back.GetTestForm_Back;
 import com.dy.huibiao_f80.api.back.TestFormSubmit_Back;
+import com.dy.huibiao_f80.bean.ReportBean;
 import com.dy.huibiao_f80.mvp.contract.ExamOperationContract;
 import com.jess.arms.di.scope.ActivityScope;
 import com.jess.arms.http.imageloader.ImageLoader;
@@ -16,6 +18,10 @@ import com.jess.arms.integration.AppManager;
 import com.jess.arms.mvp.BasePresenter;
 import com.jess.arms.utils.ArmsUtils;
 import com.jess.arms.utils.RxLifecycleUtils;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -62,6 +68,7 @@ public class ExamOperationPresenter extends BasePresenter<ExamOperationContract.
                         LogUtils.d(back);
                         if (back.getSuccess()){
                             mRootView.showExamTitle(back);
+                            getAllReportMessage(back);
                         }else {
                             ArmsUtils.snackbarText(back.getMessage());
                         }
@@ -69,22 +76,70 @@ public class ExamOperationPresenter extends BasePresenter<ExamOperationContract.
                 });
     }
 
+    private void getAllReportMessage(BeginOperationExam_Back back) {
+        List<BeginOperationExam_Back.EntityBean.OperationPaperListBean> operationPaperList = back.getEntity().getOperationPaperList();
+        for (int i = 0; i < operationPaperList.size(); i++) {
+            BeginOperationExam_Back.EntityBean.OperationPaperListBean operationPaperListBean = operationPaperList.get(i);
+            String id = operationPaperListBean.getId();
+            getReportMessage(id);
+        }
+    }
+
+    private void getReportMessage(String id) {
+        mModel.getReportMessage(id)
+                .doOnSubscribe(disposable -> {
+                    mRootView.showLoading();
+                }).subscribeOn(AndroidSchedulers.mainThread())
+                .doFinally(() -> {
+                    mRootView.hideLoading();
+                }).compose(RxLifecycleUtils.bindToLifecycle(mRootView))
+                .subscribe(new ErrorHandleSubscriber<GetTestForm_Back>(mErrorHandler) {
+                    @Override
+                    public void onNext(GetTestForm_Back back) {
+                        LogUtils.d(back);
+                        if (back.getSuccess()){
+                            MyAppLocation.myAppLocation.mExamOperationService.addGetTestForm_BackMap(id,back);
+                        }else {
+                            getReportMessage(id);
+                        }
+
+
+
+                    }
+                });
+    }
 
 
     public void submitOperation() {
-        if (null==MyAppLocation.myAppLocation.mExamOperationService.getBeginTestForm_back()) {
-            ArmsUtils.snackbarText("请先填写实验报告");
-            return;
-        }
-        if (null==MyAppLocation.myAppLocation.mExamOperationService.getReportBean()){
-          makeDialog();
-        }else {
+        Map<String, GetTestForm_Back> getTestForm_backMap = MyAppLocation.myAppLocation.mExamOperationService.getGetTestForm_backMap();
+        Map<String, ReportBean> reportBeanMap = MyAppLocation.myAppLocation.mExamOperationService.getReportBeanMap();
+        Set<String>  getTestForm_backMapkeys= getTestForm_backMap.keySet();
+        Set<String>  reportBeanMapkeys= reportBeanMap.keySet();
+        LogUtils.d(getTestForm_backMap);
+        LogUtils.d(reportBeanMap);
+        int i = getTestForm_backMapkeys.size() - reportBeanMapkeys.size();
+        if (i >0) {
+            makeDialog(i);
+        }else{
             submit();
         }
 
+
     }
     private void submit(){
-        mModel.submitOperation()
+        Map<String, GetTestForm_Back> getTestForm_backMap = MyAppLocation.myAppLocation.mExamOperationService.getGetTestForm_backMap();
+        Set<String> strings = getTestForm_backMap.keySet();
+        for (String string : strings) {
+            GetTestForm_Back getTestForm_back = getTestForm_backMap.get(string);
+            submitone(string);
+        }
+
+    }
+
+
+
+    private void submitone(String string) {
+        mModel.submitOperation(string)
                 .doOnSubscribe(disposable -> {
                     mRootView.showLoading();
                 }).subscribeOn(AndroidSchedulers.mainThread())
@@ -96,7 +151,17 @@ public class ExamOperationPresenter extends BasePresenter<ExamOperationContract.
                     public void onNext(TestFormSubmit_Back back) {
                         LogUtils.d(back);
                         if (back.isSuccess()){
-                            mRootView.submitSuccess();
+
+                            Map<String, GetTestForm_Back> getTestForm_backMap = MyAppLocation.myAppLocation.mExamOperationService.getGetTestForm_backMap();
+                            getTestForm_backMap.remove(string);
+                            if (getTestForm_backMap.keySet().size()==0){
+                                mRootView.submitSuccess();
+                                ArmsUtils.snackbarText("考试已结束");
+                            }
+
+
+                        }else {
+                            submitone(string);
                         }
 
                         ArmsUtils.snackbarText(back.getMessage());
@@ -105,10 +170,10 @@ public class ExamOperationPresenter extends BasePresenter<ExamOperationContract.
                 });
     }
 
-    private void makeDialog() {
+    private void makeDialog(int i) {
         AlertDialog.Builder builder=new AlertDialog.Builder(mRootView.getActivity());
         builder.setTitle("提示");
-        builder.setMessage("实验报告还未填写，确定要提交吗？");
+        builder.setMessage("还有"+i+"道题实验报告还未填写完成，确定要提交吗？");
         builder.setNeutralButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

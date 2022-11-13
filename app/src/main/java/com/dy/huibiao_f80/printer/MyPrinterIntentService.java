@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Parcelable;
 
+import com.apkfuns.logutils.LogUtils;
 import com.dy.huibiao_f80.greendao.TestRecord;
 
 import java.util.ArrayList;
@@ -119,6 +120,7 @@ public class MyPrinterIntentService extends IntentService {
             } else if (ACTION_MULTIPLE.equals(action)) {
                 final List<TestRecord> param1 = intent.getParcelableArrayListExtra(EXTRA_PARAM1);
                 //final String param2 = intent.getStringExtra(EXTRA_PARAM2);
+                LogUtils.d(param1);
                 handleActionMultiple(param1);
             } else if (ACTION_SINGLE.equals(action)) {
                 final List<TestRecord> param1 = intent.getParcelableArrayListExtra(EXTRA_PARAM1);

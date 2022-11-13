@@ -19,6 +19,12 @@
                 android:gravity="center"
                 android:layout_marginLeft="10dp"/>
             <TextView
+                android:id="@+id/samplenumber"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="样品编号"/>
+            <TextView
                 android:id="@+id/samplename"
                 android:layout_width="0dp"
                 android:layout_weight="1"

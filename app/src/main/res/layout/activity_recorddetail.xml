@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/beijing_img"
+    android:focusable="true"
     android:orientation="vertical">
 
     <include layout="@layout/include_title" />
@@ -62,42 +63,26 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:focusable="true"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="2"
                     android:orientation="vertical">
 
-                    <TextView
+                    <com.dy.huibiao_f80.mvp.ui.widget.MyTextView
                         android:id="@+id/samplename"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:text="白菜"
-                        android:textColor="#E47C99"
-                        android:textSize="20dp"
-                        android:textStyle="bold" />
+                        style="@style/MarqueeTextView"
+                        android:text=""/>
 
-                    <TextView
+                    <com.dy.huibiao_f80.mvp.ui.widget.MyTextView
                         android:id="@+id/testproject"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:text="吊白块"
-                        android:textColor="#E47C99"
-                        android:textSize="18dp"
-                        android:textStyle="bold" />
+                        style="@style/MarqueeTextView" />
 
-                    <TextView
+                    <com.dy.huibiao_f80.mvp.ui.widget.MyTextView
                         android:id="@+id/testunit"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginBottom="20dp"
-                        android:text="%"
-                        android:textColor="#E47C99"
-                        android:textSize="18dp"
-                        android:textStyle="bold" />
+                        style="@style/MarqueeTextView"
+                        android:text=""/>
 
                 </LinearLayout>
 
@@ -136,6 +121,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:focusable="true"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -143,36 +129,17 @@
                     android:layout_weight="2"
                     android:orientation="vertical">
 
-                    <TextView
+                    <com.dy.huibiao_f80.mvp.ui.widget.MyTextView
                         android:id="@+id/testmoudle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:text="胶体金"
-                        android:textColor="#E47C99"
-                        android:textSize="18dp"
-                        android:textStyle="bold" />
+                        style="@style/MarqueeTextView" />
 
-                    <TextView
+                    <com.dy.huibiao_f80.mvp.ui.widget.MyTextView
                         android:id="@+id/testresult"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:text="27%"
-                        android:textColor="#E47C99"
-                        android:textSize="18dp"
-                        android:textStyle="bold" />
+                        style="@style/MarqueeTextView"/>
 
-                    <TextView
+                    <com.dy.huibiao_f80.mvp.ui.widget.MyTextView
                         android:id="@+id/judge"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginBottom="20dp"
-                        android:text="合格"
-                        android:textColor="#E47C99"
-                        android:textSize="18dp"
-                        android:textStyle="bold" />
+                        style="@style/MarqueeTextView"/>
 
                 </LinearLayout>
             </LinearLayout>
@@ -187,9 +154,9 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
                     android:layout_weight="1"
                     android:gravity="right"
-                    android:layout_marginLeft="20dp"
                     android:orientation="vertical">
 
                     <TextView
@@ -201,51 +168,82 @@
                         android:textStyle="bold" />
 
 
-
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
                         android:layout_marginBottom="20dp"
-                        android:text="方法检出限"
+                        android:text="检测地点"
                         android:textSize="18dp"
                         android:textStyle="bold" />
 
                 </LinearLayout>
 
                 <LinearLayout
+                    android:focusable="true"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_weight="5"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
+
+                    <com.dy.huibiao_f80.mvp.ui.widget.MyTextView
+                        android:id="@+id/standnum"
+                        style="@style/MarqueeTextView"/>
+
+
+                    <com.dy.huibiao_f80.mvp.ui.widget.MyTextView
+                        android:id="@+id/testsite"
+                        style="@style/MarqueeTextView" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="right"
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/standnum"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
-                        android:text="gb2123"
-                        android:textColor="#E47C99"
+                        android:text="方法检出限"
                         android:textSize="18dp"
                         android:textStyle="bold" />
 
-
-
                     <TextView
-                        android:id="@+id/methodlimit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
                         android:layout_marginBottom="20dp"
-                        android:text="13"
-                        android:textColor="#E47C99"
+                        android:text="经纬度"
                         android:textSize="18dp"
                         android:textStyle="bold" />
 
+
                 </LinearLayout>
 
+                <LinearLayout
+                    android:focusable="true"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
+
+                    <com.dy.huibiao_f80.mvp.ui.widget.MyTextView
+                        android:id="@+id/methodlimit"
+                        style="@style/MarqueeTextView" />
+
+
+                    <com.dy.huibiao_f80.mvp.ui.widget.MyTextView
+                        android:id="@+id/latitudeandlongitude"
+                        style="@style/MarqueeTextView"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -274,7 +272,6 @@
                         android:textStyle="bold" />
 
 
-
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -287,34 +284,21 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:focusable="true"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="2"
                     android:orientation="vertical">
 
-                    <TextView
+                    <com.dy.huibiao_f80.mvp.ui.widget.MyTextView
                         android:id="@+id/samplingnumber"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:text=""
-                        android:textColor="#E47C99"
-                        android:textSize="20dp"
-                        android:textStyle="bold" />
+                        style="@style/MarqueeTextView" />
 
 
-
-                    <TextView
+                    <com.dy.huibiao_f80.mvp.ui.widget.MyTextView
                         android:id="@+id/samplingname"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginBottom="20dp"
-                        android:text=""
-                        android:textColor="#E47C99"
-                        android:textSize="18dp"
-                        android:textStyle="bold" />
+                        style="@style/MarqueeTextView" />
 
                 </LinearLayout>
 
@@ -346,6 +330,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:focusable="true"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -353,28 +338,14 @@
                     android:layout_weight="2"
                     android:orientation="vertical">
 
-                    <TextView
+                    <com.dy.huibiao_f80.mvp.ui.widget.MyTextView
                         android:id="@+id/beunits"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:text=""
-                        android:textColor="#E47C99"
-                        android:textSize="18dp"
-                        android:textStyle="bold" />
+                        style="@style/MarqueeTextView"/>
 
 
-
-                    <TextView
+                    <com.dy.huibiao_f80.mvp.ui.widget.MyTextView
                         android:id="@+id/samplingtime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginBottom="20dp"
-                        android:text=""
-                        android:textColor="#E47C99"
-                        android:textSize="18dp"
-                        android:textStyle="bold" />
+                        style="@style/MarqueeTextView"/>
 
                 </LinearLayout>
 
@@ -382,11 +353,12 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
                 <Button
                     android:id="@+id/btn_chosesampling"
                     android:layout_width="200dp"
@@ -402,20 +374,21 @@
                     android:id="@+id/btn_save"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="40dp"
                     android:layout_marginRight="40dp"
                     android:background="@drawable/btn_background_blue"
                     android:paddingLeft="10dp"
-                    android:layout_marginLeft="40dp"
                     android:paddingRight="10dp"
                     android:text="保 存"
                     android:textColor="@color/white"
                     android:textSize="20dp" />
             </LinearLayout>
+
             <TextView
-                android:layout_marginTop="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="*选择关联采样单后，检测时间和结果将会回传至采样单"/>
+                android:layout_marginTop="20dp"
+                android:text="*选择关联采样单后，检测时间和结果将会回传至采样单" />
 
         </LinearLayout>
 

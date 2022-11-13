@@ -2,6 +2,8 @@ package com.dy.huibiao_f80.mvp.model;
 
 import android.app.Application;
 
+import com.dy.huibiao_f80.api.ProjectService;
+import com.dy.huibiao_f80.bean.UpdateFileMessage;
 import com.dy.huibiao_f80.greendao.DBHelper;
 import com.dy.huibiao_f80.greendao.ProjectFGGD;
 import com.dy.huibiao_f80.greendao.ProjectJTJ;
@@ -117,5 +119,14 @@ public class EdtorProjectModel extends BaseModel implements EdtorProjectContract
                 emitter.onComplete();
             }
         });
+    }
+
+    @Override
+    public Observable<UpdateFileMessage> upgradeFile(String appName) {
+        return mRepositoryManager
+                .obtainRetrofitService(ProjectService.class)
+                .upgradeFile(appName)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io());
     }
 }

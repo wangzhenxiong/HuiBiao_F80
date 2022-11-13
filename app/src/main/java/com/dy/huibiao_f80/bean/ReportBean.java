@@ -32,6 +32,7 @@ import java.util.List;
 public class ReportBean {
     private String examinationId;
     private String examinerId;
+    private String operationPaperId;
     private String createTime;
     private List<TestFormDetail> testFormDetailList;
 
@@ -51,6 +52,14 @@ public class ReportBean {
         this.examinerId = examinerId == null ? "" : examinerId;
     }
 
+    public String getOperationPaperId() {
+        return operationPaperId == null ? "" : operationPaperId;
+    }
+
+    public void setOperationPaperId(String operationPaperId) {
+        this.operationPaperId = operationPaperId == null ? "" : operationPaperId;
+    }
+
     public String getCreateTime() {
         return createTime == null ? "" : createTime;
     }
@@ -67,7 +76,7 @@ public class ReportBean {
         this.testFormDetailList = testFormDetailList;
     }
 
-    public static class TestFormDetail{
+    public static class TestFormDetail {
         private String testFormId;
         private String testFormDetailId;
         private String fieldName;

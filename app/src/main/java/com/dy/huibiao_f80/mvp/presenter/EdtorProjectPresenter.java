@@ -4,15 +4,22 @@ import android.app.Application;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.webkit.URLUtil;
 
 import com.apkfuns.logutils.LogUtils;
+import com.dy.huibiao_f80.BuildConfig;
+import com.dy.huibiao_f80.Constants;
+import com.dy.huibiao_f80.R;
+import com.dy.huibiao_f80.app.utils.FileIOUtils;
 import com.dy.huibiao_f80.app.utils.JxlUtils;
+import com.dy.huibiao_f80.bean.UpdateFileMessage;
 import com.dy.huibiao_f80.bean.base.BaseProjectMessage;
 import com.dy.huibiao_f80.greendao.ProjectFGGD;
 import com.dy.huibiao_f80.greendao.ProjectJTJ;
 import com.dy.huibiao_f80.mvp.contract.EdtorProjectContract;
 import com.dy.huibiao_f80.mvp.ui.widget.OutMoudle;
 import com.dy.huibiao_f80.mvp.ui.widget.lettersnavigation.search.PinyinComparator;
+import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.di.scope.ActivityScope;
 import com.jess.arms.http.imageloader.ImageLoader;
 import com.jess.arms.integration.AppManager;
@@ -20,18 +27,29 @@ import com.jess.arms.mvp.BasePresenter;
 import com.jess.arms.utils.ArmsUtils;
 import com.jess.arms.utils.RxLifecycleUtils;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import me.jessyan.retrofiturlmanager.RetrofitUrlManager;
 import me.jessyan.rxerrorhandler.core.RxErrorHandler;
 import me.jessyan.rxerrorhandler.handler.ErrorHandleSubscriber;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 @ActivityScope
 public class EdtorProjectPresenter extends BasePresenter<EdtorProjectContract.Model, EdtorProjectContract.View> {
@@ -162,6 +180,7 @@ public class EdtorProjectPresenter extends BasePresenter<EdtorProjectContract.Mo
                         for (int i = 0; i < strings.size(); i++) {
                             s = s + strings.get(i) + "\r\n";
                         }
+                        mRootView.RefreshList();
                         mRootView.hideSportDialog();
                         ArmsUtils.snackbarText(s);
                     }
@@ -187,6 +206,7 @@ public class EdtorProjectPresenter extends BasePresenter<EdtorProjectContract.Mo
                         for (int i = 0; i < strings.size(); i++) {
                             s = s + strings.get(i) + "\r\n";
                         }
+                        mRootView.RefreshList();
                         mRootView.hideSportDialog();
                         ArmsUtils.snackbarText(s);
                     }
@@ -321,4 +341,116 @@ public class EdtorProjectPresenter extends BasePresenter<EdtorProjectContract.Mo
     }
 
 
+    public void checkNewVersion(int checkmoudle) {
+        RetrofitUrlManager.getInstance().putDomain("project", BuildConfig.DEVICE_UPDATA_URL);
+        mModel.upgradeFile(BuildConfig.DEVICE_UPDATA_NAME)
+                .subscribeOn(Schedulers.io())
+                .doOnSubscribe(disposable -> {
+                    mRootView.showLoading();
+                }).subscribeOn(AndroidSchedulers.mainThread())
+                .doFinally(() -> {
+                    mRootView.hideLoading();
+                }).compose(RxLifecycleUtils.bindToLifecycle(mRootView))
+                .subscribe(new ErrorHandleSubscriber<UpdateFileMessage>(mErrorHandler) {
+                    @Override
+                    public void onNext(UpdateFileMessage message) {
+                        mRootView.hideLoading();
+                        LogUtils.d(message);
+                        String code = message.getResultCode();
+                        if (!"success1".equals(code)) {
+                            ArmsUtils.snackbarText(message.getResultDescripe());
+                            return;
+                        }
+                        UpdateFileMessage.ResultBean result = message.getResult();
+                        if (null == result) {
+                            ArmsUtils.snackbarText(mApplication.getString(R.string.withoutnewversionn));
+                            return;
+                        }
+                        String linkurl = "";
+                        String local = "";
+                        if (1==checkmoudle) {
+                            linkurl = result.getFgItemlink();
+                            local = Constants.FGITEMLINK;
+                        } else if (2==checkmoudle) {
+                            linkurl = result.getJtjlink();
+                            local = Constants.JTJLINK;
+                        }
+                        LogUtils.d(local);
+                        LogUtils.d(linkurl);
+
+
+
+                        if (linkurl.isEmpty()) {
+                            ArmsUtils.snackbarText(mApplication.getString(R.string.withoutnewversionn));
+                            return;
+                        }
+                        if (!URLUtil.isValidUrl(linkurl)) {
+                            ArmsUtils.snackbarText(mApplication.getString(R.string.fileaddressexception)+linkurl);
+                            return;
+                        }
+                        String filename = null;
+                        String[] split = linkurl.split("/");
+                        filename=split[split.length-1];
+                        mRootView.makeDialogNewVersion(filename,local, checkmoudle, linkurl, message);
+
+                        //ArmsUtils.snackbarText("请稍后重试");
+                    }
+                });
+    }
+
+    public void downLoadProject(String filename, int checkmoudle, String url) {
+        Observable.create(new ObservableOnSubscribe<File>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<File> emitter) throws Exception {
+                AppComponent component = ArmsUtils.obtainAppComponentFromContext(mApplication);
+                OkHttpClient client = component.okHttpClient();
+                Request.Builder builder = new Request.Builder().url(url);
+                try {
+                    Response execute = client.newCall(builder.build()).execute();
+                    ResponseBody body = execute.body();
+
+                    if (execute.isSuccessful()) {
+                        if (body.contentType().equals("application/vnd.ms-excel")) {
+                            ArmsUtils.snackbarText(mApplication.getString(R.string.filetypeerro));
+
+                            return;
+                        }
+
+                        InputStream stream = body.byteStream();
+                        File file = new File("/data/data/" + BuildConfig.APPLICATION_ID + "/" + filename);
+                        boolean b = FileIOUtils.writeFileFromIS(file, stream);
+                        if (b){
+                            emitter.onNext(file);
+                            emitter.onComplete();
+                        }
+                    }else {
+                        ArmsUtils.snackbarText(mApplication.getString(R.string.downloadfail));
+                        emitter.onComplete();
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    ArmsUtils.snackbarText("IO\r\n"+e.getMessage());
+                    emitter.onComplete();
+                }
+            }
+        }).subscribeOn(Schedulers.io())
+                .doOnSubscribe(disposable -> {
+                    mRootView.showLoading();
+                }).subscribeOn(AndroidSchedulers.mainThread())
+                .doFinally(() -> {
+                    mRootView.hideLoading();
+                }).compose(RxLifecycleUtils.bindToLifecycle(mRootView))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new ErrorHandleSubscriber<File>(mErrorHandler) {
+                    @Override
+                    public void onNext(@NonNull File file) {
+                        LogUtils.d(file);
+                        mRootView.inputProject(file,filename,checkmoudle);
+
+                    }
+                });
+
+
+    }
 }

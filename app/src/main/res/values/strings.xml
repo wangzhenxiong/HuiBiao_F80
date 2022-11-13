@@ -97,4 +97,13 @@
     <string name="toasmessage_download">已转至后台进行下载</string>
     <string name="newversionmessage">有新版本可以更新</string>
     <string name="cancle">取消</string>
+    <string name="app_localdata_address">/mnt/internal_sd/dayuan</string>
+    <string name="withoutnewversionn">暂无更新</string>
+    <string name="fileaddressexception">文件地址异常</string>
+    <string name="projectversionnmessage">检测项目版本信息</string>
+    <string name="serviceversion">服务器版本</string>
+    <string name="localversion">仪器本地版本</string>
+    <string name="whihoutnewversion">暂无版本</string>
+    <string name="filetypeerro">文件类型错误</string>
+    <string name="downloadfail">下载失败</string>
 </resources>

@@ -104,7 +104,7 @@ public class StartTestActivity extends BaseActivity<StartTestPresenter> implemen
     @Override
     protected void onResume() {
         super.onResume();
-        mPresenter.loadData(null);
+
         //mPresenter.loadFGGD(null);
         //mPresenter.loadjtj(null);
     }
@@ -116,6 +116,7 @@ public class StartTestActivity extends BaseActivity<StartTestPresenter> implemen
         jtjProjectFragment = JTJProjectFragment.newInstance();
         initsparr();
         checkFGGD();
+        mPresenter.loadData(null);
     }
 
 

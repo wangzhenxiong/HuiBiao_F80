@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -47,6 +48,7 @@ import static com.jess.arms.utils.Preconditions.checkNotNull;
 
 public class ExamAnalyseActivity extends BaseActivity<ExamAnalysePresenter> implements ExamAnalyseContract.View {
 
+
     @BindView(R.id.toolbar_back)
     RelativeLayout mToolbarBack;
     @BindView(R.id.toolbar_title)
@@ -59,15 +61,13 @@ public class ExamAnalyseActivity extends BaseActivity<ExamAnalysePresenter> impl
     Toolbar mToolbar;
     @BindView(R.id.toolbarly)
     AppBarLayout mToolbarly;
-    @BindView(R.id.examname)
-    TextView mExamname;
+
     @BindView(R.id.exam_title)
     LinearLayout mExamTitle;
-    @BindView(R.id.examtitle)
-    TextView mExamtitle;
     @BindView(R.id.ed_answer)
     EditText mEdAnswer;
-
+    @BindView(R.id.title_answer)
+    TextView mTitleAnswer;
     private String examinationId;
     private String examinerId;
     private int theoryExamTime;
@@ -141,18 +141,18 @@ public class ExamAnalyseActivity extends BaseActivity<ExamAnalysePresenter> impl
         for (int i = 0; i < analysePaperList.size(); i++) {
             BeginAnalyseExam_Back.EntityBean.AnalysePaperListBean analysePaperListBean = analysePaperList.get(i);
             if (analysePaperListBean.getStudentAnswer().isEmpty()) {
-               noanswer++;
+                noanswer++;
             }
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("提示");
-        builder.setMessage("一共"+analysePaperList.size()
-                +"道题，已经完成"+(analysePaperList.size()-noanswer)+",未完成"+noanswer+"道\r\n"+"确定要交卷吗？");
+        builder.setMessage("一共" + analysePaperList.size()
+                + "道题，已经完成" + (analysePaperList.size() - noanswer) + ",未完成" + noanswer + "道\r\n" + "确定要交卷吗？");
         builder.setNegativeButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                mPresenter.submit(examinationId,examinerId,beginAnalyseExamBack);
+                mPresenter.submit(examinationId, examinerId, beginAnalyseExamBack);
             }
         });
         builder.setNeutralButton("取消", new DialogInterface.OnClickListener() {
@@ -178,7 +178,6 @@ public class ExamAnalyseActivity extends BaseActivity<ExamAnalysePresenter> impl
         beginAnalyseExamBack = back;
         BeginAnalyseExam_Back.EntityBean entity = back.getEntity();
         BeginAnalyseExam_Back.EntityBean.AnalysePaperBean analysePaper = entity.getAnalysePaper();
-        mExamname.setText(Html.fromHtml(analysePaper.getTitle())+"(总分："+analysePaper.getTotalScore()+"分）");
         theoryExamTime = analysePaper.getAnalyseExamTime() * 60;
         LogUtils.d(theoryExamTime);
         mScheduledThreadPoolExecutor.scheduleAtFixedRate(new Runnable() {
@@ -208,21 +207,28 @@ public class ExamAnalyseActivity extends BaseActivity<ExamAnalysePresenter> impl
         for (int i = 0; i < analysePaperList.size(); i++) {
             BeginAnalyseExam_Back.EntityBean.AnalysePaperListBean analysePaperListBean = analysePaperList.get(i);
             View inflate = LayoutInflater.from(this).inflate(R.layout.analyse_title_item, null);
+            TextView title_number = (TextView) inflate.findViewById(R.id.title_number);
             TextView viewById = (TextView) inflate.findViewById(R.id.title);
             viewById.setId(i);
             viewById.setOnClickListener(chardClick());
-            viewById.setText((i + 1) + "、第" + (i + 1) + "题"+"(共"+analysePaperListBean.getScore()+"分）");
+            String content = analysePaperListBean.getContent();
+            content = content.replaceAll("\\\\", "");
+            LogUtils.d(content);
+            CharSequence spanned = Html.fromHtml(content, new URLImageGetter(viewById), null);
+            viewById.setText(spanned);
+
+            title_number.setText("第" + (i + 1) + "题" + "(共" + analysePaperListBean.getScore() + "分)");
             mExamTitle.addView(inflate);
 
         }
-        initExamCont(analysePaperList.get(0));
+        initExamCont(analysePaperList.get(0), 0);
     }
 
     @Override
     public void submitSuccess() {
-        runflag=false;
+        runflag = false;
         finish();
-        Intent content = new Intent(this,ExamStateActivity.class);
+        Intent content = new Intent(this, ExamStateActivity.class);
         content.putExtra("examinationId", examinationId);
         content.putExtra("examinerId", examinerId);
         ArmsUtils.startActivity(content);
@@ -233,22 +239,18 @@ public class ExamAnalyseActivity extends BaseActivity<ExamAnalysePresenter> impl
             @Override
             public void onClick(View v) {
                 BeginAnalyseExam_Back.EntityBean.AnalysePaperListBean analysePaperListBean = analysePaperList.get(v.getId());
-                initExamCont(analysePaperListBean);
+                initExamCont(analysePaperListBean,v.getId());
             }
         };
     }
 
     BeginAnalyseExam_Back.EntityBean.AnalysePaperListBean nowAnalysePaper;
 
-    private void initExamCont(BeginAnalyseExam_Back.EntityBean.AnalysePaperListBean analysePaperListBean) {
+    private void initExamCont(BeginAnalyseExam_Back.EntityBean.AnalysePaperListBean analysePaperListBean, int id) {
+        mTitleAnswer.setText("第"+(id+1)+"题作答处");
         nowAnalysePaper = analysePaperListBean;
         mEdAnswer.removeTextChangedListener(answerWatcher);
         mEdAnswer.setText("");
-        String content = analysePaperListBean.getContent();
-        content = content.replaceAll("\\\\", "");
-        LogUtils.d(content);
-        CharSequence spanned = Html.fromHtml(content, new URLImageGetter(mExamtitle), null);
-        mExamtitle.setText(spanned);
         String studentAnswer = analysePaperListBean.getStudentAnswer();
         mEdAnswer.setText(studentAnswer);
         mEdAnswer.addTextChangedListener(answerWatcher);
@@ -270,7 +272,6 @@ public class ExamAnalyseActivity extends BaseActivity<ExamAnalysePresenter> impl
             nowAnalysePaper.setStudentAnswer(s.toString());
         }
     };
-
 
 
     public class URLDrawable extends BitmapDrawable {
@@ -313,11 +314,19 @@ public class ExamAnalyseActivity extends BaseActivity<ExamAnalysePresenter> impl
 
                 public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                     LogUtils.d(imageUri);
-                    urlDrawable.bitmap = loadedImage;
-
-                    urlDrawable.setBounds(0, 0, loadedImage.getWidth(), loadedImage.getHeight());
-
-
+                    int width = loadedImage.getWidth();
+                    int height = loadedImage.getHeight();
+                    int width1 = textView.getWidth() - textView.getPaddingLeft() - textView.getPaddingRight();
+                    float i = (float) width1 / width;
+                    Matrix matrix = new Matrix();
+                    matrix.postScale(i, i);
+                    Bitmap bmp = Bitmap.createBitmap(loadedImage, 0, 0, width, height, matrix, true);
+                    urlDrawable.bitmap = bmp;
+                    LogUtils.d(width + "   " + height);
+                    int width2 = bmp.getWidth();
+                    int height2 = bmp.getHeight();
+                    LogUtils.d(width2 + "   " + height2);
+                    urlDrawable.setBounds(0, 0, width2, height2);
                     //为了防止图片重叠必须重新设置textView
                     runOnUiThread(new Runnable() {
                         @Override

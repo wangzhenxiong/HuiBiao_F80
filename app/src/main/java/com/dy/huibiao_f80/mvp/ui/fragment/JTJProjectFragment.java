@@ -171,7 +171,7 @@ public class JTJProjectFragment extends BaseFragment<JTJProjectPresenter> implem
         });
     }
 
-    int lastCheck = -1;
+    public int lastCheck = -1;
 
     private void checkProject(int position) {
         LogUtils.d(lastCheck+"   "+position);

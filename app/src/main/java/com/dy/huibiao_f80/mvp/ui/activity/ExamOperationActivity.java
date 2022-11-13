@@ -54,16 +54,12 @@ public class ExamOperationActivity extends BaseActivity<ExamOperationPresenter> 
     RelativeLayout mToolbarBack;
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
-    @BindView(R.id.btn_submit)
-    Button mBtnSubmit;
     @BindView(R.id.toolbar_time)
     TextView mToolbarTime;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
     @BindView(R.id.toolbarly)
     AppBarLayout mToolbarly;
-    @BindView(R.id.examname)
-    TextView mExamname;
     @BindView(R.id.exam_title)
     LinearLayout mExamTitle;
     @BindView(R.id.examtitle)
@@ -74,6 +70,8 @@ public class ExamOperationActivity extends BaseActivity<ExamOperationPresenter> 
     Button mBtnTestrecord;
     @BindView(R.id.btn_report)
     Button mBtnReport;
+    @BindView(R.id.btn_submit)
+    Button mBtnSubmit;
     private String examinationId;
     private String examinerId;
     private ScheduledThreadPoolExecutor mScheduledThreadPoolExecutor;
@@ -105,9 +103,10 @@ public class ExamOperationActivity extends BaseActivity<ExamOperationPresenter> 
         examinationId = intent.getStringExtra("examinationId");
         examinerId = intent.getStringExtra("examinerId");
         mScheduledThreadPoolExecutor = (ScheduledThreadPoolExecutor) ArmsUtils.obtainAppComponentFromContext(this).executorService();
+        MyAppLocation.myAppLocation.mExamOperationService.cleanMaps();
         mPresenter.beginOperationExam(examinationId, examinerId);
         IFloatWindow iFloatWindow = FloatWindow.get();
-        if (null!=iFloatWindow){
+        if (null != iFloatWindow) {
             FloatWindow.get().hide();
         }
 
@@ -153,35 +152,33 @@ public class ExamOperationActivity extends BaseActivity<ExamOperationPresenter> 
 
         BeginOperationExam_Back.EntityBean entity = back.getEntity();
         operationPaperList = entity.getOperationPaperList();
-        mExamname.setText("实操考试题，一共" + operationPaperList.size() + "道题");
+        //mExamname.setText("实操考试题，一共" + operationPaperList.size() + "道题");
         for (int i = 0; i < operationPaperList.size(); i++) {
             BeginOperationExam_Back.EntityBean.OperationPaperListBean operationPaperListBean = operationPaperList.get(i);
-            View inflate = LayoutInflater.from(this).inflate(R.layout.analyse_title_item, null);
+            View inflate = LayoutInflater.from(this).inflate(R.layout.analyse_title_item1, null);
             TextView viewById = (TextView) inflate.findViewById(R.id.title);
             viewById.setId(i);
             viewById.setOnClickListener(chardClick());
-            viewById.setText((i + 1) + "、第" + (i + 1) + "题" + "(共" + operationPaperListBean.getAllScore() + "分）");
+            viewById.setText("第" + (i + 1) + "题" + "(共" + operationPaperListBean.getAllScore() + "分)");
             mExamTitle.addView(inflate);
         }
-        Integer operationExamTime = entity.getExamination().getOperationExamTime()*60;
+        Integer operationExamTime = entity.getExamination().getOperationExamTime() * 60;
 
         MyAppLocation.myAppLocation.mExamOperationService.setBeginOperationExam_back(back);
         MyAppLocation.myAppLocation.mExamOperationService.setExaminationId(examinationId);
         MyAppLocation.myAppLocation.mExamOperationService.setExaminerId(examinerId);
 
-        MyAppLocation.myAppLocation.mExamOperationService.startExamOperation(true,operationExamTime);
+        MyAppLocation.myAppLocation.mExamOperationService.startExamOperation( operationExamTime);
 
         initExamCont(operationPaperList.get(0));
 
-        // mTitleExam.setText("实操题（总分："+back.getEntity().getOperationPaper().getAllScore()+"分)");
-        // mOperationTitle.setText(Html.fromHtml(operationPaper.getContent()));
     }
 
     @Override
     public void submitSuccess() {
         MyAppLocation.myAppLocation.mExamOperationService.finishOperationExam();
         finish();
-        Intent content = new Intent(this,ExamStateActivity.class);
+        Intent content = new Intent(this, ExamStateActivity.class);
         content.putExtra("examinationId", examinationId);
         content.putExtra("examinerId", examinerId);
         ArmsUtils.startActivity(content);
@@ -222,7 +219,7 @@ public class ExamOperationActivity extends BaseActivity<ExamOperationPresenter> 
         ButterKnife.bind(this);
     }
 
-    @OnClick({R.id.btn_submit, R.id.btn_starttest, R.id.btn_testrecord, R.id.btn_report})
+    @OnClick({R.id.btn_starttest, R.id.btn_testrecord, R.id.btn_report,R.id.btn_submit})
     public void onClick(View view) {
         String id = onoeperationPaper.getId();
         switch (view.getId()) {
@@ -241,22 +238,23 @@ public class ExamOperationActivity extends BaseActivity<ExamOperationPresenter> 
                 ((TextView) view1.findViewById(R.id.textview)).setText(spanned);
                 //((TextView) view1).setText(onoeperationPaper.getContent());
                 FloatWindow.get().show();
+
                 Intent content = new Intent(this, StartTestActivity.class);
                 startActivity(content);
                 break;
             case R.id.btn_testrecord:
                 Intent c = new Intent(this, RecordActivity.class);
-                c.putExtra("examinationId", examinationId +"");
-                c.putExtra("examinerId", examinerId +"");
-                c.putExtra("examId", id +"");
+                c.putExtra("examinationId", examinationId + "");
+                c.putExtra("examinerId", examinerId + "");
+                c.putExtra("examId", id + "");
                 startActivity(c);
                 break;
             case R.id.btn_report:
-                Intent intent = new Intent(ExamOperationActivity.this,PrintReportActivity.class);
-                intent.putExtra("examinationId",examinationId);
-                intent.putExtra("examinerId",examinerId);
+                Intent intent = new Intent(ExamOperationActivity.this, PrintReportActivity.class);
+                intent.putExtra("examinationId", examinationId);
+                intent.putExtra("examinerId", examinerId);
+                intent.putExtra("operationPaperId", onoeperationPaper.getId());
                 startActivity(intent);
-
                 break;
         }
     }

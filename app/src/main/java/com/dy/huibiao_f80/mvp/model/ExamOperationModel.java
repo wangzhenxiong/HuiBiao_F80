@@ -7,7 +7,7 @@ import com.dy.huibiao_f80.Constants;
 import com.dy.huibiao_f80.MyAppLocation;
 import com.dy.huibiao_f80.api.HuiBiaoService;
 import com.dy.huibiao_f80.api.back.BeginOperationExam_Back;
-import com.dy.huibiao_f80.api.back.BeginTestForm_Back;
+import com.dy.huibiao_f80.api.back.GetTestForm_Back;
 import com.dy.huibiao_f80.api.back.TestFormSubmit_Back;
 import com.dy.huibiao_f80.app.utils.DataUtils;
 import com.dy.huibiao_f80.bean.ReportBean;
@@ -58,7 +58,7 @@ public class ExamOperationModel extends BaseModel implements ExamOperationContra
                 .unsubscribeOn(Schedulers.io());
     }
 
-    @Override
+    /*@Override
     public Observable<TestFormSubmit_Back> submitOperation() {
         RetrofitUrlManager.getInstance().putDomain("xxx", Constants.URL);
         return mRepositoryManager.obtainRetrofitService(HuiBiaoService.class)
@@ -66,23 +66,78 @@ public class ExamOperationModel extends BaseModel implements ExamOperationContra
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io());
+    }*/
+
+    @Override
+    public Observable<GetTestForm_Back> getReportMessage(String id) {
+        RetrofitUrlManager.getInstance().putDomain("xxx", Constants.URL);
+        return mRepositoryManager.obtainRetrofitService(HuiBiaoService.class)
+                .getTestForm(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io());
     }
 
-    private RequestBody getTestFormSubmit() {
-        ReportBean reportBean = MyAppLocation.myAppLocation.mExamOperationService.getReportBean();
+    @Override
+    public Observable<TestFormSubmit_Back> submitOperation(String string) {
+        RetrofitUrlManager.getInstance().putDomain("xxx", Constants.URL);
+        return mRepositoryManager.obtainRetrofitService(HuiBiaoService.class)
+                .testFormSubmit(getTestFormSubmit(string))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io());
+    }
+
+    private RequestBody getTestFormSubmit(String string) {
+        ReportBean reportBean = MyAppLocation.myAppLocation.mExamOperationService.getReportBeanByID(string);
         if (null==reportBean) {
-            BeginTestForm_Back beginTestForm_back = MyAppLocation.myAppLocation.mExamOperationService.getBeginTestForm_back();
+            GetTestForm_Back beginTestForm_back = MyAppLocation.myAppLocation.mExamOperationService.getGetTestFormByID(string);
+            ReportBean bean=new ReportBean();
+            bean.setExaminerId(MyAppLocation.myAppLocation.mExamOperationService.getExaminerId());
+            bean.setExaminationId(MyAppLocation.myAppLocation.mExamOperationService.getExaminationId());
+            bean.setOperationPaperId(string);
+            bean.setCreateTime(DataUtils.getNowtimeyyymmddhhmmss());
+            ArrayList<ReportBean.TestFormDetail> testFormDetailList = new ArrayList<>();
+            List<GetTestForm_Back.EntityBean.TestFormListBean> testFormList = beginTestForm_back.getEntity().getTestFormList();
+            for (int i = 0; i < testFormList.size(); i++) {
+                GetTestForm_Back.EntityBean.TestFormListBean testFormListBean = testFormList.get(i);
+                List<GetTestForm_Back.EntityBean.TestFormListBean.TestFormDetailListBean> testFormDetailList1 = testFormListBean.getTestFormDetailList();
+                for (int i1 = 0; i1 < testFormDetailList1.size(); i1++) {
+                    GetTestForm_Back.EntityBean.TestFormListBean.TestFormDetailListBean testFormDetailListBean = testFormDetailList1.get(i1);
+                    ReportBean.TestFormDetail detail=new ReportBean.TestFormDetail();
+                    detail.setTestFormDetailId(testFormDetailListBean.getId());
+                    detail.setTestFormId(testFormDetailListBean.getTestFormId());
+                    detail.setFieldName(testFormDetailListBean.getFieldName());
+                    detail.setAnswer("");
+                    testFormDetailList.add(detail);
+                }
+            }
+            bean.setTestFormDetailList(testFormDetailList);
+            String s = new Gson().toJson(bean);
+            LogUtils.d(s);
+            return RequestBody.create(MediaType.parse("application/json"), s);
+        }else {
+            String content = new Gson().toJson(reportBean);
+            LogUtils.d(content);
+            return RequestBody.create(MediaType.parse("application/json"), content);
+        }
+    }
+
+   /* private RequestBody getTestFormSubmit() {
+        ReportBean reportBean = MyAppLocation.myAppLocation.mExamOperationService.getGetTestForm_backMap();
+        if (null==reportBean) {
+            GetTestForm_Back beginTestForm_back = MyAppLocation.myAppLocation.mExamOperationService.getGetTestFormBackList();
             ReportBean bean=new ReportBean();
             bean.setExaminerId(MyAppLocation.myAppLocation.mExamOperationService.getExaminerId());
             bean.setExaminationId(MyAppLocation.myAppLocation.mExamOperationService.getExaminationId());
             bean.setCreateTime(DataUtils.getNowtimeyyymmddhhmmss());
             ArrayList<ReportBean.TestFormDetail> testFormDetailList = new ArrayList<>();
-            List<BeginTestForm_Back.EntityBean.TestFormListBean> testFormList = beginTestForm_back.getEntity().getTestFormList();
+            List<GetTestForm_Back.EntityBean.TestFormListBean> testFormList = beginTestForm_back.getEntity().getTestFormList();
             for (int i = 0; i < testFormList.size(); i++) {
-                BeginTestForm_Back.EntityBean.TestFormListBean testFormListBean = testFormList.get(i);
-                List<BeginTestForm_Back.EntityBean.TestFormListBean.TestFormDetailListBean> testFormDetailList1 = testFormListBean.getTestFormDetailList();
+                GetTestForm_Back.EntityBean.TestFormListBean testFormListBean = testFormList.get(i);
+                List<GetTestForm_Back.EntityBean.TestFormListBean.TestFormDetailListBean> testFormDetailList1 = testFormListBean.getTestFormDetailList();
                 for (int i1 = 0; i1 < testFormDetailList1.size(); i1++) {
-                    BeginTestForm_Back.EntityBean.TestFormListBean.TestFormDetailListBean testFormDetailListBean = testFormDetailList1.get(i1);
+                    GetTestForm_Back.EntityBean.TestFormListBean.TestFormDetailListBean testFormDetailListBean = testFormDetailList1.get(i1);
                     ReportBean.TestFormDetail detail=new ReportBean.TestFormDetail();
                     detail.setTestFormDetailId(testFormDetailListBean.getId());
                     detail.setTestFormId(testFormDetailListBean.getTestFormId());
@@ -101,5 +156,5 @@ public class ExamOperationModel extends BaseModel implements ExamOperationContra
             return RequestBody.create(MediaType.parse("application/json"), content);
         }
 
-    }
+    }*/
 }

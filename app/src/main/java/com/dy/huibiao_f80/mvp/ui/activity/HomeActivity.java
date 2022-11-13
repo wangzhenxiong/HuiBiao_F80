@@ -2,15 +2,19 @@ package com.dy.huibiao_f80.mvp.ui.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,8 +56,6 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
     TextView mTrain;
     @BindView(R.id.exam)
     TextView mExam;
-    @BindView(R.id.seting)
-    Button mSeting;
     private AlertDialog sportDialog;
 
     @Override
@@ -196,20 +198,18 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
         });
     }
 
-    @OnClick({R.id.practice, R.id.train, R.id.exam, R.id.seting})
+    @OnClick({R.id.practice, R.id.train, R.id.exam})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.practice:
                 ArmsUtils.startActivity(new Intent(getActivity(),PracticeActivity.class));
                 break;
             case R.id.train:
-                ArmsUtils.startActivity(new Intent(getActivity(),TrainActivity.class));
+                jumpUriToBrowser(this,Constants.URL_TRAINING);
+                //ArmsUtils.startActivity(new Intent(getActivity(),TrainActivity.class));
                 break;
             case R.id.exam:
                 mPresenter.existExam(Constants.URL,Constants.DEVICENUM);
-                break;
-            case R.id.seting:
-                ArmsUtils.startActivity(new Intent(getActivity(),SettingLoginActivity.class));
                 break;
         }
     }
@@ -222,5 +222,46 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
         } else {
             ArmsUtils.exitApp();
         }
+    }
+
+    public static void jumpUriToBrowser(Context context, String url) {
+        if (url.startsWith("www."))
+            url = "http://" + url;
+        if (!url.startsWith("http://") && !url.startsWith("https://")) {
+            Toast.makeText(context, "网址错误", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Intent intent = new Intent();
+        // 设置意图动作为打开浏览器
+        intent.setAction(Intent.ACTION_VIEW);
+        // 声明一个Uri
+        Uri uri = Uri.parse(url);
+        intent.setData(uri);
+        context.startActivity(intent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu_home, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+         super.onOptionsItemSelected(item);
+        switch (item.getItemId()){
+            case R.id.location:
+                launchActivity(new Intent(getActivity(), BaiduMapActivity.class));
+                break;
+            case R.id.balance:
+                launchActivity(new Intent(getActivity(), BalanceCalibrationActivity.class));
+                break;
+            case R.id.setting:
+                ArmsUtils.startActivity(new Intent(getActivity(),SettingLoginActivity.class));
+                break;
+        }
+        return true;
     }
 }

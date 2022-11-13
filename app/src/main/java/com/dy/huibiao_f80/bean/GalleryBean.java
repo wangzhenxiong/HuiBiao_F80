@@ -27,6 +27,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.RunnableScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
@@ -1342,6 +1343,7 @@ public abstract class GalleryBean implements Parcelable, UsbReadWriteHelper.onUs
         detection_record_fggd_nc.setId(null);//自增ID
         //设置状态为检测完成 2
         detection_record_fggd_nc.setState(2);
+        detection_record_fggd_nc.setSysCode(UUID.randomUUID().toString());
         //detection_record_fggd_nc.setDowhat(0);
         if (MyAppLocation.myAppLocation.mExamOperationService.isStartExamOperation()){
             detection_record_fggd_nc.setExam_id(MyAppLocation.myAppLocation.mExamOperationService.getNowOperationExam().getId());

@@ -78,6 +78,7 @@ public class BeginTestForm_Back {
             private String name;
             private String totalScore;
             private String isVirtual;
+            private String content;
             private String delFlag;
             private String createTime;
             private String createUser;
@@ -129,6 +130,14 @@ public class BeginTestForm_Back {
 
             public void setIsVirtual(String isVirtual) {
                 this.isVirtual = isVirtual;
+            }
+
+            public String getContent() {
+                return content;
+            }
+
+            public void setContent(String content) {
+                this.content = content;
             }
 
             public String getDelFlag() {

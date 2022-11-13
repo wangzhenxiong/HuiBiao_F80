@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.apkfuns.logutils.LogUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.greendao.TestRecord;
@@ -76,6 +77,7 @@ public class RecordPresenter extends BasePresenter<RecordContract.Model, RecordC
                 .subscribe(new ErrorHandleSubscriber<List<TestRecord>>(mErrorHandler) {
                     @Override
                     public void onNext(@NonNull List<TestRecord> list) {
+                        LogUtils.d(list);
                         testRecordList.clear();
                         testRecordList.addAll(list);
                         testRecrdAdapter.notifyDataSetChanged();

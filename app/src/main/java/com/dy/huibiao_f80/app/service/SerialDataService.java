@@ -49,7 +49,13 @@ import com.dy.huibiao_f80.bean.eventBusBean.FGTestMessageBean;
 import com.dy.huibiao_f80.greendao.DBHelper;
 import com.dy.huibiao_f80.greendao.ProjectFGGD;
 import com.dy.huibiao_f80.greendao.TestRecord;
-import com.dy.huibiao_f80.mvp.ui.activity.ExamOperationActivity;
+import com.dy.huibiao_f80.mvp.ui.activity.ChoseGalleryFGGDActivity;
+import com.dy.huibiao_f80.mvp.ui.activity.ChoseGalleryJTJActivity;
+import com.dy.huibiao_f80.mvp.ui.activity.StartTestActivity;
+import com.dy.huibiao_f80.mvp.ui.activity.TestFGGDActivity;
+import com.dy.huibiao_f80.mvp.ui.activity.TestJTJActivity;
+import com.dy.huibiao_f80.mvp.ui.activity.TestResultFGGDActivity;
+import com.dy.huibiao_f80.mvp.ui.activity.TestResultJTJActivity;
 import com.dy.huibiao_f80.usbhelps.UsbControl;
 import com.dy.huibiao_f80.usbhelps.UsbReadWriteHelper;
 import com.jess.arms.base.BaseService;
@@ -63,6 +69,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -205,7 +212,10 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
                 //桌面显示
                 //.setViewStateListener(mViewStateListener)    //监听悬浮控件状态改变
                 //.setPermissionListener(mPermissionListener)  //监听权限申请结果
-                .setFilter(false, ExamOperationActivity.class)
+                .setFilter(true,
+                        ChoseGalleryJTJActivity.class, ChoseGalleryFGGDActivity.class, StartTestActivity.class,
+                        TestJTJActivity.class, TestFGGDActivity.class, TestResultFGGDActivity.class, TestResultJTJActivity.class
+                )
                 .build();
     }
 
@@ -700,6 +710,7 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
         detection_record_fggd_nc.setId(null);//自增ID
         //设置状态为检测完成 2
         detection_record_fggd_nc.setState(2);
+        detection_record_fggd_nc.setSysCode(UUID.randomUUID().toString());
         //detection_record_fggd_nc.setDowhat(0);
 
         if (MyAppLocation.myAppLocation.mExamOperationService.isStartExamOperation()){
@@ -1023,6 +1034,7 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
         detection_record_fggd_nc.setId(null);//自增ID
         //设置状态为检测完成 2
         detection_record_fggd_nc.setState(2);
+        detection_record_fggd_nc.setSysCode(UUID.randomUUID().toString());
         //detection_record_fggd_nc.setDowhat(0);
         if (MyAppLocation.myAppLocation.mExamOperationService.isStartExamOperation()){
             detection_record_fggd_nc.setExam_id(MyAppLocation.myAppLocation.mExamOperationService.getNowOperationExam().getId());
@@ -1164,6 +1176,7 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
         detection_record_fggd_nc.setId(null);//自增ID
         //设置状态为检测完成 2
         detection_record_fggd_nc.setState(2);
+        detection_record_fggd_nc.setSysCode(UUID.randomUUID().toString());
         //detection_record_fggd_nc.setDowhat(0);
         if (MyAppLocation.myAppLocation.mExamOperationService.isStartExamOperation()){
             detection_record_fggd_nc.setExam_id(MyAppLocation.myAppLocation.mExamOperationService.getNowOperationExam().getId());
@@ -1227,6 +1240,7 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
         //设置状态为检测完成 2
         //detection_record_fggd_nc.setDowhat(0);
         detection_record_fggd_nc.setState(2);
+        detection_record_fggd_nc.setSysCode(UUID.randomUUID().toString());
         if (MyAppLocation.myAppLocation.mExamOperationService.isStartExamOperation()){
             detection_record_fggd_nc.setExam_id(MyAppLocation.myAppLocation.mExamOperationService.getNowOperationExam().getId());
             detection_record_fggd_nc.setExaminerId(MyAppLocation.myAppLocation.mExamOperationService.getExaminerId());

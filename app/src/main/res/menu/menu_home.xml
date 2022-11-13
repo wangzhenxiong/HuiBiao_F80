@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/location"
+        android:icon="@drawable/location"
+        android:title="位置"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/balance"
+        android:icon="@drawable/balance"
+        android:title="水平仪"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/setting"
+        android:icon="@drawable/setting_icn"
+        android:title="设置"
+        app:showAsAction="always" />
+</menu>

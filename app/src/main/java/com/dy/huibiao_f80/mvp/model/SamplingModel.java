@@ -57,9 +57,13 @@ public class SamplingModel extends BaseModel implements SamplingContract.Model {
                 }else {
                     Long starte = DataUtils.getNowtimeYYIMMIDD(starttime);
                     Long stop = DataUtils.getNowtimeYYIMMIDD(stoptime);
-                    samplingQueryBuilder = samplingQueryBuilder.where(SamplingDao.Properties.CreationTime.between(starte, stop + 86400000));
+                    LogUtils.d(starte+"  "+(stop+ 86400000));
+                    samplingQueryBuilder = samplingQueryBuilder.where(SamplingDao.Properties.TestingTime.between(starte, stop + 86400000));
                 }
-                List<Sampling> list = samplingQueryBuilder.where(SamplingDao.Properties.TestResult.eq(testResult)).orderDesc(SamplingDao.Properties.CreationTime).list();
+                if (!testResult.equals("选择判定结果")){
+                    samplingQueryBuilder=samplingQueryBuilder.where(SamplingDao.Properties.TestResult.eq(testResult));
+                }
+                List<Sampling> list = samplingQueryBuilder.orderDesc(SamplingDao.Properties.TestingTime).list();
                 LogUtils.d(list);
                 emitter.onNext(list);
                 emitter.onComplete();
@@ -74,7 +78,7 @@ public class SamplingModel extends BaseModel implements SamplingContract.Model {
         return Observable.create(new ObservableOnSubscribe<List<Sampling>>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<Sampling>> emitter) throws Exception {
-                List<Sampling> list = DBHelper.getSamplingDao().queryBuilder().orderDesc(SamplingDao.Properties.CreationTime).list();
+                List<Sampling> list = DBHelper.getSamplingDao().queryBuilder().orderDesc(SamplingDao.Properties.TestingTime).list();
                 LogUtils.d(list);
                 emitter.onNext(list);
                 emitter.onComplete();

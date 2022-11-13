@@ -6,6 +6,7 @@ import com.dy.huibiao_f80.MyAppLocation;
 import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.android_serialport_api.SerialControl;
 import com.dy.huibiao_f80.app.utils.CharUtils;
+import com.dy.huibiao_f80.app.utils.NumberUtils;
 import com.dy.huibiao_f80.bean.PrintMessage;
 import com.dy.huibiao_f80.greendao.TestRecord;
 import com.jess.arms.utils.ArmsUtils;
@@ -169,11 +170,11 @@ public class PrintTask_Multiple implements Itask {
         } else if ("3".equals(method)) {
             control.sendPortData(control, MyAppLocation.myAppLocation.getString(R.string.print_mothed4) + "\r");
         } else {
-            CharUtils.splitLine180(control, MyAppLocation.myAppLocation.getString(R.string.print_mothed) + method, 33, 34);
+            CharUtils.splitLine180(control, MyAppLocation.myAppLocation.getString(R.string.print_mothed) + method, 31, 32);
         }
 
         String out = "检测依据：" + nc1.getStand_num();
-        CharUtils.splitLine180(control, out);
+        CharUtils.splitLine180(control, out,31,32);
 
 
         if (checkPrintMessage.isCheckBox_testtime()) {
@@ -198,7 +199,7 @@ public class PrintTask_Multiple implements Itask {
             LogUtils.d(samplename);
             String decisionoutcome = nc.getDecisionoutcomePrint(6);
             String testresult = nc.getTestresultPrint(5);
-            String s = (nc.getSerialNumber() + " " + ("".equals(samplename) ? "--" : samplename)
+            String s = (nc.getSamplenum().equals("")?nc.getGalleryNum()+"":nc.getSamplenum() + " " + ("".equals(samplename) ? "--" : samplename)
                     + " " + testresult + " " + ("".equals(decisionoutcome) ? "--" : decisionoutcome));
 
 
@@ -209,9 +210,9 @@ public class PrintTask_Multiple implements Itask {
         control.sendPortData(control, "--------------------------------");
 
         if ("抑制率法".equals(method) || "0".equals(method) ) {
-            control.sendPortData(control, "对照值：△A=".trim() + nc1.getControlvalue() + "\r");
+            control.sendPortData(control, "对照值：△A=".trim() + NumberUtils.four(Double.parseDouble(nc1.getControlvalue())) + "\r");
         } else if ("标准曲线法".equals(method) || "1".equals(method)) {
-            control.sendPortData(control, "对照值：△A=".trim() + nc1.getControlvalue() + "\r");
+            control.sendPortData(control, "对照值：△A=".trim() + NumberUtils.four(Double.parseDouble(nc1.getControlvalue())) + "\r");
             control.sendPortData(control, "稀释倍数：△A=".trim() + nc1.getDilutionratio() + "\r");
         } else if ("系数法".equals(method) || "3".equals(method)) {
             control.sendPortData(control, "反应液滴数：△A=".trim() + nc1.getEveryresponse() + "\r");
@@ -270,9 +271,9 @@ public class PrintTask_Multiple implements Itask {
 
 
         if ("抑制率法".equals(method) || "0".equals(method)) {
-            control.sendPortData(control, "对照值：△A=".trim() + nc1.getControlvalue() + "\r");
+            control.sendPortData(control, "对照值：△A=".trim() + NumberUtils.four(Double.parseDouble(nc1.getControlvalue())) + "\r");
         } else if ("标准曲线法".equals(method) || "1".equals(method)) {
-            control.sendPortData(control, "对照值：△A=".trim() + nc1.getControlvalue() + "\r");
+            control.sendPortData(control, "对照值：△A=".trim() + NumberUtils.four(Double.parseDouble(nc1.getControlvalue())) + "\r");
             control.sendPortData(control, "稀释倍数：△A=".trim() + nc1.getDilutionratio() + "\r");
         } else if ("系数法".equals(method) || "3".equals(method)) {
             control.sendPortData(control, "反应液滴数：△A=".trim() + nc1.getEveryresponse() + "\r");
@@ -280,17 +281,17 @@ public class PrintTask_Multiple implements Itask {
         control.sendPortData(control, "--------------------------------");
         fgNcList = SortBySearinumber(fgNcList);
         for (int i = 0; i < fgNcList.size(); i++) {
-
             TestRecord nc = fgNcList.get(i);
+            LogUtils.d(nc);
             String samplename = nc.getSamplenamePrint(10);
             LogUtils.d(samplename);
 
             String decisionoutcome = nc.getDecisionoutcomePrint(6);
             String testresult = nc.getTestresultPrint(5);
-            String s = (nc.getSerialNumber() + " " + ("".equals(samplename) ? "--" : samplename)
+            String s = (nc.getSamplenum().equals("")?nc.getGalleryNum()+"":nc.getSamplenum() + " " + ("".equals(samplename) ? "--" : samplename)
                     + " " + testresult + " " + ("".equals(decisionoutcome) ? "--" : decisionoutcome));
 
-            CharUtils.splitLine(control, s, 33, 34);
+            CharUtils.splitLine(control, s, 31, 32);
 
             //LogUtils.d(s.length());
 
@@ -315,7 +316,7 @@ public class PrintTask_Multiple implements Itask {
 
 
         String out = "检测依据：" + nc1.getStand_num();
-        CharUtils.splitLine(control, out, 33, 34);
+        CharUtils.splitLine(control, out, 31, 32);
 
         if (nc1.getTest_Moudle().equals("分光光度")){
             if ("0".equals(method)) {
@@ -327,7 +328,7 @@ public class PrintTask_Multiple implements Itask {
             } else if ("3".equals(method)) {
                 control.sendPortData(control, MyAppLocation.myAppLocation.getString(R.string.print_mothed4) + "\r");
             } else {
-                CharUtils.splitLine180(control, MyAppLocation.myAppLocation.getString(R.string.print_mothed) + method, 33, 34);
+                CharUtils.splitLine180(control, MyAppLocation.myAppLocation.getString(R.string.print_mothed) + method, 31, 32);
             }
         }else if (nc1.getTest_Moudle().equals("胶体金")){
             if ("0".equals(method)) {

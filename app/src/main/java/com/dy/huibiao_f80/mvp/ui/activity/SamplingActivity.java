@@ -204,13 +204,13 @@ public class SamplingActivity extends BaseActivity<SamplingPresenter> implements
                     isSeaching = false;
 
 
-                    mChoseTime.setText("选择采样时间");
+                    mChoseTime.setText("选择检测时间");
                     mChoseResult.setText("选择判定结果");
 
                     mPresenter.load(true);
 
                 } else {
-                    if (mChoseTime.getText().toString().equals("选择采样时间")&&mChoseResult.getText().toString().equals("选择判定结果")){
+                    if (mChoseTime.getText().toString().equals("选择检测时间")&&mChoseResult.getText().toString().equals("选择判定结果")){
                         ArmsUtils.snackbarText("请选择搜索条件");
                         return;
                     }
@@ -388,7 +388,7 @@ public class SamplingActivity extends BaseActivity<SamplingPresenter> implements
                 isSeaching = false;
                 starttime = "无";
                 stoptime = "";
-                mChoseTime.setText("选择采样时间");
+                mChoseTime.setText("选择检测时间");
 
                 //mPresenter.seach(starttime, stoptime, mChoseResult.getText().toString(), true);
             }

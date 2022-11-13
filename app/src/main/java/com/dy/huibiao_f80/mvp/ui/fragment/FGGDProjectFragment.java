@@ -173,7 +173,7 @@ public class FGGDProjectFragment extends BaseFragment<FGGDProjectPresenter> impl
         });
     }
 
-    int lastCheck = -1;
+   public int lastCheck = -1;
 
     private void checkProject(int position) {
         mDateList.get(position).check = true;

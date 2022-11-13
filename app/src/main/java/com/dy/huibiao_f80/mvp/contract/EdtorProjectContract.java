@@ -2,12 +2,14 @@ package com.dy.huibiao_f80.mvp.contract;
 
 import android.app.Activity;
 
+import com.dy.huibiao_f80.bean.UpdateFileMessage;
 import com.dy.huibiao_f80.greendao.ProjectFGGD;
 import com.dy.huibiao_f80.greendao.ProjectJTJ;
 import com.dy.huibiao_f80.mvp.ui.widget.OutMoudle;
 import com.jess.arms.mvp.IModel;
 import com.jess.arms.mvp.IView;
 
+import java.io.File;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -27,6 +29,10 @@ public interface EdtorProjectContract {
         void loadJTJFinish();
 
         void loadFGGDFinish();
+
+        void makeDialogNewVersion(String filename, String local, int checkmoudle, String linkurl, UpdateFileMessage message);
+
+        void inputProject(File file, String filename, int checkmoudle);
     }
 
     //Model层定义接口,外部只需关心Model返回的数据,无需关心内部细节,即是否使用缓存
@@ -40,8 +46,6 @@ public interface EdtorProjectContract {
 
         Observable<List<OutMoudle>> getFGGDJXLs();
 
-
-
-
+        Observable<UpdateFileMessage> upgradeFile(String appName);
     }
 }

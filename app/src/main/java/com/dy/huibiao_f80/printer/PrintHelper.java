@@ -1,5 +1,6 @@
 package com.dy.huibiao_f80.printer;
 
+import com.apkfuns.logutils.LogUtils;
 import com.dy.huibiao_f80.MyAppLocation;
 import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.greendao.DBHelper;
@@ -62,6 +63,7 @@ public class PrintHelper {
     public List<List<TestRecord>> mListList;
 
     public void deailList(List<TestRecord> list) {
+        LogUtils.d(list);
         if (list.size() <= 0) {
             ArmsUtils.snackbarText(MyAppLocation.myAppLocation.getString(R.string.withoutprintdata));
         } else {
@@ -169,6 +171,7 @@ public class PrintHelper {
 
                 for (int i = 0; i < mListList.size(); i++) {
                     List<TestRecord> ncs = mListList.get(i);
+                    LogUtils.d(ncs);
                     if (ncs.size() == 1) {  //单条打印
                         //不需要打印二维码
                         MyPrinterIntentService.startActionPrintSingle(MyAppLocation.myAppLocation, ncs);
