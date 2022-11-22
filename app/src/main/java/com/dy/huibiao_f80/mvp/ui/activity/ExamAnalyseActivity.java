@@ -185,17 +185,18 @@ public class ExamAnalyseActivity extends BaseActivity<ExamAnalysePresenter> impl
             public void run() {
                 if (runflag) {
                     if (theoryExamTime > 0) {
+                        int i = theoryExamTime / 60;
+                        int i1 = theoryExamTime % 60;
+                        String text = "剩余时间  " + (i < 10 ? "0" + i : "" + i) + ":" + (i1 < 10 ? "0" + i1 : "" + i1);
+                        theoryExamTime--;
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 if (null != mToolbarTime) {
-                                    int i = theoryExamTime / 60;
-                                    int i1 = theoryExamTime % 60;
-                                    mToolbarTime.setText("剩余时间  " + (i < 10 ? "0" + i : "" + i) + ":" + (i1 < 10 ? "0" + i1 : "" + i1));
+                                    mToolbarTime.setText(text);
                                 }
                             }
                         });
-                        theoryExamTime--;
                     } else {
                         mPresenter.submit(examinationId, examinerId, beginAnalyseExamBack);
                         runflag = false;

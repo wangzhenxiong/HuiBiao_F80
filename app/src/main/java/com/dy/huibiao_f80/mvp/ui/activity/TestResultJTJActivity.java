@@ -19,7 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.dy.huibiao_f80.Constants;
 import com.dy.huibiao_f80.MyAppLocation;
 import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.app.utils.NumberUtils;
@@ -244,8 +243,8 @@ public class TestResultJTJActivity extends BaseActivity<TestResultJTJPresenter> 
             checklist.get(i).setCheckd(true);
             checklist.get(i).cardGet_Argmen();
             checklist.get(i).cardInNotScan();
-            checklist.get(i).getJTJRWHelper().sendMessage(Constants.COLLAURUM_ENT_SCANNING_REQUEST_P, true);
-            checklist.get(i).getJTJRWHelper().stratReadData_P(2000, true);
+           // checklist.get(i).getJTJRWHelper().sendMessage(Constants.COLLAURUM_ENT_SCANNING_REQUEST_P, true);
+            checklist.get(i).getJTJRWHelper().stratReadData_P(4000, true);
         }
         Intent intent = new Intent();
         intent.setClass(getActivity(), TestSettingJTJActivity.class);
@@ -453,6 +452,9 @@ public class TestResultJTJActivity extends BaseActivity<TestResultJTJPresenter> 
 
     @Override
     public void onBackPressed() {
+        for (int i = 0; i < MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.size(); i++) {
+            MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(i).cardInNotScan();
+        }
         ArmsUtils.startActivity(this, StartTestActivity.class);
     }
 }

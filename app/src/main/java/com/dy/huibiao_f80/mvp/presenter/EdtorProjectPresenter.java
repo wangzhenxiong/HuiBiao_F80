@@ -195,8 +195,8 @@ public class EdtorProjectPresenter extends BasePresenter<EdtorProjectContract.Mo
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doFinally(() -> {
-                    mRootView.hideSportDialog();
-                    mRootView.RefreshList();
+                   // mRootView.hideSportDialog();
+                    //mRootView.RefreshList();
                 })
                 .compose(RxLifecycleUtils.bindToLifecycle(mRootView))
                 .subscribe(new ErrorHandleSubscriber<List<String>>(mErrorHandler) {

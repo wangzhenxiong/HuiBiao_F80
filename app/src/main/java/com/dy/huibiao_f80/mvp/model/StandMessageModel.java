@@ -44,6 +44,7 @@ public class StandMessageModel extends BaseModel implements StandMessageContract
         return Observable.just(getfileslist(path)).subscribeOn(Schedulers.io());
     }
     public List<File> getfileslist(String path) {
+        LogUtils.d(path);
         //boolean b = FileUtils.isFileExists(path);
         FileUtils.makeRootDirectory(path);
         boolean b = FileUtils.createOrExistsFile(path);

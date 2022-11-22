@@ -50,7 +50,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:layout_marginRight="20dp"
-            android:text="剩余时间 44:59"
             android:textColor="@color/white"
             android:textSize="20sp" />
 

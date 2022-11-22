@@ -36,7 +36,7 @@ public abstract class StandMessageModule {
     @ActivityScope
     @Provides
     static LocalFileAdapter provideUserAdapter(StandMessageContract.View view, List<File> list){
-        return new LocalFileAdapter(list,view.getActivity(),"stand");
+        return new LocalFileAdapter(list,view.getActivity(),"standard");
     }
 
     /*@ActivityScope

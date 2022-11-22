@@ -130,6 +130,9 @@ public class TestResultFGGDActivity extends BaseActivity<TestResultFGGDPresenter
         if (MyAppLocation.myAppLocation.mExamOperationService.isStartExamOperation()){
             mBtnWritereport.setVisibility(View.VISIBLE);
             mBtnBackhome.setVisibility(View.VISIBLE);
+        }else {
+            mBtnWritereport.setVisibility(View.GONE);
+            mBtnBackhome.setVisibility(View.GONE);
         }
     }
 

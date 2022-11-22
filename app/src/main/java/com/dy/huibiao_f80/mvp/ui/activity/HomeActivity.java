@@ -225,8 +225,9 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
     }
 
     public static void jumpUriToBrowser(Context context, String url) {
-        if (url.startsWith("www."))
+        if (url.startsWith("www.")) {
             url = "http://" + url;
+        }
         if (!url.startsWith("http://") && !url.startsWith("https://")) {
             Toast.makeText(context, "网址错误", Toast.LENGTH_SHORT).show();
             return;
@@ -234,6 +235,9 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
         Intent intent = new Intent();
         // 设置意图动作为打开浏览器
         intent.setAction(Intent.ACTION_VIEW);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
         // 声明一个Uri
         Uri uri = Uri.parse(url);
         intent.setData(uri);

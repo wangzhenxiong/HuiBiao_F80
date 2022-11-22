@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">HuiBiao_F80</string>
+    <string name="app_name">考培云</string>
 
     <string name="customactivityoncrash_error_activity_error_occurred_explanation" translatable="false">发生意外错误。\n抱歉，给您带来不便。</string>
     <string name="customactivityoncrash_error_activity_restart_app" translatable="false">重新启动</string>

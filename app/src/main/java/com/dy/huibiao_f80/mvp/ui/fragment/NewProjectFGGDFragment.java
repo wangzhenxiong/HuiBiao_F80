@@ -346,7 +346,12 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
         builder.setView(inflate);
         AlertDialog dialog = builder.create();
 
-
+        inflate.findViewById(R.id.btn_quit).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
         inflate.findViewById(R.id.btn_getcurve).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -779,11 +784,27 @@ public class NewProjectFGGDFragment extends BaseFragment<NewProjectFGGDPresenter
                     return;
                 }
 
-                ProjectFGGD projectFGGD = new ProjectFGGD();
+                //ProjectFGGD projectFGGD = new ProjectFGGD();
                 projectFGGD.setId(null);
                 projectFGGD.setProjectName(pjName);
                 projectFGGD.setCurveName(curvename);
                 projectFGGD.setCurveOrder((int) count);
+                projectFGGD.setA(1);
+                projectFGGD.setB(0);
+                projectFGGD.setC(0);
+                projectFGGD.setD(0);
+                projectFGGD.setA1(0);
+                projectFGGD.setB1(0);
+                projectFGGD.setC1(0);
+                projectFGGD.setD1(0);
+                projectFGGD.setFrom1(0);
+                projectFGGD.setTo1(0);
+                projectFGGD.setA0(0);
+                projectFGGD.setB0(0);
+                projectFGGD.setC0(0);
+                projectFGGD.setD0(0);
+                projectFGGD.setFrom0(0);
+                projectFGGD.setTo0(0);
                 projectFGGD.setCreator(1);
                 DBHelper.getProjectFGGDDao().insert(projectFGGD);
                 initCurve(curvename, projectFGGD);

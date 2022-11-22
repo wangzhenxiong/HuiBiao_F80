@@ -287,7 +287,7 @@ public class NewProjectJTJFragment extends BaseFragment<NewProjectJTJPresenter> 
                     return;
                 }
 
-                ProjectJTJ projectJTJ = new ProjectJTJ();
+                //ProjectJTJ projectJTJ = new ProjectJTJ();
                 projectJTJ.setId(null);
                 projectJTJ.setProjectName(pjName);
                 projectJTJ.setCurveName(curvename);

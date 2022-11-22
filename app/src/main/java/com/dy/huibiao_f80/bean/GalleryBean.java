@@ -918,31 +918,20 @@ public abstract class GalleryBean implements Parcelable, UsbReadWriteHelper.onUs
     public void cardOut() {
         //stopJTJTest();
         if (mJTJModel == 1) {
-            mJTJRWHelper.sendMessage(Constants.COLLAURUM_OUT_REQUEST_S, true);
         } else {
             mJTJRWHelper.sendMessage(Constants.COLLAURUM_OUT_REQUEST_P, true);
         }
 
     }
 
-    /**
-     * @param dealy 延迟多长时间出卡 1000 为1秒
-     */
-    public void cardOut(int dealy) {
-        if (mJTJModel == 1) {
-            mJTJRWHelper.sendMessage(Constants.COLLAURUM_OUT_REQUEST_S, true, dealy);
-        } else {
-            mJTJRWHelper.sendMessage(Constants.COLLAURUM_OUT_REQUEST_P, true, dealy);
-        }
 
-    }
 
     /**
      * 进卡不扫描
      */
     public void cardInNotScan() {
+        LogUtils.d("cardInNotScan");
         if (mJTJModel == 1) {
-            mJTJRWHelper.sendMessage(Constants.COLLAURUM_ENT_REQUEST_S, true);
         } else {
             mJTJRWHelper.sendMessage(Constants.COLLAURUM_ENT_REQUEST_P, true);
         }
@@ -962,29 +951,9 @@ public abstract class GalleryBean implements Parcelable, UsbReadWriteHelper.onUs
     }
 
 
-    /**
-     * @param dealy 延迟多长时间进卡 1000 为1秒
-     */
-    public void cardInNotScan(int dealy) {
-        if (mJTJModel == 1) {
-            mJTJRWHelper.sendMessage(Constants.COLLAURUM_ENT_REQUEST_S, true, dealy);
-        } else {
-            mJTJRWHelper.sendMessage(Constants.COLLAURUM_ENT_REQUEST_P, true, dealy);
-        }
 
-    }
 
-    /**
-     * 卡状态请求
-     */
-    public void getCardStatus() {
-        if (mJTJModel == 1) {
-            mJTJRWHelper.sendMessage(Constants.COLLAURUM_STATE_REQUEST_S, true);
-        } else {
-            mJTJRWHelper.sendMessage(Constants.COLLAURUM_STATE_REQUEST_P, true);
-        }
 
-    }
 
 
     /**
@@ -992,7 +961,6 @@ public abstract class GalleryBean implements Parcelable, UsbReadWriteHelper.onUs
      */
     public void getCardNum() {
         if (mJTJModel == 1) {
-            mJTJRWHelper.sendMessage(Constants.COLLAURUM_NUMBER_ASK_S, true);
         } else {
             mJTJRWHelper.sendMessage(Constants.COLLAURUM_NUMBER_ASK_P, true);
         }
@@ -1000,30 +968,10 @@ public abstract class GalleryBean implements Parcelable, UsbReadWriteHelper.onUs
     }
 
 
-    /**
-     * 设置模块编号
-     */
-    public void cardNumSeting(int num) {
-        if (mJTJModel == 1) {
-            mJTJRWHelper.sendMessage(Constants.COLLAURUM_NUMBER_SET_S(num), true);
-        } else {
-            mJTJRWHelper.sendMessage(Constants.COLLAURUM_NUMBER_SET_P(num), true);
-        }
-
-    }
 
 
-    /**
-     * 校准请求
-     */
-    public void cardAdjust() {
-        if (mJTJModel == 1) {
-            mJTJRWHelper.sendMessage(Constants.COLLAURUM_CALIBRATION_REQUEST, true);
-        } else {
-            // mJTJRWHelper.sendMessage(Constants.COLLAURUM_NUMBER_ASK_P,true,dealy);
-        }
 
-    }
+
 
 
     private List<Bitmap> mBitmapList;
@@ -1064,53 +1012,18 @@ public abstract class GalleryBean implements Parcelable, UsbReadWriteHelper.onUs
         // LogUtils.d(bytes);
         byte aByte = bytes.get(1);//fla位，可根据它来判断是什么响应
         switch (aByte) {
-            case 0x14: //卡状态响应
-                LogUtils.d("卡状态响应" + bytes);
-                if (bytes.get(4) == 0x01) { //有卡状态
-                    // cardScanning();
 
-                } else if (bytes.get(4) == 0x02) { //无卡状态
-                    if (state == 1) { //倒计时状态
-                        setState(0);
-                    }
-                    ArmsUtils.snackbarText("没有检测到胶体金卡条，请放入卡条后重试");
-                }
-
-                break;
             case 0x1c://获取模块编号响应
                 LogUtils.d(bytes);
                 this.setJTJ_MAC(bytes.get(4));
-                break;
-            case 0x1A:
-                LogUtils.d(bytes);
-                break;
-            case 0x16://检测数据响应
-                // TODO: 2020/9/5 这里需要注意下：一定要区分胶体金的当前检测模块，在摄像头模块进行校准后，
-                //  再返回检测界面会触发扫描模块的计算结果代码，
-                //  原因就是在校准完成，关闭校准界面时候会发送进卡命令，
-                //  发送命令的代码会有一个读取返回的操作，读取到的结果会有上一次的摄像头模块请求数据的返回，那个返回也是0x7e，0x16开头，
-                //  然后返回到监听，也就是这个位置，就触发了这个计算结果的代码
-
-
-                LogUtils.d("扫描检测数据响应");
-                if (1 == mJTJModel) {
-                    // checkData_S(bytes);
-                }
                 break;
             case 0x21: //获取摄像头参数 左右 上下
                 horizontal_d = bytes.get(4);
                 vertical_d = bytes.get(5);
                 break;
-            case 0x1E:
-                //cardGet_Argmen();
-                break;
-            case 0x18:
-                LogUtils.d("0x18 " + bytes);
-                if (1 == mJTJModel) {
-                    cardOut(15000);
-                }
 
-                break;
+
+
         }
 
     }

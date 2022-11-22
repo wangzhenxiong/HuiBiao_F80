@@ -216,9 +216,9 @@ public class ChoseGalleryJTJActivity extends BaseActivity<ChoseGalleryJTJPresent
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                List<GalleryBean> mJTJGalleryBeanList = MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList;
-                for (int i = 0; i < mJTJGalleryBeanList.size(); i++) {
-                    GalleryBean galleryBean = mJTJGalleryBeanList.get(i);
+                for (int i = 0; i < MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.size(); i++) {
+                    GalleryBean galleryBean = MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(i);
+                    LogUtils.d("出卡命令");
                     galleryBean.cardOut();
                     int galleryNum = galleryBean.getGalleryNum();
 
@@ -242,19 +242,7 @@ public class ChoseGalleryJTJActivity extends BaseActivity<ChoseGalleryJTJPresent
 
     }
 
-    @Override
-    public void reBuildGalleryView() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mBackground1.setVisibility(View.GONE);
-                mBackground2.setVisibility(View.GONE);
-                mBackground3.setVisibility(View.GONE);
-                mBackground4.setVisibility(View.GONE);
-               mPresenter.initJTJUSB();
-            }
-        });
-    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -270,7 +258,7 @@ public class ChoseGalleryJTJActivity extends BaseActivity<ChoseGalleryJTJPresent
                 clean();
                 break;
             case R.id.btn_gallerychange:
-                mPresenter.changeGallery();
+                //mPresenter.changeGallery();
                 break;
             case R.id.btn_starttest:
                 nextStep();

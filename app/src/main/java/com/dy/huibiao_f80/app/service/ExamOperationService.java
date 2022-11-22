@@ -14,7 +14,6 @@ import com.dy.huibiao_f80.api.back.IsTeacherSubmit_Back;
 import com.dy.huibiao_f80.api.back.TestFormSubmit_Back;
 import com.dy.huibiao_f80.app.utils.DataUtils;
 import com.dy.huibiao_f80.bean.ReportBean;
-import com.dy.huibiao_f80.mvp.ui.activity.ExamStateActivity;
 import com.google.gson.Gson;
 import com.jess.arms.base.BaseService;
 import com.jess.arms.utils.ArmsUtils;
@@ -85,65 +84,70 @@ public class ExamOperationService extends BaseService {
     public void startExamOperation(int examTime) {
         isStartExamOperation = true;
         operationExamTime = examTime;
-        if (isStartExamOperation) {
-            countDownOperationExamTime(examTime);
-            isTeacherSubmit();
-            //getReportData();
-        }
+        command_countdownState = true;
+        commandisTeacherSubmitState = true;
     }
-
-   /* private void getReportData() {
-        RetrofitUrlManager.getInstance().putDomain("xxx", Constants.URL);
-        ArmsUtils.obtainAppComponentFromContext(ExamOperationService.this)
-                .repositoryManager().obtainRetrofitService(HuiBiaoService.class)
-                .beginTestForm(examinationId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .unsubscribeOn(Schedulers.io()).subscribe(new ErrorHandleSubscriber<BeginTestForm_Back>(ArmsUtils.obtainAppComponentFromContext(ExamOperationService.this).rxErrorHandler()) {
-            @Override
-            public void onNext(@NonNull BeginTestForm_Back back) {
-                if (null != back) {
-                    isTeacherSubmit = back.getSuccess();
-                    if (isTeacherSubmit) {
-                        beginTestForm_back= back;
-                    }
-                }
-            }
-        });
-    }*/
 
     /**
-     * 5秒一次轮询考评员是否提交分数
+     * 倒计时 状态
      */
-    private void isTeacherSubmit() {
-        mScheduledThreadPoolExecutor.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                if (!isTeacherSubmit) {
-                    RetrofitUrlManager.getInstance().putDomain("xxx", Constants.URL);
-                    ArmsUtils.obtainAppComponentFromContext(ExamOperationService.this)
-                            .repositoryManager().obtainRetrofitService(HuiBiaoService.class)
-                            .isTeacherSubmit(examinerId)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .unsubscribeOn(Schedulers.io()).subscribe(new ErrorHandleSubscriber<IsTeacherSubmit_Back>(ArmsUtils.obtainAppComponentFromContext(ExamOperationService.this).rxErrorHandler()) {
-                        @Override
-                        public void onNext(@NonNull IsTeacherSubmit_Back isTeacherSubmit_back) {
-                            LogUtils.d(isTeacherSubmit_back);
-                            if (null != isTeacherSubmit_back) {
-                                isTeacherSubmit = isTeacherSubmit_back.getSuccess();
-                                if (isTeacherSubmit) {
-                                    // TODO: 11/3/22 考评员分数已提交，结束考试
-                                    ArmsUtils.snackbarText("考评员分数已提交");
-                                    //ArmsUtils.startActivity(new Intent());
-                                }
-                            }
-                        }
-                    });
+    boolean command_countdownState = false;
+    Runnable command_countdown = new Runnable() {
+        @Override
+        public void run() {
+            if (isStartExamOperation && command_countdownState) {
+                if (operationExamTime > 0) {
+
+                    int i = operationExamTime / 60;
+                    int i1 = operationExamTime % 60;
+
+                    // mToolbarTime.setText("剩余时间  " + (i < 10 ? "0" + i : "" + i) + ":" + (i1 < 10 ? "0" + i1 : "" + i1));
+                    ExamOperationServiceEventBean event = new ExamOperationServiceEventBean();
+                    event.setTime(operationExamTime);
+                    event.setTimestring("剩余时间  " + (i < 10 ? "0" + i : "" + i) + ":" + (i1 < 10 ? "0" + i1 : "" + i1));
+                    EventBus.getDefault().post(event);
+                    operationExamTime--;
+                } else {
+                    //mPresenter.submit(examinationId, examinerId, beginAnalyseExamBack);
+                    isStartExamOperation = false;
+                    // TODO: 11/5/22 倒计时结束，需要强制上传实验报告
+                    forceUploadReport();
                 }
             }
-        }, 0, 5000, TimeUnit.MILLISECONDS);
-    }
+        }
+    };
+    /**
+     * 查询考评员分数是否提交  状态
+     */
+    boolean commandisTeacherSubmitState = false;
+    Runnable commandisTeacherSubmit = new Runnable() {
+        @Override
+        public void run() {
+            if (!isTeacherSubmit && commandisTeacherSubmitState) {
+                RetrofitUrlManager.getInstance().putDomain("xxx", Constants.URL);
+                ArmsUtils.obtainAppComponentFromContext(ExamOperationService.this)
+                        .repositoryManager().obtainRetrofitService(HuiBiaoService.class)
+                        .isTeacherSubmit(examinerId)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .unsubscribeOn(Schedulers.io()).subscribe(new ErrorHandleSubscriber<IsTeacherSubmit_Back>(ArmsUtils.obtainAppComponentFromContext(ExamOperationService.this).rxErrorHandler()) {
+                    @Override
+                    public void onNext(@NonNull IsTeacherSubmit_Back isTeacherSubmit_back) {
+                        LogUtils.d(isTeacherSubmit_back);
+                        if (null != isTeacherSubmit_back) {
+                            isTeacherSubmit = isTeacherSubmit_back.getSuccess();
+                            if (isTeacherSubmit) {
+                                // TODO: 11/3/22 考评员分数已提交，结束考试
+                                //ArmsUtils.snackbarText("考评员分数已提交");
+                                //ArmsUtils.startActivity(new Intent());
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    };
+
 
     /**
      * 开始考试
@@ -154,7 +158,10 @@ public class ExamOperationService extends BaseService {
      * 结束考试
      */
     public void finishOperationExam() {
+        command_countdownState = false;
+        commandisTeacherSubmitState = false;
         isStartExamOperation = false;
+        isTeacherSubmit = false;
         beginOperationExam_back = null;
         getTestForm_backMap.clear();
         reportBeanMap.clear();
@@ -195,34 +202,11 @@ public class ExamOperationService extends BaseService {
     @Override
     public void init() {
         mScheduledThreadPoolExecutor = (ScheduledThreadPoolExecutor) ArmsUtils.obtainAppComponentFromContext(this).executorService();
+        mScheduledThreadPoolExecutor.scheduleAtFixedRate(command_countdown, 0, 1000, TimeUnit.MILLISECONDS);
+        mScheduledThreadPoolExecutor.scheduleAtFixedRate(commandisTeacherSubmit, 0, 5000, TimeUnit.MILLISECONDS);
+
     }
 
-    private void countDownOperationExamTime(Integer time) {
-        mScheduledThreadPoolExecutor.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                if (isStartExamOperation) {
-                    if (operationExamTime > 0) {
-
-                        int i = operationExamTime / 60;
-                        int i1 = operationExamTime % 60;
-
-                        // mToolbarTime.setText("剩余时间  " + (i < 10 ? "0" + i : "" + i) + ":" + (i1 < 10 ? "0" + i1 : "" + i1));
-                        ExamOperationServiceEventBean event = new ExamOperationServiceEventBean();
-                        event.setTime(operationExamTime);
-                        event.setTimestring("剩余时间  " +(i < 10 ? "0" + i : "" + i) + ":" + (i1 < 10 ? "0" + i1 : "" + i1));
-                        EventBus.getDefault().post(event);
-                        operationExamTime--;
-                    } else {
-                        //mPresenter.submit(examinationId, examinerId, beginAnalyseExamBack);
-                        isStartExamOperation = false;
-                        // TODO: 11/5/22 倒计时结束，需要强制上传实验报告
-                        forceUploadReport();
-                    }
-                }
-            }
-        }, 0, 1000, TimeUnit.MILLISECONDS);
-    }
 
     private void forceUploadReport() {
 
@@ -283,18 +267,18 @@ public class ExamOperationService extends BaseService {
                     @Override
                     public void onNext(@NonNull TestFormSubmit_Back back) {
                         if (null != back) {
-                            isTeacherSubmit = back.isSuccess();
-                            if (isTeacherSubmit) {
-                                getTestForm_backMap.remove(next);
-                                if (getTestForm_backMap.keySet().size() == 0) {
-                                    finishOperationExam();
-                                    ArmsUtils.snackbarText("考试已结束");
-                                    ArmsUtils.startActivity(ExamStateActivity.class);
-                                }
-
-                            } else {
-                                uploadReport(next);
+                            //isTeacherSubmit = back.isSuccess();
+                            getTestForm_backMap.remove(next);
+                            if (getTestForm_backMap.keySet().size() == 0) {
+                                finishOperationExam();
+                                ArmsUtils.snackbarText("考试已结束");
+                                ExamOperationService.ExamOperationServiceEventBean event = new ExamOperationService.ExamOperationServiceEventBean();
+                                event.state = -1;
+                                EventBus.getDefault().post(event);
+                                //ArmsUtils.startActivity(ExamStateActivity.class);
                             }
+                        } else {
+                            uploadReport(next);
                         }
                     }
                 });

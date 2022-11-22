@@ -21,7 +21,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.apkfuns.logutils.LogUtils;
-import com.dy.huibiao_f80.Constants;
 import com.dy.huibiao_f80.MyAppLocation;
 import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.bean.GalleryBean;
@@ -127,14 +126,26 @@ public class TestSettingJTJActivity extends BaseActivity<TestSettingTJPresenter>
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        for (int i = 0; i < MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.size(); i++) {
+            GalleryBean galleryBean = MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(i);
+            if (galleryBean.isCheckd()) {
+                galleryBean.getJTJRWHelper().stopReadData_P();
+                galleryBean.cardOut();
+
+            }
+        }
+    }
+
+    @Override
     public void initData(@Nullable Bundle savedInstanceState) {
         Intent intent = getIntent();
         project = intent.getStringExtra("project");
         LogUtils.d(project);
         initSpinner();
-        List<GalleryBean> mJTJGalleryBeanList = MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList;
-        for (int i = 0; i < mJTJGalleryBeanList.size(); i++) {
-            GalleryBean galleryBean = mJTJGalleryBeanList.get(i);
+        for (int i = 0; i < MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.size(); i++) {
+            GalleryBean galleryBean = MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(i);
             if (galleryBean.isCheckd()) {
                 if (galleryBean.getGalleryNum() == 1) {
                     mGallery1.setVisibility(View.VISIBLE);
@@ -142,10 +153,10 @@ public class TestSettingJTJActivity extends BaseActivity<TestSettingTJPresenter>
                     mGallery2.setVisibility(View.VISIBLE);
                 }
                 galleryBean.setJTJResultReciverListener(TestSettingJTJActivity.this);
-                galleryBean.cardGet_Argmen();
                 galleryBean.cardInNotScan();
-                galleryBean.getJTJRWHelper().sendMessage(Constants.COLLAURUM_ENT_SCANNING_REQUEST_P, true);
-                galleryBean.getJTJRWHelper().stratReadData_P(2000, true);
+                galleryBean.cardGet_Argmen();
+                //galleryBean.getJTJRWHelper().sendMessage(Constants.COLLAURUM_ENT_SCANNING_REQUEST_P, true);
+                galleryBean.getJTJRWHelper().stratReadData_P(4000, true);
             }
         }
 
@@ -289,7 +300,7 @@ public class TestSettingJTJActivity extends BaseActivity<TestSettingTJPresenter>
 
     @Override
     public void onReciverSuccess(Bitmap bitmap, int gallerynum) {
-        LogUtils.d("onReciverSuccess   "+gallerynum);
+
         if (gallerynum == 1) {
             bitmap1 = bitmap;
             if (mSurfaceviewState1 == 3) {
@@ -408,8 +419,7 @@ public class TestSettingJTJActivity extends BaseActivity<TestSettingTJPresenter>
             case R.id.btn_cardin1:
                 MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(0).cardGet_Argmen();
                 MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(0).cardInNotScan();
-                MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(0).getJTJRWHelper().sendMessage(Constants.COLLAURUM_ENT_SCANNING_REQUEST_P, true);
-                MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(0).getJTJRWHelper().stratReadData_P(2000,true);
+                MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(0).getJTJRWHelper().stratReadData_P(4000,true);
                 break;
 
             case R.id.btn_cardout2:
@@ -419,14 +429,13 @@ public class TestSettingJTJActivity extends BaseActivity<TestSettingTJPresenter>
             case R.id.btn_cardin2:
                 MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(1).cardGet_Argmen();
                 MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(1).cardInNotScan();
-                MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(1).getJTJRWHelper().sendMessage(Constants.COLLAURUM_ENT_SCANNING_REQUEST_P, true);
-                MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(1).getJTJRWHelper().stratReadData_P(2000,true);
+                MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(1).getJTJRWHelper().stratReadData_P(4000,true);
                 break;
 
             case R.id.btn_starttest:
-                List<GalleryBean> mJTJGalleryBeanList = MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList;
-                for (int i = 0; i < mJTJGalleryBeanList.size(); i++) {
-                    GalleryBean galleryBean = mJTJGalleryBeanList.get(i);
+
+                for (int i = 0; i < MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.size(); i++) {
+                    GalleryBean galleryBean = MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(i);
                     if (galleryBean.isCheckd()) {
                         if (galleryBean.getGalleryNum() == 1) {
                             if (bitmap1==null){
@@ -442,11 +451,13 @@ public class TestSettingJTJActivity extends BaseActivity<TestSettingTJPresenter>
                             }
                             galleryBean.setBitmap(bitmap2);
                         }
-                        galleryBean.getJTJRWHelper().stopReadData_P();
+
                     }
+                    MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(i).getJTJRWHelper().stopReadData_P();
                 }
                 ArmsUtils.startActivity(new Intent(this, TestResultJTJActivity.class));
                 this.finish();
+
                 break;
         }
     }

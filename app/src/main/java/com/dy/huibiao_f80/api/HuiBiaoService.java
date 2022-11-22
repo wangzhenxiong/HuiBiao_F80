@@ -32,11 +32,13 @@ import com.dy.huibiao_f80.bean.UpdateMessage;
 
 import io.reactivex.Observable;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Retrofit;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -52,6 +54,26 @@ import retrofit2.http.Query;
  * @author wangzhenxiong
  */
 public interface HuiBiaoService {
+
+    /**
+     * 法律法规
+     * @param s
+     * @return
+     */
+    @Headers({"Domain-Name: kjfw"})
+    @GET("/pdf/法律法规/{id}")
+    Observable<ResponseBody> getLaws(
+            @Path("id") String s);
+
+    /**
+     * 食品标准
+     * @param s
+     * @return
+     */
+    @Headers({"Domain-Name: kjfw"})
+    @GET("/pdf/食品标准/{id}")
+    Observable<ResponseBody> getStandard(
+            @Path("id") String s);
 
     @Headers({"Domain-Name: upgradeVersion"}) // 加上 Domain-Name header
     @POST("/dyfda2/os/java/pub/app/upgradeVersion.shtml")

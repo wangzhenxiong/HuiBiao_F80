@@ -10,11 +10,9 @@ import android.hardware.usb.UsbManager;
 import com.apkfuns.logutils.LogUtils;
 import com.dy.huibiao_f80.Constants;
 import com.dy.huibiao_f80.MyAppLocation;
-import com.dy.huibiao_f80.app.utils.ByteUtils;
 import com.dy.huibiao_f80.app.utils.CRC8Util;
 import com.jess.arms.utils.ArmsUtils;
 
-import java.io.ByteArrayOutputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -84,82 +82,11 @@ public class UsbReadWriteHelper {
         mReciver = new WeakReference<>(reciverListener);
     }
 
-    public void sendMessage(byte[] bytes) {
-
-
-        if (!checkUsbDeviceIslive()) {
-            return;
-        }
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                LogUtils.d( bytes);
-                int count = mUsbDevice.getInterface(1).getEndpointCount();
-                UsbEndpoint end_out = null;
-                UsbEndpoint end_in = null;
-                for (int i = 0; i < count; i++) {
-                    UsbEndpoint end = mUsbDevice.getInterface(1).getEndpoint(i);
-                    if (end.getDirection() == UsbConstants.USB_DIR_OUT) {
-                        end_out = end;
-                    } else if (end.getDirection() == UsbConstants.USB_DIR_IN) {
-                        end_in = end;
-                    }
-                }
-                if (null == end_out || null == end_in) {
-                    ArmsUtils.snackbarText("获取读写端口失败！");
-                    LogUtils.d("获取读写端口失败！");
-                    return;
-                }
-
-                int i1 = connection.bulkTransfer(end_out, bytes, bytes.length, 500);
-                LogUtils.d(i1);
-                if (i1 != bytes.length) {
-                    LogUtils.d("指令发送失败！");
-                    ArmsUtils.snackbarText("指令发送失败！");
-                    return;
-                }
-                List<Byte> bytes = new ArrayList<>();
-                byte[] mybuffer = new byte[end_in.getMaxPacketSize()];
-                int datalength = 0;
-                while (true) {
-                    datalength = connection.bulkTransfer(end_in, mybuffer, mybuffer.length, 500);
-                    LogUtils.d(datalength);
-                    for (int j = 0; j < datalength; j++) {
-                        bytes.add(mybuffer[j]);
-                    }
-                    if (bytes.size()>=7){
-                        break;
-                    }
-
-                    try {
-                        Thread.sleep(10);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                //LogUtils.d("mReciver  "+mReciver.get());
-                LogUtils.d(bytes.get(0)+","+bytes.get(1)+":  "+bytes.size());
-
-                if (null != mReciver && bytes.size() >= 3) {
-                    LogUtils.d("usb reciver byte");
-                    onUsbReciver reciver = mReciver.get();
-                    if (reciver!=null){
-                        reciver.reciver(bytes);
-                    }
-
-                }
-                //connection.close();
-
-            }
-        };
-
-
-        setWriteExecute(runnable);
-
-    }
 
     public void sendMessage(byte[] bytes, boolean readResponse) {
-
+        if (bytes[1]==Constants.COLLAURUM_ENT_REQUEST_P[1]) {
+            LogUtils.d("COLLAURUM_ENT_REQUEST_P");
+        }
 
         if (!checkUsbDeviceIslive()) {
             return;
@@ -202,15 +129,15 @@ public class UsbReadWriteHelper {
                     for (int j = 0; j < datalength; j++) {
                         bytes.add(mybuffer[j]);
                     }
-                    if (datalength<mybuffer.length){
+                    if (datalength < mybuffer.length) {
                         break;
                     }
                 }
-                LogUtils.d(bytes.get(0)+","+bytes.get(1)+":  "+bytes.size());
+                LogUtils.d(bytes.get(0) + "," + bytes.get(1) + ":  " + bytes.size());
                 if (null != mReciver && bytes.size() >= 3) {
                     LogUtils.d("usb reciver byte");
                     onUsbReciver reciver = mReciver.get();
-                    if (reciver!=null){
+                    if (reciver != null) {
                         reciver.reciver(bytes);
                     }
 
@@ -269,11 +196,11 @@ public class UsbReadWriteHelper {
                         bytes.add(mybuffer[j]);
                     }
                 }
-                LogUtils.d(bytes.get(0)+","+bytes.get(1)+":  "+bytes.size());
+                LogUtils.d(bytes.get(0) + "," + bytes.get(1) + ":  " + bytes.size());
                 if (null != mReciver && bytes.size() >= 3) {
                     LogUtils.d("usb reciver byte");
                     onUsbReciver reciver = mReciver.get();
-                    if (reciver!=null){
+                    if (reciver != null) {
                         reciver.reciver(bytes);
                     }
 
@@ -291,8 +218,8 @@ public class UsbReadWriteHelper {
     }
 
 
-    public  int vertical;
-    public  int horizontal;
+    public int vertical;
+    public int horizontal;
 
     /**
      * @param delay   多少秒后开始读取数据
@@ -321,7 +248,7 @@ public class UsbReadWriteHelper {
                     }
                 }
                 while (READFLAG) {
-
+                   LogUtils.d("读取图片");
                     //先读取下无用数据，防止造成数据混乱
                     int lengthunuser = 0;
                     byte[] bufferun = new byte[endpoint_in.getMaxPacketSize()];
@@ -334,7 +261,7 @@ public class UsbReadWriteHelper {
                     //需要停止了就不要发了，发了读不完造成一些不必要的麻烦
                     if (READFLAG) {
                         int i = connection.bulkTransfer(endpoint_out, Constants.COLLAURUM_DATA_REQUEST_P, Constants.COLLAURUM_DATA_REQUEST_P.length, 100);
-                        if (i!=Constants.COLLAURUM_DATA_REQUEST_P.length){
+                        if (i != Constants.COLLAURUM_DATA_REQUEST_P.length) {
                             continue;
                         }
                     }
@@ -362,9 +289,9 @@ public class UsbReadWriteHelper {
                             temp[i] = bytes.get(i + 8);
                         }
                         if (null != mReciver && READFLAG) {
-                           // LogUtils.d("usb reciver 图像");
+                            // LogUtils.d("usb reciver 图像");
                             onUsbReciver reciver = mReciver.get();
-                            if (reciver!=null){
+                            if (reciver != null) {
                                 reciver.reciver(temp, WIDTH, HEIGHT);
                             }
                         }
@@ -373,12 +300,12 @@ public class UsbReadWriteHelper {
                         continue;
                     }
                     if (setting) {
-                        if (vertical==0&&horizontal==0){
+                        if (vertical == 0 && horizontal == 0) {
                             continue;
                         }
                         //在获取摄像头参数时候失败了
-                        if (!getdefaultvalue(connection, endpoint_in, endpoint_out)){
-                          continue;
+                        if (!getdefaultvalue(connection, endpoint_in, endpoint_out)) {
+                            continue;
                         }
                         switch (vertical) {
                             case 1:
@@ -422,18 +349,18 @@ public class UsbReadWriteHelper {
 
     private void setdefaultvalue(UsbDeviceConnection connection, UsbEndpoint usbEpIn, UsbEndpoint usbEpOut) {
         byte[] buffer = {0x7E, 0x1d, 0x02, 0x00, (byte) horizontal_d, (byte) vertical_d, (byte) CRC8Util.FindCRC(new byte[]{0x1d, 0x02, 0x00, (byte) horizontal_d, (byte) vertical_d}), 0x7E};
-        LogUtils.d("设置摄像头参数： "+buffer);
+        LogUtils.d("设置摄像头参数： " + buffer);
         int i = connection.bulkTransfer(usbEpOut, buffer, buffer.length, 100);
-        if (i!=buffer.length){
-            LogUtils.d("设置摄像头参数失败： "+i);
-          return;
+        if (i != buffer.length) {
+            LogUtils.d("设置摄像头参数失败： " + i);
+            return;
         }
         int datalength = 0;
         while (datalength != -1 && READFLAG) {
             byte[] mybuffer = new byte[30];
             datalength = connection.bulkTransfer(usbEpIn, mybuffer, mybuffer.length, 300);
-            LogUtils.d("设置摄像头参数响应： "+mybuffer);
-            if (datalength<mybuffer.length){
+            LogUtils.d("设置摄像头参数响应： " + mybuffer);
+            if (datalength < mybuffer.length) {
                 break;
             }
         }
@@ -441,7 +368,8 @@ public class UsbReadWriteHelper {
 
     /**
      * 获取摄像头偏移位置
-     *  @param connection
+     *
+     * @param connection
      * @param usbEpIn
      * @param usbEpOut
      * @return
@@ -450,9 +378,9 @@ public class UsbReadWriteHelper {
         ArrayList<Byte> bytes = new ArrayList<>();
         int length = Constants.COLLAURUM_GET_ARGMENT.length;
         int i1 = connection.bulkTransfer(usbEpOut, Constants.COLLAURUM_GET_ARGMENT, length, 100);
-        LogUtils.d("读取摄像头参数： "+Constants.COLLAURUM_GET_ARGMENT);
-        if (i1!=length){
-            LogUtils.d("读取摄像头参数失败： "+i1);
+        LogUtils.d("读取摄像头参数： " + Constants.COLLAURUM_GET_ARGMENT);
+        if (i1 != length) {
+            LogUtils.d("读取摄像头参数失败： " + i1);
             return false;
         }
 
@@ -463,7 +391,7 @@ public class UsbReadWriteHelper {
             for (int i = 0; i < datalength; i++) {
                 bytes.add(mybuffer[i]);
             }
-            if (datalength<mybuffer.length){
+            if (datalength < mybuffer.length) {
                 break;
             }
         }
@@ -471,122 +399,15 @@ public class UsbReadWriteHelper {
         if (bytes.size() < 7) {
             return false;
         }
-        LogUtils.d("读取摄像头参数响应： "+bytes);
+        LogUtils.d("读取摄像头参数响应： " + bytes);
         horizontal_d = bytes.get(4);
         vertical_d = bytes.get(5);
 
         return true;
     }
 
-    public void readData_S(long delay) {
-        if (!checkUsbDeviceIslive()) {
-            return;
-        }
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                LogUtils.d("readData_S");
-                List<Byte> bytes = new ArrayList<>();
-                int count = mUsbDevice.getInterface(1).getEndpointCount();
-                for (int i = 0; i < count; i++) {
-                    UsbEndpoint end = mUsbDevice.getInterface(1).getEndpoint(i);
-                    if (end.getDirection() == UsbConstants.USB_DIR_OUT) {
-                        //LogUtils.d(bytes);
-                        connection.bulkTransfer(end, Constants.COLLAURUM_DATA_REQUEST_S, Constants.COLLAURUM_DATA_REQUEST_S.length, 500);
-                    }
-                }
-                for (int i = 0; i < count; i++) {
-                    UsbEndpoint end = mUsbDevice.getInterface(1).getEndpoint(i);
-                    if (end.getDirection() == UsbConstants.USB_DIR_IN) {
-                        byte[] mybuffer = new byte[end.getMaxPacketSize()];
-                        int datalength = 0;
-                        while (datalength != -1) {
-                            //LogUtils.d(end.getMaxPacketSize());
-                            datalength = connection.bulkTransfer(end, mybuffer, mybuffer.length, 500);
-                            for (int j = 0; j < datalength; j++) {
-                                bytes.add(mybuffer[j]);
-                            }
-                        }
-
-                        if (null != mReciver) {
-                            LogUtils.d("usb reciver byte");
-                            onUsbReciver reciver = mReciver.get();
-                            if (reciver !=null) {
-                                reciver.reciver(bytes);
-                            }
-
-                        }
-                        break;
-                    }
-                }
-
-               // connection.close();
-            }
-        };
-
-        setReadSchedule(runnable, delay, TimeUnit.MILLISECONDS);
-
-    }
 
 
-    public void stratReadData_SCANNER(long delay) {
-        READFLAG = false;
-
-
-        if (!checkUsbDeviceIslive()) {
-            return;
-        }
-        Runnable runnable = () -> {
-            LogUtils.d("stratReadData_SCANNER");
-            int count = mUsbDevice.getInterface(1).getEndpointCount();
-            UsbEndpoint endpoint_in = null;
-            //UsbEndpoint endpoint_out = null;
-            for (int i = 0; i < count; i++) {
-                UsbEndpoint end = mUsbDevice.getInterface(1).getEndpoint(i);
-                if (end.getDirection() == UsbConstants.USB_DIR_IN) {
-                    endpoint_in = end;
-                }
-            }
-            READFLAG = true;
-            while (READFLAG) {
-                ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-                int length = 3600;
-                byte[] mybuffer = new byte[length];
-                int datalength = 0;
-                while (datalength != -1 && READFLAG) {
-                    datalength = connection.bulkTransfer(endpoint_in, mybuffer, mybuffer.length, 1000);
-                    // LogUtils.d(flag+"--"+datalength + "--" + Thread.currentThread().getId());
-                    if (datalength != -1) {
-                        outStream.write(mybuffer, 0, datalength);
-                    }
-
-                }
-                LogUtils.d("跳出while");
-                byte[] bytes = outStream.toByteArray();
-                if (bytes.length > length * 1000) {
-                    int WIDTH = (bytes[2] & 0x0FF) * 256 + (bytes[1] & 0x0FF);
-                    int HEIGHT = (bytes[4] & 0x0FF) * 256 + (bytes[3] & 0x0FF);
-                    byte[] bytes1 = ByteUtils.subBytes(bytes, 5, bytes.length - 5);
-                    LogUtils.d(WIDTH + "--" + HEIGHT);
-                    LogUtils.d("shengchengtupian");
-                    //Bitmap bitmap01 = PicUtils.byteToBitMap(bytes1, WIDTH, HEIGHT);
-                    if (null != mReciver) {
-                        LogUtils.d("usb reciver 图像");
-                        onUsbReciver reciver = mReciver.get();
-                        if (reciver !=null) {
-                            reciver.reciver(bytes1, WIDTH, HEIGHT);
-                        }
-                        READFLAG = false;
-                    }
-                }
-            }
-            //connection.close();
-
-        };
-
-
-        setReadSchedule(runnable, delay, TimeUnit.MILLISECONDS);
-    }
 
     private UsbDeviceConnection connection;
 
@@ -599,7 +420,7 @@ public class UsbReadWriteHelper {
         if (null == mManager) {
             mManager = (UsbManager) MyAppLocation.myAppLocation.getSystemService(Context.USB_SERVICE);
         }
-        if (null==connection){
+        if (null == connection) {
             connection = mManager.openDevice(mUsbDevice);
         }
 
@@ -645,11 +466,5 @@ public class UsbReadWriteHelper {
         mThreadPoolExecutor.execute(runnable);
     }
 
-    private void setReadExecute(Runnable runnable) {
-        LogUtils.d("setReadExecute");
-        if (null == mThreadPoolExecutor) {
-            mThreadPoolExecutor = new ScheduledThreadPoolExecutor(1);
-        }
-        mThreadPoolExecutor.execute(runnable);
-    }
+
 }

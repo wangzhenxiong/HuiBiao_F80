@@ -100,10 +100,12 @@ public class RecordActivity extends BaseActivity<RecordPresenter> implements Rec
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
         Intent intent = getIntent();
-        examId = intent.getStringExtra("examId") == null ? "" : intent.getStringExtra("examId");
+        String id = intent.getStringExtra("examId");
+        //examId = id == null ? "" : id;
         if (MyAppLocation.myAppLocation.mExamOperationService.isStartExamOperation()) {
             examinationId = MyAppLocation.myAppLocation.mExamOperationService.getExaminationId();
             examinerId = MyAppLocation.myAppLocation.mExamOperationService.getExaminerId();
+            examId=MyAppLocation.myAppLocation.mExamOperationService.getNowOperationExam().getId();
         }
         ArmsUtils.configRecyclerView(mRecylerview, new GridLayoutManager(this, 1));
         testRecrdAdapter.setEmptyView(R.layout.emptyview, (ViewGroup) mRecylerview.getParent());
@@ -139,7 +141,7 @@ public class RecordActivity extends BaseActivity<RecordPresenter> implements Rec
                 ArmsUtils.startActivity(content);
             }
         });
-        mPresenter.load(examinationId, examinerId, examId);
+        mPresenter.load(examinationId, examinerId, this.examId);
     }
 
 

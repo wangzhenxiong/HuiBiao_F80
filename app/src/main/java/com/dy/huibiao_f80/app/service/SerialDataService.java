@@ -25,8 +25,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.WindowManager;
 
 import com.apkfuns.logutils.LogUtils;
@@ -49,19 +47,10 @@ import com.dy.huibiao_f80.bean.eventBusBean.FGTestMessageBean;
 import com.dy.huibiao_f80.greendao.DBHelper;
 import com.dy.huibiao_f80.greendao.ProjectFGGD;
 import com.dy.huibiao_f80.greendao.TestRecord;
-import com.dy.huibiao_f80.mvp.ui.activity.ChoseGalleryFGGDActivity;
-import com.dy.huibiao_f80.mvp.ui.activity.ChoseGalleryJTJActivity;
-import com.dy.huibiao_f80.mvp.ui.activity.StartTestActivity;
-import com.dy.huibiao_f80.mvp.ui.activity.TestFGGDActivity;
-import com.dy.huibiao_f80.mvp.ui.activity.TestJTJActivity;
-import com.dy.huibiao_f80.mvp.ui.activity.TestResultFGGDActivity;
-import com.dy.huibiao_f80.mvp.ui.activity.TestResultJTJActivity;
 import com.dy.huibiao_f80.usbhelps.UsbControl;
 import com.dy.huibiao_f80.usbhelps.UsbReadWriteHelper;
 import com.jess.arms.base.BaseService;
 import com.jess.arms.utils.ArmsUtils;
-import com.yhao.floatwindow.FloatWindow;
-import com.yhao.floatwindow.Screen;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -195,7 +184,7 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
 
 
 
-    public void initDialog() {
+    /*public void initDialog() {
         if (null != FloatWindow.get()) {
             return;
         }
@@ -217,7 +206,7 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
                         TestJTJActivity.class, TestFGGDActivity.class, TestResultFGGDActivity.class, TestResultJTJActivity.class
                 )
                 .build();
-    }
+    }*/
 
 
     AlertDialog dialog = null;

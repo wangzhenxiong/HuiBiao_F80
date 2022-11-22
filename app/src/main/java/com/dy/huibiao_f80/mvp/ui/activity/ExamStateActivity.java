@@ -8,10 +8,12 @@ import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dy.huibiao_f80.BuildConfig;
+import com.dy.huibiao_f80.MyAppLocation;
 import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.api.back.GetExamPage_Back;
 import com.dy.huibiao_f80.di.component.DaggerExamStateComponent;
@@ -20,6 +22,9 @@ import com.dy.huibiao_f80.mvp.presenter.ExamStatePresenter;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
+
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,8 +54,13 @@ public class ExamStateActivity extends BaseActivity<ExamStatePresenter> implemen
     TextView mTime3;
     @BindView(R.id.startexam3)
     Button mStartexam3;
+    @BindView(R.id.layout1)
+    LinearLayout mLayout1;
+    @BindView(R.id.finish_hint)
+    TextView mFinishHint;
     private String examinationId;
     private String examinerId;
+    private ScheduledThreadPoolExecutor mScheduledThreadPoolExecutor;
 
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
@@ -68,11 +78,33 @@ public class ExamStateActivity extends BaseActivity<ExamStatePresenter> implemen
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        runFlag=false;
+    }
+     /*@Override
+    public void onBackPressed() {
+
+        runFlag=false;
+        Intent intent = new Intent(ExamStateActivity.this, ExamActivity.class);
+        startActivity(intent);
+
+    }*/
+
+
+    @Override
     public void initData(@Nullable Bundle savedInstanceState) {
         Intent intent = getIntent();
         examinationId = intent.getStringExtra("examinationId");
         examinerId = intent.getStringExtra("examinerId");
+        if (examinationId == null) {
+            examinationId = MyAppLocation.myAppLocation.mExamOperationService.getExaminationId();
+        }
+        if (examinerId == null) {
+            examinerId = MyAppLocation.myAppLocation.mExamOperationService.getExaminerId();
+        }
         mPresenter.getExamPage(examinerId, examinationId);
+        mScheduledThreadPoolExecutor = (ScheduledThreadPoolExecutor) ArmsUtils.obtainAppComponentFromContext(this).executorService();
     }
 
     @Override
@@ -109,8 +141,13 @@ public class ExamStateActivity extends BaseActivity<ExamStatePresenter> implemen
         ButterKnife.bind(this);
     }
 
+    private int finishTime;
+    boolean runFlag;
+
     @Override
     public void showState(GetExamPage_Back back) {
+        runFlag = true;
+        finishTime = 30;
         GetExamPage_Back.EntityBean entity = back.getEntity();
         GetExamPage_Back.EntityBean.ExaminationBean examination = entity.getExamination();
         GetExamPage_Back.EntityBean.ExaminerBean examiner = entity.getExaminer();
@@ -131,7 +168,7 @@ public class ExamStateActivity extends BaseActivity<ExamStatePresenter> implemen
         } else if (examStatus == 2) {
 
             mStartexam1.setClickable(false);
-            if (BuildConfig.DEBUG){
+            if (BuildConfig.DEBUG) {
                 mStartexam1.setClickable(true);
             }
             mStartexam1.setBackground(getResources().getDrawable(R.drawable.btn_background_gray));
@@ -142,7 +179,7 @@ public class ExamStateActivity extends BaseActivity<ExamStatePresenter> implemen
             mStartexa2.setBackground(getResources().getDrawable(R.drawable.btn_background_blue));
         } else if (analyseStatus == 2) {
             mStartexa2.setClickable(false);
-            if (BuildConfig.DEBUG){
+            if (BuildConfig.DEBUG) {
                 mStartexa2.setClickable(true);
             }
             mStartexa2.setBackground(getResources().getDrawable(R.drawable.btn_background_gray));
@@ -150,49 +187,79 @@ public class ExamStateActivity extends BaseActivity<ExamStatePresenter> implemen
         if (operationStatus == 1) {
             mStartexam3.setClickable(true);
             mStartexam3.setBackground(getResources().getDrawable(R.drawable.btn_background_blue));
-        } else if (operationStatus == 2) {
+        } else {
             mStartexam3.setClickable(false);
-            if (BuildConfig.DEBUG){
+            if (BuildConfig.DEBUG) {
                 mStartexam3.setClickable(true);
             }
             mStartexam3.setBackground(getResources().getDrawable(R.drawable.btn_background_gray));
         }
 
-        if (examination.getIsShowScore() == 1) {
-            mTime1.setVisibility(View.VISIBLE);
-            mTime2.setVisibility(View.VISIBLE);
-            mTime3.setVisibility(View.VISIBLE);
+        mTime1.setText("考试时间：" + theoryExamTime + "分钟");
+        mTime2.setText("考试时间：" + analyseExamTime + "分钟");
+        mTime3.setText("考试时间：" + operationExamTime + "分钟");
+        /*//理论考试状态：1未考2已考
+        Integer examStatus = examiner.getExamStatus();
+        //分析题考试状态：1未考2已考
+        Integer analyseStatus = examiner.getAnalyseStatus();
+        //实操题考试状态：1未考2进行中3已结束
+        Integer operationStatus = examiner.getOperationStatus();*/
+        if (examStatus != 1 && analyseStatus != 1 && operationStatus != 1) {
+            //倒计时30秒后退出
 
-            mTime1.setText("考试时间：" + theoryExamTime + "分钟");
-            mTime2.setText("考试时间：" + analyseExamTime + "分钟");
-            mTime3.setText("考试时间：" + operationExamTime + "分钟");
-        } else {
-            mTime1.setVisibility(View.GONE);
-            mTime2.setVisibility(View.GONE);
-            mTime3.setVisibility(View.GONE);
+            mScheduledThreadPoolExecutor.scheduleAtFixedRate(new Runnable() {
+                @Override
+                public void run() {
+                    if (runFlag) {
+                        if (finishTime == 0) {
+                            //退出考试
+                            runFlag = false;
+                            Intent intent = new Intent(ExamStateActivity.this, ExamActivity.class);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            finishTime--;
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    if (null != mFinishHint) {
+                                        mFinishHint.setVisibility(View.VISIBLE);
+                                        mFinishHint.setText("本场考试已结束，即将在" + finishTime + "秒后退出");
+                                    }
+
+                                }
+                            });
+                        }
+                    }
+
+                }
+            }, 0, 1000, TimeUnit.MILLISECONDS);
         }
 
 
     }
 
+
+
     @OnClick({R.id.startexam1, R.id.startexa2, R.id.startexam3})
     public void onClick(View view) {
         Intent intent = new Intent();
-        intent.putExtra("examinationId",examinationId);
-        intent.putExtra("examinerId",examinerId);
+        intent.putExtra("examinationId", examinationId);
+        intent.putExtra("examinerId", examinerId);
         switch (view.getId()) {
             case R.id.startexam1:
-                intent.setClass(this,ExamTheoryActivity.class);
+                intent.setClass(this, ExamTheoryActivity.class);
                 ArmsUtils.startActivity(intent);
                 finish();
                 break;
             case R.id.startexa2:
-                intent.setClass(this,ExamAnalyseActivity.class);
+                intent.setClass(this, ExamAnalyseActivity.class);
                 ArmsUtils.startActivity(intent);
                 finish();
                 break;
             case R.id.startexam3:
-                intent.setClass(this,ExamOperationActivity.class);
+                intent.setClass(this, ExamOperationActivity.class);
                 ArmsUtils.startActivity(intent);
                 finish();
                 break;

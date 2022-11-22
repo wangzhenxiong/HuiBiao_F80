@@ -5,7 +5,6 @@ import android.app.Application;
 import com.dy.huibiao_f80.bean.base.BaseStandard_LawsMessage;
 import com.dy.huibiao_f80.mvp.contract.StandMessageContract;
 import com.dy.huibiao_f80.mvp.ui.adapter.LocalFileAdapter;
-import com.dy.huibiao_f80.mvp.ui.adapter.Standard_LawsAdapter;
 import com.jess.arms.di.scope.ActivityScope;
 import com.jess.arms.http.imageloader.ImageLoader;
 import com.jess.arms.integration.AppManager;

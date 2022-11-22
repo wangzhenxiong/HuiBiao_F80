@@ -3,14 +3,10 @@ package com.dy.huibiao_f80.mvp.presenter;
 import android.app.AlertDialog;
 import android.app.Application;
 import android.hardware.usb.UsbDevice;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.EditText;
 
 import com.apkfuns.logutils.LogUtils;
 import com.dy.huibiao_f80.Constants;
 import com.dy.huibiao_f80.MyAppLocation;
-import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.bean.GalleryBean;
 import com.dy.huibiao_f80.greendao.TestRecord;
 import com.dy.huibiao_f80.mvp.contract.ChoseGalleryJTJContract;
@@ -175,7 +171,7 @@ public class ChoseGalleryJTJPresenter extends BasePresenter<ChoseGalleryJTJContr
         }
     }
 
-    public void changeGallery() {
+   /* public void changeGallery() {
         //先判断是否有通道在检测
         for (int i = 0; i < MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.size(); i++) {
             GalleryBean bean = MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(i);
@@ -191,9 +187,9 @@ public class ChoseGalleryJTJPresenter extends BasePresenter<ChoseGalleryJTJContr
         }
         //按目前的排列顺序出卡，让用户手动输入通道编号 然后设置给模块
         makeDialogSetGalleryNum();
-    }
+    }*/
 
-    private void makeDialogSetGalleryNum() {
+   /* private void makeDialogSetGalleryNum() {
         if (MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.size() <= 0) {
             mRootView.reBuildGalleryView();
             return;
@@ -232,5 +228,5 @@ public class ChoseGalleryJTJPresenter extends BasePresenter<ChoseGalleryJTJContr
         builder.setCancelable(false);
         builder.setView(view);
         builder.show();
-    }
+    }*/
 }

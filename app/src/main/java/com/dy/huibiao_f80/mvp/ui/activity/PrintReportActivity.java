@@ -39,6 +39,7 @@ import com.jess.arms.utils.ArmsUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -93,6 +94,22 @@ public class PrintReportActivity extends BaseActivity<PrintReportPresenter> impl
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
+    }
+
+
+
+
+
+    @Override
     public int initView(@Nullable Bundle savedInstanceState) {
         return R.layout.activity_printreport; //如果你不需要框架帮你设置 setContentView(id) 需要自行设置,请返回 0
     }
@@ -105,6 +122,11 @@ public class PrintReportActivity extends BaseActivity<PrintReportPresenter> impl
         operationPaperId = intent.getStringExtra("operationPaperId");
         mScheduledThreadPoolExecutor = (ScheduledThreadPoolExecutor) ArmsUtils.obtainAppComponentFromContext(this).executorService();
         mPresenter.getReportMoudle(examinerId, examinationId, operationPaperId);
+    }
+
+    @Override
+    public boolean useEventBus() {
+        return false;
     }
 
     @Override

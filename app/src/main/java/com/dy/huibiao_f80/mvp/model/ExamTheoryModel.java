@@ -81,14 +81,33 @@ public class ExamTheoryModel extends BaseModel implements ExamTheoryContract.Mod
             List<BeginTheoryExam_Back.EntityBean.TheoryQuestionRadioListBean> theoryQuestionRadioList = beginTheoryExamBack.getEntity().getTheoryQuestionRadioList();
             for (int i = 0; i < theoryQuestionRadioList.size(); i++) {
                 BeginTheoryExam_Back.EntityBean.TheoryQuestionRadioListBean theoryQuestionRadioListBean = theoryQuestionRadioList.get(i);
-                String answer = answerSore(theoryQuestionRadioListBean.getAnswer());
+                String answer = answerSore(theoryQuestionRadioListBean.getStudentAnswer());
                 JSONObject value1 = new JSONObject();
                 value1.put("theoryQuestionId",theoryQuestionRadioListBean.getId());
                 value1.put("examinerAnswer",answer);
                 value1.put("status", answer.isEmpty()?"3":"4");
                 value.put(value1);
             }
-
+            List<BeginTheoryExam_Back.EntityBean.TheoryQuestionMultipleListBean> theoryQuestionMultipleList = beginTheoryExamBack.getEntity().getTheoryQuestionMultipleList();
+            for (int i = 0; i < theoryQuestionMultipleList.size(); i++) {
+                BeginTheoryExam_Back.EntityBean.TheoryQuestionMultipleListBean theoryQuestionRadioListBean = theoryQuestionMultipleList.get(i);
+                String answer = answerSore(theoryQuestionRadioListBean.getStudentAnswer());
+                JSONObject value1 = new JSONObject();
+                value1.put("theoryQuestionId",theoryQuestionRadioListBean.getId());
+                value1.put("examinerAnswer",answer);
+                value1.put("status", answer.isEmpty()?"3":"4");
+                value.put(value1);
+            }
+            List<BeginTheoryExam_Back.EntityBean.TheoryQuestionJudgeListBean> theoryQuestionJudgeList = beginTheoryExamBack.getEntity().getTheoryQuestionJudgeList();
+            for (int i = 0; i < theoryQuestionJudgeList.size(); i++) {
+                BeginTheoryExam_Back.EntityBean.TheoryQuestionJudgeListBean theoryQuestionRadioListBean = theoryQuestionJudgeList.get(i);
+                String answer = answerSore(theoryQuestionRadioListBean.getStudentAnswer());
+                JSONObject value1 = new JSONObject();
+                value1.put("theoryQuestionId",theoryQuestionRadioListBean.getId());
+                value1.put("examinerAnswer",answer);
+                value1.put("status", answer.isEmpty()?"3":"4");
+                value.put(value1);
+            }
 
             obj.put("questionAnswerList", value);
         } catch (JSONException e) {

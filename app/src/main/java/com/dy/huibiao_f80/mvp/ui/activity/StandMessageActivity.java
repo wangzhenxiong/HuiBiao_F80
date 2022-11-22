@@ -47,8 +47,8 @@ public class StandMessageActivity extends BaseActivity<StandMessagePresenter> im
 
     @Inject
     LocalFileAdapter mAdapter;
-   /* @Inject
-    Standard_LawsAdapter mStandardAdapter;*/
+    /* @Inject
+     Standard_LawsAdapter mStandardAdapter;*/
     @BindView(R.id.toolbar_back)
     RelativeLayout mToolbarBack;
     @BindView(R.id.toolbar_title)
@@ -99,14 +99,9 @@ public class StandMessageActivity extends BaseActivity<StandMessagePresenter> im
         mSwipeRefreshLayout.setEnabled(false);
         mAdapter.setEmptyView(R.layout.emptyview, (ViewGroup) mRecyclerView.getParent());
         mRecyclerView.setAdapter(mAdapter);
-        boolean exists = FileUtils.isFileExists(ArmsUtils.getString(getActivity(), R.string.app_localdata_address) + "/BiaoZhunKu");
-        if (mData == 1) {
-            path = ArmsUtils.getString(getActivity(), R.string.app_localdata_address) + "/BiaoZhunKu";
-            setTitle("检测标准");
-        } else if (mData == 2) {
-            path = ArmsUtils.getString(getActivity(), R.string.app_localdata_address) + "/FaGuiKu";
-            setTitle("法律法规");
-        }
+        boolean exists = FileUtils.isFileExists(ArmsUtils.getString(getActivity(), R.string.app_localdata_address) + "/standard");
+        path = ArmsUtils.getString(getActivity(), R.string.app_localdata_address) + "/standard";
+        setTitle("检测标准");
         if (exists) {
             mPresenter.requestfile(true, path);
         } else {
@@ -114,7 +109,6 @@ public class StandMessageActivity extends BaseActivity<StandMessagePresenter> im
             ArmsUtils.snackbarText("未找到相关标准文件");
         }
     }
-
 
 
     private void initRecyclerView() {
@@ -207,7 +201,6 @@ public class StandMessageActivity extends BaseActivity<StandMessagePresenter> im
         // TODO: add setContentView(...) invocation
         ButterKnife.bind(this);
     }
-
 
 
     @Override

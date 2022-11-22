@@ -122,7 +122,7 @@ public class ExamOperationPresenter extends BasePresenter<ExamOperationContract.
             if (i >0) {
                 makeDialog(i);
             }else{
-                submit();
+                makeDialog(0);
             }
         }else {
           ArmsUtils.snackbarText("请联系考评员评分后提交");
@@ -178,7 +178,12 @@ public class ExamOperationPresenter extends BasePresenter<ExamOperationContract.
     private void makeDialog(int i) {
         AlertDialog.Builder builder=new AlertDialog.Builder(mRootView.getActivity());
         builder.setTitle("提示");
-        builder.setMessage("还有"+i+"道题实验报告还未填写完成，确定要提交吗？");
+        if (i==0){
+            builder.setMessage("确定要提交吗？");
+        }else {
+            builder.setMessage("还有"+i+"道题实验报告还未填写完成，确定要提交吗？");
+        }
+
         builder.setNeutralButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

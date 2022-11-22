@@ -68,7 +68,7 @@ public class TestRecord extends GalleryBean implements Parcelable, IExpandable, 
     private String test_unit_name;//检测单位名称
     private String test_unit_reserved;//检测单位预留字段
 
-    private String exam_id;//检测单位预留字段
+    private String exam_id;
     private String examinationId;
     private String examinerId;
 

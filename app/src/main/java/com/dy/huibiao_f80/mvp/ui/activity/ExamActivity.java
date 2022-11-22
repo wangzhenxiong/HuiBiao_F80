@@ -86,6 +86,13 @@ public class ExamActivity extends BaseActivity<ExamPresenter> implements ExamCon
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        mRealname.setText("");
+        mCardnumber.setText("");
+    }
+
+    @Override
     public void showMessage(@NonNull String message) {
         checkNotNull(message);
         ArmsUtils.snackbarText(message);

@@ -132,6 +132,7 @@ public class ExamHintsActivity extends BaseActivity<ExamHintsPresenter> implemen
                 content.putExtra("examinationId", examinationId);
                 content.putExtra("examinerId", examinerId);
                 ArmsUtils.startActivity(content);
+                killMyself();
                 break;
         }
     }

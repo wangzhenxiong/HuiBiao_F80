@@ -484,6 +484,7 @@ public class EdtorProjectActivity extends BaseActivity<EdtorProjectPresenter> im
 
     @Override
     public void RefreshList() {
+        mPresenter.loadData(null);
         if (checkmoudle == 1) {
             checkFGGD();
         } else {

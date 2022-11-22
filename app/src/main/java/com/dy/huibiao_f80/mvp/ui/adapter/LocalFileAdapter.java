@@ -54,7 +54,7 @@ public class LocalFileAdapter extends BaseQuickAdapter<File, BaseViewHolder> {
          case "step":
              helper.setBackgroundRes(R.id.imageView,R.drawable.pdf).setText(R.id.filename,item.getName());
              break;
-         case "stand":
+         case "standard":
              helper.setBackgroundRes(R.id.imageView,R.drawable.pdf).setText(R.id.filename,item.getName());
              break;
      }

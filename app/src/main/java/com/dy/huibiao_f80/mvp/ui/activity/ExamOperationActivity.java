@@ -20,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.apkfuns.logutils.LogUtils;
+import com.dy.huibiao_f80.BuildConfig;
 import com.dy.huibiao_f80.MyAppLocation;
 import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.api.back.BeginOperationExam_Back;
@@ -35,6 +36,7 @@ import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListene
 import com.yhao.floatwindow.FloatWindow;
 import com.yhao.floatwindow.IFloatWindow;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -94,8 +96,13 @@ public class ExamOperationActivity extends BaseActivity<ExamOperationPresenter> 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent2(ExamOperationService.ExamOperationServiceEventBean tags) {
-        String timestring = tags.getTimestring();
-        mToolbarTime.setText(timestring);
+        if (tags.getState()==-1){
+           submitSuccess();
+        } else {
+            String timestring = tags.getTimestring();
+            mToolbarTime.setText(timestring);
+        }
+
     }
 
     @Override
@@ -111,6 +118,23 @@ public class ExamOperationActivity extends BaseActivity<ExamOperationPresenter> 
             FloatWindow.get().hide();
         }
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public boolean useEventBus() {
+        return false;
     }
 
     @Override
@@ -171,8 +195,11 @@ public class ExamOperationActivity extends BaseActivity<ExamOperationPresenter> 
         MyAppLocation.myAppLocation.mExamOperationService.setExaminationId(examinationId);
         MyAppLocation.myAppLocation.mExamOperationService.setExaminerId(examinerId);
 
-        MyAppLocation.myAppLocation.mExamOperationService.startExamOperation(operationExamTime);
-
+        if (BuildConfig.DEBUG){
+            MyAppLocation.myAppLocation.mExamOperationService.startExamOperation(10);
+        } else {
+            MyAppLocation.myAppLocation.mExamOperationService.startExamOperation(operationExamTime);
+        }
         initExamCont(operationPaperList.get(0),0);
 
     }
@@ -239,16 +266,16 @@ public class ExamOperationActivity extends BaseActivity<ExamOperationPresenter> 
                 break;
             case R.id.btn_starttest:
 
-                MyAppLocation.myAppLocation.mSerialDataService.initDialog();
-                View view1 = FloatWindow.get().getView();
-                String content1 = onoeperationPaper.getContent();
+                //MyAppLocation.myAppLocation.mSerialDataService.initDialog();
+                //View view1 = FloatWindow.get().getView();
+                //String content1 = onoeperationPaper.getContent();
 
-                content1 = content1.replaceAll("\\\\", "");
-                LogUtils.d(content1);
-                CharSequence spanned = Html.fromHtml(content1, new URLImageGetter(mExamtitle), null);
-                ((TextView) view1.findViewById(R.id.textview)).setText(spanned);
+                //content1 = content1.replaceAll("\\\\", "");
+                //LogUtils.d(content1);
+                //CharSequence spanned = Html.fromHtml(content1, new URLImageGetter(mExamtitle), null);
+                //((TextView) view1.findViewById(R.id.textview)).setText(spanned);
                 //((TextView) view1).setText(onoeperationPaper.getContent());
-                FloatWindow.get().show();
+                //FloatWindow.get().show();
 
                 Intent content = new Intent(this, StartTestActivity.class);
                 startActivity(content);
