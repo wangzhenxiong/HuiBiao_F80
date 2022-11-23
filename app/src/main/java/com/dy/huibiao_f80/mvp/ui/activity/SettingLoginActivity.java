@@ -115,9 +115,11 @@ public class SettingLoginActivity extends BaseActivity<SettingLoginPresenter> im
                     ArmsUtils.snackbarText("请输入用户名密码");
                     return;
                 }
-                if (username.equals("admin")&&password.equals("123456")){
+                if ((username.equals("admin")&&password.equals("admin"))||(username.equals("hbadmin")&&password.equals("hbadmin"))){
 
-                    ArmsUtils.startActivity(new Intent(this,SetingActivity.class));
+                    Intent content = new Intent(this, SetingActivity.class);
+                    content.putExtra("username",username);
+                    ArmsUtils.startActivity(content);
                 }else {
                     ArmsUtils.snackbarText("用户名密码错误");
                 }

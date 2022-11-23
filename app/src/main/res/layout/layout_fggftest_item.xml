@@ -18,7 +18,7 @@
         android:layout_width="100dp"
         android:layout_height="match_parent"
         android:layout_marginLeft="10dp"
-        android:gravity="center"
+        android:gravity="left|center"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:text="ABS:0.0000" />

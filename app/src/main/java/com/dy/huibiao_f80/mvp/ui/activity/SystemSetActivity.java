@@ -20,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.apkfuns.logutils.LogUtils;
+import com.dy.huibiao_f80.BuildConfig;
 import com.dy.huibiao_f80.Constants;
 import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.app.utils.FileUtils;
@@ -61,7 +62,10 @@ public class SystemSetActivity extends BaseActivity<SystemSetPresenter> implemen
     Button mChecknewversion;
     @BindView(R.id.save)
     Button mSave;
+    @BindView(R.id.versionname)
+    TextView mVersionname;
     private AlertDialog mSportDialog;
+    private String username;
 
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
@@ -80,9 +84,19 @@ public class SystemSetActivity extends BaseActivity<SystemSetPresenter> implemen
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
+        Intent intent = getIntent();
+        username = intent.getStringExtra("username");
+        if (username.equals("hbadmin")) {
+            mPlaurl.setEnabled(true);
+            mDevicenumber.setEnabled(true);
+        } else {
+            mPlaurl.setEnabled(false);
+            mDevicenumber.setEnabled(false);
+        }
         mDevicenumber.setText(Constants.DEVICENUM);
         mPlaurl.setText(Constants.URL);
         mSportDialog = new SpotsDialog.Builder().setContext(getActivity()).build();
+        mVersionname.setText(BuildConfig.VERSION_NAME);
     }
 
     @Override

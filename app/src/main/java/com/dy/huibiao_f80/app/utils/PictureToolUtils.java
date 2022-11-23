@@ -507,8 +507,12 @@ public class PictureToolUtils {
         int height1 = bitmap.getHeight();
         int top = height1 / 2 - 10;
         int right = width1 - 20;
+        cvs.drawText("C",width1/2/2,height1/2+3,paint);
+        cvs.drawText("T",width1/2+width1/2/2,height1/2+3,paint);
+
         cvs.drawRect(20, top, right, top + 20, paint);
         cvs.drawRect((height) / 2, top, (height) / 2 + 1, top + 20, paint);
+
         bmplist.add(bitmap);
         bmp = cropBitmap(bmp, 20, top + 1, width1 - 40 - 2, 20 - 2); //裁剪  是容器的宽高
         //bmp = scaleBitmap(bmp, 460, 254); //比例缩放

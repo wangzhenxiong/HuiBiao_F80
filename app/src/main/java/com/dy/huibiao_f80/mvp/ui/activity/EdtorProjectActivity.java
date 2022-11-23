@@ -91,6 +91,8 @@ public class EdtorProjectActivity extends BaseActivity<EdtorProjectPresenter> im
     AlertDialog mSportDialog;
     @BindView(R.id.synchronous)
     Button mSynchronous;
+    @BindView(R.id.outorin)
+    Button mOutorin;
     private int checkmoudle = 1;
     private SparseArray<String> mSparseTags = new SparseArray<>();
     private SparseArray<String> mSparseTags_Project = new SparseArray<>();
@@ -136,13 +138,13 @@ public class EdtorProjectActivity extends BaseActivity<EdtorProjectPresenter> im
         initsparr();
         checkFGGD();
 
-        mToolbarTitle.setOnLongClickListener(new View.OnLongClickListener() {
+        /*mToolbarTitle.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 makeExportProjectDialog();
                 return true;
             }
-        });
+        });*/
     }
 
     /**
@@ -302,7 +304,7 @@ public class EdtorProjectActivity extends BaseActivity<EdtorProjectPresenter> im
         ButterKnife.bind(this);
     }
 
-    @OnClick({R.id.fggd, R.id.jtj, R.id.newproject, R.id.deleteproject,R.id.synchronous})
+    @OnClick({R.id.fggd, R.id.jtj, R.id.newproject, R.id.deleteproject, R.id.synchronous,R.id.outorin})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.fggd:
@@ -319,6 +321,9 @@ public class EdtorProjectActivity extends BaseActivity<EdtorProjectPresenter> im
                 break;
             case R.id.synchronous:
                 mPresenter.checkNewVersion(checkmoudle);
+                break;
+            case R.id.outorin:
+                makeExportProjectDialog();
                 break;
         }
     }
@@ -356,7 +361,7 @@ public class EdtorProjectActivity extends BaseActivity<EdtorProjectPresenter> im
                     DBHelper.getProjectFGGDDao().deleteInTx(list);
                     mDateList_fggd.remove(projectMessage_fggd);
                     fggdProjectFragment.setData(mDateList_fggd);
-                    fggdProjectFragment.lastCheck=-1;
+                    fggdProjectFragment.lastCheck = -1;
                     projectMessage_fggd = null;
                     //删除肯定是选中的项目
                     newProjectFGGDFragment.setData(projectMessage_fggd);
@@ -366,7 +371,7 @@ public class EdtorProjectActivity extends BaseActivity<EdtorProjectPresenter> im
                     DBHelper.getProjectJTJDao().deleteInTx(list);
                     mDateList_jtj.remove(projectMessage_jtj);
                     jtjProjectFragment.setData(mDateList_jtj);
-                    jtjProjectFragment.lastCheck=-1;
+                    jtjProjectFragment.lastCheck = -1;
                     projectMessage_jtj = null;
 
                     //删除肯定是选中的项目
@@ -537,9 +542,9 @@ public class EdtorProjectActivity extends BaseActivity<EdtorProjectPresenter> im
     public void inputProject(File file, String filename, int checkmoudle) {
         List<String> list = new ArrayList<>();
         list.add(file.getAbsolutePath());
-        if (1==checkmoudle) {
+        if (1 == checkmoudle) {
             mPresenter.inputFGGDProject(list);
-        } else if (2==checkmoudle) {
+        } else if (2 == checkmoudle) {
             mPresenter.inputJTJProject(list);
         }
     }

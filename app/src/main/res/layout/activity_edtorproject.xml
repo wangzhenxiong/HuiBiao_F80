@@ -109,7 +109,7 @@
                     android:id="@+id/deleteproject"
                     android:layout_width="wrap_content"
                     android:layout_height="34dp"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="10dp"
                     android:background="@drawable/btn_background_blue"
                     android:text="删除"
                     android:textColor="#DC000F"
@@ -119,10 +119,20 @@
                 <Button
                     android:id="@+id/synchronous"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="20dp"
+                    android:layout_height="34dp"
+                    android:layout_marginLeft="10dp"
                     android:background="@drawable/btn_background_blue"
                     android:text="同步"
+                    android:textColor="#fff"
+                    android:textSize="18dp"
+                    android:visibility="visible" />
+                <Button
+                    android:id="@+id/outorin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="34dp"
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/btn_background_blue"
+                    android:text="导入导出"
                     android:textColor="#fff"
                     android:textSize="18dp"
                     android:visibility="visible" />

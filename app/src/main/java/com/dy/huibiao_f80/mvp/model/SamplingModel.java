@@ -46,7 +46,7 @@ public class SamplingModel extends BaseModel implements SamplingContract.Model {
     }
 
     @Override
-    public Observable<List<Sampling>> seach(String starttime, String stoptime, String testResult, boolean b) {
+    public Observable<List<Sampling>> seach(String startsampletime, String stopsampletime,String starttime, String stoptime, String testResult, boolean b) {
         return Observable.create(new ObservableOnSubscribe<List<Sampling>>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<Sampling>> emitter) throws Exception {
@@ -60,6 +60,16 @@ public class SamplingModel extends BaseModel implements SamplingContract.Model {
                     LogUtils.d(starte+"  "+(stop+ 86400000));
                     samplingQueryBuilder = samplingQueryBuilder.where(SamplingDao.Properties.TestingTime.between(starte, stop + 86400000));
                 }
+
+                if (startsampletime.equals("无")||stopsampletime.isEmpty()){
+
+                }else {
+                    Long starte = DataUtils.getNowtimeYYIMMIDD(startsampletime);
+                    Long stop = DataUtils.getNowtimeYYIMMIDD(stopsampletime);
+                    LogUtils.d(starte+"  "+(stop+ 86400000));
+                    samplingQueryBuilder = samplingQueryBuilder.where(SamplingDao.Properties.CreationTime.between(starte, stop + 86400000));
+                }
+
                 if (!testResult.equals("选择判定结果")){
                     samplingQueryBuilder=samplingQueryBuilder.where(SamplingDao.Properties.TestResult.eq(testResult));
                 }

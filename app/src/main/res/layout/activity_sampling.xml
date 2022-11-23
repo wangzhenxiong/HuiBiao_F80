@@ -21,7 +21,17 @@
             android:gravity="center_vertical|right"
             android:layout_marginTop="20dp"
             android:orientation="horizontal">
-
+            <Button
+                android:id="@+id/chose_sampletime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/background_item_blue"
+                android:text="选择创建时间"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:textColor="@color/white" />
             <Button
                 android:id="@+id/chose_time"
                 android:layout_width="wrap_content"

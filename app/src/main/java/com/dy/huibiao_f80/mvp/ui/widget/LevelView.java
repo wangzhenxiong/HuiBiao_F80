@@ -259,7 +259,7 @@ public class LevelView extends View {
         float limitRadius = mLimitRadius - mBubbleRadius;
 
         bubblePoint = convertCoordinate(rollAngle, pitchAngle, mLimitRadius);
-        outLimit(bubblePoint, limitRadius);
+        //outLimit(bubblePoint, limitRadius);
 
         //坐标超出最大圆，取法向圆上的点
         if(outLimit(bubblePoint, limitRadius)){
@@ -278,7 +278,7 @@ public class LevelView extends View {
         float cSqrt = (bubblePnt.x - centerPnt.x)*(bubblePnt.x - centerPnt.x) + (centerPnt.y - bubblePnt.y) * + (centerPnt.y - bubblePnt.y);
 
 
-        if(cSqrt - limitRadius * limitRadius > 0){
+        if(cSqrt - limitRadius * limitRadius > 10){
             return true;
         }
         return false;

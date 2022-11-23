@@ -12,7 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.dy.huibiao_f80.BuildConfig;
 import com.dy.huibiao_f80.MyAppLocation;
 import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.api.back.GetExamPage_Back;
@@ -80,7 +79,7 @@ public class ExamStateActivity extends BaseActivity<ExamStatePresenter> implemen
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        runFlag=false;
+        runFlag = false;
     }
      /*@Override
     public void onBackPressed() {
@@ -143,7 +142,18 @@ public class ExamStateActivity extends BaseActivity<ExamStatePresenter> implemen
 
     private int finishTime;
     boolean runFlag;
-
+    /**
+     *理论考试状态：1未考2已考
+     */
+    Integer examStatus;
+    /**
+     * 分析题考试状态：1未考2已考
+     */
+    Integer analyseStatus;
+    /**
+     * 实操题考试状态：1未考2进行中3已结束
+     */
+    Integer operationStatus;
     @Override
     public void showState(GetExamPage_Back back) {
         runFlag = true;
@@ -151,47 +161,31 @@ public class ExamStateActivity extends BaseActivity<ExamStatePresenter> implemen
         GetExamPage_Back.EntityBean entity = back.getEntity();
         GetExamPage_Back.EntityBean.ExaminationBean examination = entity.getExamination();
         GetExamPage_Back.EntityBean.ExaminerBean examiner = entity.getExaminer();
-        //理论考试状态：1未考2已考
-        Integer examStatus = examiner.getExamStatus();
-        //分析题考试状态：1未考2已考
-        Integer analyseStatus = examiner.getAnalyseStatus();
-        //实操题考试状态：1未考2进行中3已结束
-        Integer operationStatus = examiner.getOperationStatus();
-        //时间
+
+         examStatus = examiner.getExamStatus();
+         analyseStatus = examiner.getAnalyseStatus();
+         operationStatus = examiner.getOperationStatus();
         Integer theoryExamTime = examination.getTheoryExamTime();
         Integer analyseExamTime = examination.getAnalyseExamTime();
         Integer operationExamTime = examination.getOperationExamTime();
 
         if (examStatus == 1) {
-            mStartexam1.setClickable(true);
             mStartexam1.setBackground(getResources().getDrawable(R.drawable.btn_background_blue));
-        } else if (examStatus == 2) {
-
-            mStartexam1.setClickable(false);
-            if (BuildConfig.DEBUG) {
-                mStartexam1.setClickable(true);
-            }
+        } else  {
+            mStartexam1.setText(">>已完成>>");
             mStartexam1.setBackground(getResources().getDrawable(R.drawable.btn_background_gray));
         }
 
         if (analyseStatus == 1) {
-            mStartexa2.setClickable(true);
             mStartexa2.setBackground(getResources().getDrawable(R.drawable.btn_background_blue));
-        } else if (analyseStatus == 2) {
-            mStartexa2.setClickable(false);
-            if (BuildConfig.DEBUG) {
-                mStartexa2.setClickable(true);
-            }
+        } else  {
+            mStartexa2.setText(">>已完成>>");
             mStartexa2.setBackground(getResources().getDrawable(R.drawable.btn_background_gray));
         }
         if (operationStatus == 1) {
-            mStartexam3.setClickable(true);
             mStartexam3.setBackground(getResources().getDrawable(R.drawable.btn_background_blue));
         } else {
-            mStartexam3.setClickable(false);
-            if (BuildConfig.DEBUG) {
-                mStartexam3.setClickable(true);
-            }
+            mStartexam3.setText(">>已完成>>");
             mStartexam3.setBackground(getResources().getDrawable(R.drawable.btn_background_gray));
         }
 
@@ -241,7 +235,6 @@ public class ExamStateActivity extends BaseActivity<ExamStatePresenter> implemen
     }
 
 
-
     @OnClick({R.id.startexam1, R.id.startexa2, R.id.startexam3})
     public void onClick(View view) {
         Intent intent = new Intent();
@@ -249,19 +242,42 @@ public class ExamStateActivity extends BaseActivity<ExamStatePresenter> implemen
         intent.putExtra("examinerId", examinerId);
         switch (view.getId()) {
             case R.id.startexam1:
-                intent.setClass(this, ExamTheoryActivity.class);
-                ArmsUtils.startActivity(intent);
-                finish();
+                if (examStatus == 1) {
+                    intent.setClass(this, ExamTheoryActivity.class);
+                    ArmsUtils.startActivity(intent);
+                    finish();
+                }else {
+                   ArmsUtils.snackbarText("已完成理论考试");
+                }
+
                 break;
             case R.id.startexa2:
-                intent.setClass(this, ExamAnalyseActivity.class);
-                ArmsUtils.startActivity(intent);
-                finish();
+                if (analyseStatus == 1) {
+                    if (examStatus == 1){
+                        ArmsUtils.snackbarText("请先完成理论考试");
+                        return;
+                    }
+                    intent.setClass(this, ExamAnalyseActivity.class);
+                    ArmsUtils.startActivity(intent);
+                    finish();
+                }else {
+                    ArmsUtils.snackbarText("已完成分析题考试");
+                }
+
                 break;
             case R.id.startexam3:
-                intent.setClass(this, ExamOperationActivity.class);
-                ArmsUtils.startActivity(intent);
-                finish();
+                if (operationStatus == 1) {
+                    if (analyseStatus == 1) {
+                        ArmsUtils.snackbarText("请先完成分析题考试");
+                        return;
+                    }
+                    intent.setClass(this, ExamOperationActivity.class);
+                    ArmsUtils.startActivity(intent);
+                    finish();
+                }else {
+                    ArmsUtils.snackbarText("已完成实操题考试");
+                }
+
                 break;
         }
     }

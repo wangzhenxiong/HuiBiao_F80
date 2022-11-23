@@ -17,7 +17,6 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.apkfuns.logutils.LogUtils;
 import com.dy.huibiao_f80.Constants;
 import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.app.utils.SPUtils;
@@ -30,12 +29,15 @@ import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.jess.arms.utils.Preconditions.checkNotNull;
 
-public class BalanceCalibrationActivity extends BaseActivity<BalanceCalibrationPresenter> implements BalanceCalibrationContract.View , SensorEventListener {
+public class BalanceCalibrationActivity extends BaseActivity<BalanceCalibrationPresenter> implements BalanceCalibrationContract.View, SensorEventListener {
 
     @BindView(R.id.toolbar_back)
     RelativeLayout mToolbarBack;
@@ -124,9 +126,9 @@ public class BalanceCalibrationActivity extends BaseActivity<BalanceCalibrationP
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
-        mGson=new Gson();
+        mGson = new Gson();
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        Blance_Value blance_value=mGson.fromJson((String) SPUtils.get(this, Constants.BLANCE_VALUEKEY,mGson.toJson(new Blance_Value(-1,-1,-1))),Blance_Value.class);
+        Blance_Value blance_value = mGson.fromJson((String) SPUtils.get(this, Constants.BLANCE_VALUEKEY, mGson.toJson(new Blance_Value(-1, -1, -1))), Blance_Value.class);
         if (blance_value.getX_value() != -1) {
             mX_value = blance_value.getX_value();
             mY_value = blance_value.getY_value();
@@ -135,10 +137,10 @@ public class BalanceCalibrationActivity extends BaseActivity<BalanceCalibrationP
         mGvHv.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                mZ_value = accValues[0];
-                mX_value = accValues[1];
-                mY_value = accValues[2];
-                SPUtils.put(getActivity(),Constants.BLANCE_VALUEKEY,mGson.toJson(new Blance_Value(mX_value,mY_value,mZ_value)));
+                mZ_value = avgz;
+                mX_value = avgx;
+                mY_value = avgy;
+                SPUtils.put(getActivity(), Constants.BLANCE_VALUEKEY, mGson.toJson(new Blance_Value(mX_value, mY_value, mZ_value)));
                 return false;
             }
         });
@@ -176,6 +178,13 @@ public class BalanceCalibrationActivity extends BaseActivity<BalanceCalibrationP
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
 
+    List<Float> xValue = new ArrayList<>();
+    List<Float> yValue = new ArrayList<>();
+    List<Float> zValue = new ArrayList<>();
+    float avgx;
+    float avgy;
+    float avgz;
+
     @Override
     public void onSensorChanged(SensorEvent event) {
         // 获取手机触发event的传感器的类型
@@ -183,7 +192,24 @@ public class BalanceCalibrationActivity extends BaseActivity<BalanceCalibrationP
         switch (sensorType) {
             case Sensor.TYPE_ACCELEROMETER:
                 accValues = event.values.clone();
-                LogUtils.d(accValues);
+                // 获取　沿着Z轴转过的角度
+                float azimuth = accValues[0];
+                zValue.add(azimuth);
+                // 获取　沿着X轴倾斜时　与Y轴的夹角
+                float pitchAngle = accValues[1];
+                xValue.add(pitchAngle);
+                // 获取　沿着Y轴的滚动时　与X轴的角度
+                float rollAngle = -accValues[2];
+                yValue.add(rollAngle);
+                if (yValue.size() == 20) {
+                    avgx = getAVG(xValue);
+                    avgz = getAVG(zValue);
+                    avgy = getAVG(yValue);
+                    onAngleChanged(avgx - mX_value, avgz - mZ_value, avgy - mY_value);
+                    yValue.clear();
+                    xValue.clear();
+                    zValue.clear();
+                }
                 break;
             /*case Sensor.TYPE_MAGNETIC_FIELD:
                 magValues = event.values.clone();
@@ -198,38 +224,40 @@ public class BalanceCalibrationActivity extends BaseActivity<BalanceCalibrationP
      /*   SensorManager.getRotationMatrix(r, angle, accValues, magValues);
         SensorManager.getOrientation(r, values);*/
 
-        // 获取　沿着Z轴转过的角度
-        float azimuth = accValues[0];
 
-        // 获取　沿着X轴倾斜时　与Y轴的夹角
-        float pitchAngle = accValues[1];
+    }
 
-        // 获取　沿着Y轴的滚动时　与X轴的角度
-        //此处与官方文档描述不一致，所在加了符号（https://developer.android.google.cn/reference/android/hardware/SensorManager.html#getOrientation(float[], float[])）
-        float rollAngle = -accValues[2];
+    private float getAVG(List<Float> list) {
+        float sun = 0;
+        float max = 0;
+        float min = Float.MAX_VALUE;
+        for (int i = 0; i < list.size(); i++) {
+            Float aFloat = list.get(i);
+            if (max < aFloat) {
+                max = aFloat;
+            }
+            if (min > aFloat) {
+                min = aFloat;
+            }
 
-        onAngleChanged(pitchAngle - mX_value, azimuth - mZ_value, rollAngle - mY_value);
-
+            sun = sun + aFloat;
+        }
+        return (sun-max-min) / (list.size()-2);
     }
 
     /**
      * 角度变更后显示到界面
      *
-     * @param rollAngle   y
-     * @param pitchAngle   x
-     * @param azimuth    z
+     * @param x y
+     * @param z x
+     * @param y z
      */
-    private void onAngleChanged(float rollAngle, float pitchAngle, float azimuth) {
+    private void onAngleChanged(float x, float z, float y) {
 
-        mGvHv.setAngle(rollAngle, pitchAngle);
-        mTvlHorz.setText(String.valueOf((int) Math.toDegrees(rollAngle)) + "°");
-        mTvlVertical.setText(String.valueOf((int) Math.toDegrees(pitchAngle)) + "°");
+        mGvHv.setAngle(x, z);
+        mTvlHorz.setText(String.valueOf((int) Math.toDegrees(x)) + "°");
+        mTvlVertical.setText(String.valueOf((int) Math.toDegrees(z)) + "°");
     }
-
-
-
-
-
 
 
     static class Blance_Value implements Parcelable {
@@ -243,7 +271,7 @@ public class BalanceCalibrationActivity extends BaseActivity<BalanceCalibrationP
             this.z_value = z_value;
         }
 
-        public Blance_Value( ) {
+        public Blance_Value() {
         }
 
         public float getX_value() {

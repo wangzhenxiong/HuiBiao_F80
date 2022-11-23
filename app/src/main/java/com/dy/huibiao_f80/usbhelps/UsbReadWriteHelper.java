@@ -309,22 +309,22 @@ public class UsbReadWriteHelper {
                         }
                         switch (vertical) {
                             case 1:
-                                vertical_d = vertical_d + 1;
+                                vertical_d = vertical_d + 2;
                                 vertical = 0;
                                 break;
                             case -1:
-                                vertical_d = vertical_d - 1;
+                                vertical_d = vertical_d - 2;
                                 vertical = 0;
                                 break;
                             default:
                         }
                         switch (horizontal) {
                             case 1:
-                                horizontal_d = horizontal_d + 1;
+                                horizontal_d = horizontal_d + 2;
                                 horizontal = 0;
                                 break;
                             case -1:
-                                horizontal_d = horizontal_d - 1;
+                                horizontal_d = horizontal_d - 2;
                                 horizontal = 0;
                                 break;
                             default:

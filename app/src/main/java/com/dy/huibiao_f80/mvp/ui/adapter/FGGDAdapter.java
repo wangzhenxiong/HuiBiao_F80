@@ -52,7 +52,7 @@ public class FGGDAdapter extends BaseQuickAdapter<GalleryBean, BaseViewHolder> {
         if (absorbance1<0){
             absorbance1=0;
         }
-        double four = NumberUtils.four(absorbance1);
+        String four = NumberUtils.fourString(absorbance1);
         helper.setText(R.id.gallery_num,item.getGalleryNum()+"")
                 .setText(R.id.abs_value,"ABS:"+ four)
                 .setText(R.id.contro_state,item.getDowhat()==1?"(样品)":"(对照)");

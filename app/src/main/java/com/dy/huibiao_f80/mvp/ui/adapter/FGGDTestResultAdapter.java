@@ -75,8 +75,7 @@ public class FGGDTestResultAdapter extends BaseQuickAdapter<GalleryBean, BaseVie
                 .setText(R.id.sampleserial,item1.getSamplenum())
                 .setText(R.id.dishu,item1.getDilutionratio()+"")
                 .setText(R.id.testresult,item1.getTestresult()+"")
-                .setText(R.id.jujdger, decisionoutcome +"")
-        ;
+                .setText(R.id.jujdger, decisionoutcome +"");
 
         double abs_ = 0;
         BaseProjectMessage baseProjectMessage = item.getmProjectMessage();
@@ -103,7 +102,7 @@ public class FGGDTestResultAdapter extends BaseQuickAdapter<GalleryBean, BaseVie
         if (abs_<0){
             abs_=0;
         }
-        double four = NumberUtils.four(abs_);
+        String four = NumberUtils.fourString(abs_);
         helper.setText(R.id.abs_value,four+"");
 
        /* helper.setOnCheckedChangeListener(R.id.checkbox, new CompoundButton.OnCheckedChangeListener() {

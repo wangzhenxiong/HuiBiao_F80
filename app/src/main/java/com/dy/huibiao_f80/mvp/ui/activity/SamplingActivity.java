@@ -81,7 +81,10 @@ public class SamplingActivity extends BaseActivity<SamplingPresenter> implements
     SamplingAdapter samplingAdapter;
     @Inject
     AlertDialog sportDialog;
-
+    @BindView(R.id.chose_sampletime)
+    Button mChoseSampletime;
+    private String startsampletime = "无";
+    private String stopsampletime = "";
     private String starttime = "无";
     private String stoptime = "";
     private boolean isSeaching;
@@ -109,11 +112,11 @@ public class SamplingActivity extends BaseActivity<SamplingPresenter> implements
         samplingAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                if (view.getId()==R.id.checkbox) {
+                if (view.getId() == R.id.checkbox) {
                     Sampling galleryBean = samplingList.get(position);
                     if (galleryBean.isCheck()) {
                         galleryBean.setCheck(false);
-                    }else {
+                    } else {
                         galleryBean.setCheck(true);
                     }
                 }
@@ -131,13 +134,13 @@ public class SamplingActivity extends BaseActivity<SamplingPresenter> implements
             }
         });
         int requestcode = getIntent().getIntExtra("requestcode", 0);
-        if (requestcode==RecordDetailActivity.REQUESTCODE){
+        if (requestcode == RecordDetailActivity.REQUESTCODE) {
             samplingAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                     Long id = samplingList.get(position).getId();
                     Intent intent = new Intent();
-                    intent.putExtra("id",id );
+                    intent.putExtra("id", id);
                     setResult(Activity.RESULT_OK, intent);
                     // RESULT_OK就是一个默认值，=-1，它说OK就OK吧
                     finish();
@@ -189,9 +192,12 @@ public class SamplingActivity extends BaseActivity<SamplingPresenter> implements
         ButterKnife.bind(this);
     }
 
-    @OnClick({R.id.chose_time, R.id.chose_result, R.id.seach, R.id.newsampling, R.id.editor, R.id.delete})
+    @OnClick({R.id.chose_sampletime,R.id.chose_time, R.id.chose_result, R.id.seach, R.id.newsampling, R.id.editor, R.id.delete})
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.chose_sampletime:
+                choseSampleingTime();
+                break;
             case R.id.chose_time:
                 choseTime();
                 break;
@@ -203,20 +209,20 @@ public class SamplingActivity extends BaseActivity<SamplingPresenter> implements
                     mSeach.setText("查询");
                     isSeaching = false;
 
-
+                    mChoseSampletime.setText("选择创建时间");
                     mChoseTime.setText("选择检测时间");
                     mChoseResult.setText("选择判定结果");
 
                     mPresenter.load(true);
 
                 } else {
-                    if (mChoseTime.getText().toString().equals("选择检测时间")&&mChoseResult.getText().toString().equals("选择判定结果")){
+                    if (mChoseSampletime.getText().toString().equals("选择创建时间")&&mChoseTime.getText().toString().equals("选择检测时间") && mChoseResult.getText().toString().equals("选择判定结果")) {
                         ArmsUtils.snackbarText("请选择搜索条件");
                         return;
                     }
                     mSeach.setText("取消");
                     isSeaching = true;
-                    mPresenter.seach(starttime, stoptime, mChoseResult.getText().toString(), true);
+                    mPresenter.seach(startsampletime,stopsampletime,starttime, stoptime, mChoseResult.getText().toString(), true);
                 }
                 break;
             case R.id.newsampling:
@@ -262,6 +268,8 @@ public class SamplingActivity extends BaseActivity<SamplingPresenter> implements
         }
     }
 
+
+
     private void makeDeleteDialog(List<Sampling> checkSamples) {
         AlertDialog dialog = new AlertDialog.Builder(this).create();
         dialog.setTitle("提示");
@@ -273,7 +281,7 @@ public class SamplingActivity extends BaseActivity<SamplingPresenter> implements
                 DBHelper.getSamplingDao().deleteInTx(checkSamples);
                 ArmsUtils.snackbarText("删除成功");
                 if (isSeaching) {
-                    mPresenter.seach(starttime, stoptime, mChoseResult.getText().toString(), true);
+                    mPresenter.seach(startsampletime, stopsampletime,starttime, stoptime, mChoseResult.getText().toString(), true);
                 } else {
                     mPresenter.load(true);
                 }
@@ -349,6 +357,53 @@ public class SamplingActivity extends BaseActivity<SamplingPresenter> implements
         dialog.setCanceledOnTouchOutside(true);
     }
 
+    private void choseSampleingTime() {
+        MyDatePickerDialog myDatePickerDialog = new MyDatePickerDialog(this, AlertDialog.THEME_HOLO_LIGHT);
+        myDatePickerDialog.setOnImgDialogListener(new MyDatePickerDialog.OnImgDialogListener() {
+            @Override
+            public void onItemImg(int year1_start, int month1_start, int day1_start, int year1_stop, int month1_stop, int day1_stop, String type) {
+                LogUtils.d(year1_start + "年" + month1_start + "月" + day1_start + "日" + year1_stop + "年" + month1_stop + "月" + day1_stop + "日" + type);
+                Calendar calendarstart = Calendar.getInstance();
+                calendarstart.set(year1_start, month1_start, day1_start);
+                Calendar calendarstop = Calendar.getInstance();
+                calendarstop.set(year1_stop, month1_stop, day1_stop);
+
+
+                Date time1 = calendarstart.getTime();
+                Date time2 = calendarstop.getTime();
+
+                if (time1.getTime() > time2.getTime()) {
+                    startsampletime = getTime(time2);
+                    stopsampletime = getTime(time1);
+                    mChoseSampletime.setText(startsampletime + "-" + stopsampletime);
+                } else if (time1.getTime() < time2.getTime()) {
+                    startsampletime = getTime(time1);
+                    stopsampletime = getTime(time2);
+                    mChoseSampletime.setText(startsampletime + "-" + stopsampletime);
+
+                } else {
+                    startsampletime = getTime(time1);
+                    stopsampletime = getTime(time2);
+                    mChoseSampletime.setText(startsampletime);
+                }
+
+
+
+            }
+
+            @Override
+            public void cancle() {
+                isSeaching = false;
+                startsampletime = "无";
+                stopsampletime = "";
+                mChoseTime.setText("选择检测时间");
+
+
+            }
+        });
+        myDatePickerDialog.myShow();
+    }
+
     private void choseTime() {
         MyDatePickerDialog myDatePickerDialog = new MyDatePickerDialog(this, AlertDialog.THEME_HOLO_LIGHT);
         myDatePickerDialog.setOnImgDialogListener(new MyDatePickerDialog.OnImgDialogListener() {
@@ -422,11 +477,11 @@ public class SamplingActivity extends BaseActivity<SamplingPresenter> implements
                     ArmsUtils.snackbarText("请输入样品名称");
                     return;
                 }
-                if ( number.isEmpty() ) {
+                if (number.isEmpty()) {
                     ArmsUtils.snackbarText("请输入采样单编号");
                     return;
                 }
-                if ( beunit.isEmpty() ) {
+                if (beunit.isEmpty()) {
                     ArmsUtils.snackbarText("请输入被检单位");
                     return;
                 }

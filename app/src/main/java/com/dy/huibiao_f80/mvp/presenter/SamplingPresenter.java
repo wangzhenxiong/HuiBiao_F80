@@ -53,9 +53,9 @@ public class SamplingPresenter extends BasePresenter<SamplingContract.Model, Sam
         this.mApplication = null;
     }
 
-    public void seach(String starttime, String stoptime, String testResult, boolean b) {
+    public void seach(String startsampletime, String stopsampletime,String starttime, String stoptime, String testResult, boolean b) {
 
-        mModel.seach(starttime,stoptime,testResult,b)
+        mModel.seach(startsampletime,stopsampletime,starttime,stoptime,testResult,b)
                 .subscribeOn(Schedulers.io())
                 .doOnSubscribe(disposable -> {
                     mRootView.showLoading();

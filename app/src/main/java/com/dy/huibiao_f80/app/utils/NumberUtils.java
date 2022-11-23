@@ -82,4 +82,34 @@ public class NumberUtils {
     private static double stringToDouble(String s) {
         return Double.valueOf(s);
     }
+
+
+    public static String oneString(double d) {
+        String format = new DecimalFormat("#,##0.0").format(d);
+        return format;
+    }
+
+    public static String twoString(double d) {
+        String format = new DecimalFormat("#,##0.00").format(d);
+        return format;
+    }
+
+    public static String threeString(double d) {
+        String format = new DecimalFormat("#,##0.000").format(d);
+        return format;
+    }
+
+    public static String fourString(double d) {
+        String format = new DecimalFormat("#,##0.0000").format(d);
+        return format;
+    }
+    public static String fiveString(double d) {
+        String format = new DecimalFormat("#,##0.00000").format(d);
+        return format;
+    }
+
+    public static String sixString(double d) {
+        String format = new DecimalFormat("#,##0.000000").format(d);
+        return format;
+    }
 }

@@ -39,6 +39,7 @@ public class SetingActivity extends BaseActivity<SetingPresenter> implements Set
     TextView mSystemset;
     @BindView(R.id.project)
     TextView mProject;
+    private String username;
 
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
@@ -57,7 +58,8 @@ public class SetingActivity extends BaseActivity<SetingPresenter> implements Set
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
-
+        Intent intent = getIntent();
+        username = intent.getStringExtra("username");
     }
 
     @Override
@@ -98,7 +100,9 @@ public class SetingActivity extends BaseActivity<SetingPresenter> implements Set
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.systemset:
-                ArmsUtils.startActivity(new Intent(this,SystemSetActivity.class));
+                Intent content = new Intent(this, SystemSetActivity.class);
+                content.putExtra("username",username);
+                ArmsUtils.startActivity(content);
                 break;
             case R.id.project:
                 ArmsUtils.startActivity(new Intent(this, EdtorProjectActivity.class));
