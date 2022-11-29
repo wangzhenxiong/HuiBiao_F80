@@ -108,9 +108,9 @@ public class ExamTheoryActivity extends BaseActivity<ExamTheoryPresenter> implem
     private List<BeginTheoryExam_Back.EntityBean.TheoryQuestionRadioListBean> theoryQuestionRadioList;
     private List<BeginTheoryExam_Back.EntityBean.TheoryQuestionMultipleListBean> theoryQuestionMultipleList;
     private List<BeginTheoryExam_Back.EntityBean.TheoryQuestionJudgeListBean> theoryQuestionJudgeList;
-    private int theoryQuestionRadioList_p = -1;
-    private int theoryQuestionMultipleList_p = -1;
-    private int theoryQuestionJudgeList_p = -1;
+    private int singleList_p = -1;
+    private int multipleList_p = -1;
+    private int judgeList_p = -1;
 
     private View theoryQuestionRadio_layout;
     private View theoryQuestionMultiple_layout;
@@ -278,30 +278,30 @@ public class ExamTheoryActivity extends BaseActivity<ExamTheoryPresenter> implem
     private void checked(String a) {
         LogUtils.d("选择了"+a);
         if (nowShowTitle instanceof BeginTheoryExam_Back.EntityBean.TheoryQuestionRadioListBean) {
-            theoryQuestionRadioList.get(theoryQuestionRadioList_p).setStudentAnswer(a);
+            theoryQuestionRadioList.get(singleList_p).setStudentAnswer(a);
         } else if (nowShowTitle instanceof BeginTheoryExam_Back.EntityBean.TheoryQuestionMultipleListBean) {
-            theoryQuestionMultipleList.get(theoryQuestionMultipleList_p).setStudentAnswer(a);
+            theoryQuestionMultipleList.get(multipleList_p).setStudentAnswer(a);
         } else if (nowShowTitle instanceof BeginTheoryExam_Back.EntityBean.TheoryQuestionJudgeListBean) {
-            theoryQuestionJudgeList.get(theoryQuestionJudgeList_p).setStudentAnswer(a);
+            theoryQuestionJudgeList.get(judgeList_p).setStudentAnswer(a);
         }
     }
 
     private void multipleUnCheck(String c) {
         if (nowShowTitle instanceof BeginTheoryExam_Back.EntityBean.TheoryQuestionRadioListBean) {
-            BeginTheoryExam_Back.EntityBean.TheoryQuestionRadioListBean theoryQuestionRadioListBean = theoryQuestionRadioList.get(theoryQuestionRadioList_p);
+            BeginTheoryExam_Back.EntityBean.TheoryQuestionRadioListBean theoryQuestionRadioListBean = theoryQuestionRadioList.get(singleList_p);
             String answer = theoryQuestionRadioListBean.getStudentAnswer();
             if (answer.contains(c)) {
                 theoryQuestionRadioListBean.setStudentAnswer(answer.replace(c,""));
             }
 
         } else if (nowShowTitle instanceof BeginTheoryExam_Back.EntityBean.TheoryQuestionMultipleListBean) {
-            BeginTheoryExam_Back.EntityBean.TheoryQuestionMultipleListBean theoryQuestionMultipleListBean = theoryQuestionMultipleList.get(theoryQuestionMultipleList_p);
+            BeginTheoryExam_Back.EntityBean.TheoryQuestionMultipleListBean theoryQuestionMultipleListBean = theoryQuestionMultipleList.get(multipleList_p);
             String answer = theoryQuestionMultipleListBean.getStudentAnswer();
             if (answer.contains(c)) {
                 theoryQuestionMultipleListBean.setStudentAnswer(answer.replace(c,""));
             }
         } else if (nowShowTitle instanceof BeginTheoryExam_Back.EntityBean.TheoryQuestionJudgeListBean) {
-            BeginTheoryExam_Back.EntityBean.TheoryQuestionJudgeListBean theoryQuestionJudgeListBean = theoryQuestionJudgeList.get(theoryQuestionJudgeList_p);
+            BeginTheoryExam_Back.EntityBean.TheoryQuestionJudgeListBean theoryQuestionJudgeListBean = theoryQuestionJudgeList.get(judgeList_p);
             String answer = theoryQuestionJudgeListBean.getStudentAnswer();
             if (answer.contains(c)) {
                 theoryQuestionJudgeListBean.setStudentAnswer(answer.replace(c,""));
@@ -312,7 +312,7 @@ public class ExamTheoryActivity extends BaseActivity<ExamTheoryPresenter> implem
     private void multipleCheck(String c) {
         LogUtils.d(c+"_check  " );
         if (nowShowTitle instanceof BeginTheoryExam_Back.EntityBean.TheoryQuestionRadioListBean) {
-            BeginTheoryExam_Back.EntityBean.TheoryQuestionRadioListBean theoryQuestionRadioListBean = theoryQuestionRadioList.get(theoryQuestionRadioList_p);
+            BeginTheoryExam_Back.EntityBean.TheoryQuestionRadioListBean theoryQuestionRadioListBean = theoryQuestionRadioList.get(singleList_p);
             String answer = theoryQuestionRadioListBean.getStudentAnswer();
             if (answer.isEmpty()) {
                 theoryQuestionRadioListBean.setStudentAnswer(c+"");
@@ -323,7 +323,7 @@ public class ExamTheoryActivity extends BaseActivity<ExamTheoryPresenter> implem
             }
 
         } else if (nowShowTitle instanceof BeginTheoryExam_Back.EntityBean.TheoryQuestionMultipleListBean) {
-            BeginTheoryExam_Back.EntityBean.TheoryQuestionMultipleListBean theoryQuestionMultipleListBean = theoryQuestionMultipleList.get(theoryQuestionMultipleList_p);
+            BeginTheoryExam_Back.EntityBean.TheoryQuestionMultipleListBean theoryQuestionMultipleListBean = theoryQuestionMultipleList.get(multipleList_p);
 
             String answer = theoryQuestionMultipleListBean.getStudentAnswer();
             if (answer.isEmpty()) {
@@ -334,7 +334,7 @@ public class ExamTheoryActivity extends BaseActivity<ExamTheoryPresenter> implem
                 }
             }
         } else if (nowShowTitle instanceof BeginTheoryExam_Back.EntityBean.TheoryQuestionJudgeListBean) {
-            BeginTheoryExam_Back.EntityBean.TheoryQuestionJudgeListBean theoryQuestionJudgeListBean = theoryQuestionJudgeList.get(theoryQuestionJudgeList_p);
+            BeginTheoryExam_Back.EntityBean.TheoryQuestionJudgeListBean theoryQuestionJudgeListBean = theoryQuestionJudgeList.get(judgeList_p);
             String answer = theoryQuestionJudgeListBean.getStudentAnswer();
             if (answer.isEmpty()) {
                 theoryQuestionJudgeListBean.setStudentAnswer(c+"");
@@ -445,24 +445,24 @@ public class ExamTheoryActivity extends BaseActivity<ExamTheoryPresenter> implem
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
 
-                theoryQuestionRadioList_p = position;
-                theoryQuestionMultipleList_p = -1;
-                theoryQuestionJudgeList_p = -1;
+                singleList_p = position;
+                multipleList_p = -1;
+                judgeList_p = -1;
                 check1(title1, position);
-                LogUtils.d(theoryQuestionRadioList_p);
-                LogUtils.d(theoryQuestionMultipleList_p);
-                LogUtils.d(theoryQuestionJudgeList_p);
+                LogUtils.d(singleList_p + "  " + multipleList_p + "  " + judgeList_p);
+
             }
         });
         //默认展示
         BeginTheoryExam_Back.EntityBean.TheoryQuestionRadioListBean object = theoryQuestionRadioList.get(0);
         showExamMessage(title1, object, 0);
         nowShowTitle = object;
-        theoryQuestionRadioList_p = 0;
-        theoryQuestionMultipleList_p = 0;
-        theoryQuestionJudgeList_p = 0;
+        singleList_p = 0;
+        multipleList_p = -1;
+        judgeList_p = -1;
         theoryQuestionRadioList.get(0).setCheck(true);
         adapter1.notifyDataSetChanged();
+        LogUtils.d(singleList_p + "  " + multipleList_p + "  " + judgeList_p);
 
     }
 
@@ -480,13 +480,12 @@ public class ExamTheoryActivity extends BaseActivity<ExamTheoryPresenter> implem
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 //主动点击，
-                theoryQuestionRadioList_p = theoryQuestionRadioList.size() - 1;
-                theoryQuestionMultipleList_p = position;
-                theoryQuestionJudgeList_p = -1;
+                singleList_p = theoryQuestionRadioList.size() - 1;
+                multipleList_p = position;
+                judgeList_p = -1;
                 check2(title2, position);
-                LogUtils.d(theoryQuestionRadioList_p);
-                LogUtils.d(theoryQuestionMultipleList_p);
-                LogUtils.d(theoryQuestionJudgeList_p);
+                LogUtils.d(singleList_p + "  " + multipleList_p + "  " + judgeList_p);
+
             }
         });
     }
@@ -504,13 +503,12 @@ public class ExamTheoryActivity extends BaseActivity<ExamTheoryPresenter> implem
         adapter3.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                theoryQuestionRadioList_p = theoryQuestionRadioList.size() - 1;
-                theoryQuestionMultipleList_p = theoryQuestionMultipleList.size() - 1;
-                theoryQuestionJudgeList_p = position;
+                singleList_p = theoryQuestionRadioList.size() - 1;
+                multipleList_p = theoryQuestionMultipleList.size() - 1;
+                judgeList_p = position;
                 check3(title3, position);
-                LogUtils.d(theoryQuestionRadioList_p);
-                LogUtils.d(theoryQuestionMultipleList_p);
-                LogUtils.d(theoryQuestionJudgeList_p);
+                LogUtils.d(singleList_p + "  " + multipleList_p + "  " + judgeList_p);
+
             }
         });
     }
@@ -611,10 +609,8 @@ public class ExamTheoryActivity extends BaseActivity<ExamTheoryPresenter> implem
             mGroupJudger.setVisibility(View.GONE);
             String options = object1.getOptions();
             String[] split = options.split("#option#");
-            String[] split2 = {"A", "B", "C", "D", "E", "F", "G"};
             for (int i = 0; i < split.length; i++) {
-                String s = split[i].replace("<p>", "").replace("</p>", "");
-                String text = split2[i] + " " + s;
+                String text = split[i].replace("<p>", "").replace("</p>", "");
                 if (i == 0) {
                     mRadio1.setText(text);
                 } else if (i == 1) {
@@ -648,10 +644,8 @@ public class ExamTheoryActivity extends BaseActivity<ExamTheoryPresenter> implem
             mGroupJudger.setVisibility(View.GONE);
             String options = object1.getOptions();
             String[] split = options.split("#option#");
-            String[] split2 = {"A", "B", "C", "D", "E", "F", "G"};
             for (int i = 0; i < split.length; i++) {
-                String s = split[i].replace("<p>", "").replace("</p>", "");
-                String text = split2[i] + " " + s;
+                String text = split[i].replace("<p>", "").replace("</p>", "");
                 if (i == 0) {
                     mCheckbox1.setText(text);
                 } else if (i == 1) {
@@ -792,77 +786,77 @@ public class ExamTheoryActivity extends BaseActivity<ExamTheoryPresenter> implem
     }
     //下一题
     private void down() {
-        LogUtils.d(theoryQuestionRadioList_p + "  " + theoryQuestionMultipleList_p + "  " + theoryQuestionJudgeList_p);
+        LogUtils.d(singleList_p + "  " + multipleList_p + "  " + judgeList_p);
 
         //39 0 0
         //先判断单选题下标到哪了
 
-        theoryQuestionRadioList_p++;
-        if (theoryQuestionRadioList_p > theoryQuestionRadioList.size() - 1) {
-            theoryQuestionRadioList_p--;
+        singleList_p++;
+        if (singleList_p > theoryQuestionRadioList.size() - 1) {
+            singleList_p--;
 
-            theoryQuestionMultipleList_p++;
-            if (theoryQuestionMultipleList_p > theoryQuestionMultipleList.size() - 1) {
-                theoryQuestionMultipleList_p--;
-                theoryQuestionJudgeList_p++;
-                if (theoryQuestionJudgeList_p > theoryQuestionJudgeList.size() - 1) {
-                    theoryQuestionJudgeList_p--;
+            multipleList_p++;
+            if (multipleList_p > theoryQuestionMultipleList.size() - 1) {
+                multipleList_p--;
+                judgeList_p++;
+                if (judgeList_p > theoryQuestionJudgeList.size() - 1) {
+                    judgeList_p--;
                     ArmsUtils.snackbarText("已经是最后一道");
                 } else {
-                    check3(title3, theoryQuestionJudgeList_p);
+                    check3(title3, judgeList_p);
                 }
             } else {
-                check2(title2, theoryQuestionMultipleList_p);
+                check2(title2, multipleList_p);
             }
         } else {
-            check1(title1, theoryQuestionRadioList_p);
+            check1(title1, singleList_p);
         }
 
-        LogUtils.d(theoryQuestionRadioList_p + "  " + theoryQuestionMultipleList_p + "  " + theoryQuestionJudgeList_p);
+        LogUtils.d(singleList_p + "  " + multipleList_p + "  " + judgeList_p);
 
     }
 
     //上一题
     private void up() {
-        LogUtils.d(theoryQuestionRadioList_p + "  " + theoryQuestionMultipleList_p + "  " + theoryQuestionJudgeList_p);
+        LogUtils.d(singleList_p + "  " + multipleList_p + "  " + judgeList_p);
         //先判断单选题下标到哪了
         // 判断ls3的下标是否为0，是
 
-        if (theoryQuestionJudgeList_p < 0) {
+        if (judgeList_p < 0) {
 
-            if (theoryQuestionMultipleList_p < 0) {
-                if (theoryQuestionRadioList_p < 0) {
+            if (multipleList_p < 0) {
+                if (singleList_p <= 0) {
                     ArmsUtils.snackbarText("已经是最第一道");
                 } else {
-                    theoryQuestionRadioList_p--;
-                    if (theoryQuestionRadioList_p == -1) {
+                    singleList_p--;
+                    if (singleList_p == -1) {
                         check1(title1, 0);
                     } else {
-                        check1(title1, theoryQuestionRadioList_p);
+                        check1(title1, singleList_p);
                     }
 
                 }
             } else {
-                theoryQuestionMultipleList_p--;
-                if (theoryQuestionMultipleList_p == -1) {
-                    check1(title1, theoryQuestionRadioList_p);
+                multipleList_p--;
+                if (multipleList_p == -1) {
+                    check1(title1, singleList_p);
                 } else {
-                    check2(title2, theoryQuestionMultipleList_p);
+                    check2(title2, multipleList_p);
                 }
 
             }
         } else {
-            theoryQuestionJudgeList_p--;
-            if (theoryQuestionJudgeList_p == -1) {
-                check2(title2, theoryQuestionMultipleList_p);
+            judgeList_p--;
+            if (judgeList_p == -1) {
+                check2(title2, multipleList_p);
             } else {
-                check3(title3, theoryQuestionJudgeList_p);
+                check3(title3, judgeList_p);
             }
 
         }
 
 
-        LogUtils.d(theoryQuestionRadioList_p + "  " + theoryQuestionMultipleList_p + "  " + theoryQuestionJudgeList_p);
+        LogUtils.d(singleList_p + "  " + multipleList_p + "  " + judgeList_p);
 
     }
 

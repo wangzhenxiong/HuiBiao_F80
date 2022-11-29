@@ -90,7 +90,9 @@ public class PrintReportActivity extends BaseActivity<PrintReportPresenter> impl
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent2(ExamOperationService.ExamOperationServiceEventBean tags) {
         String timestring = tags.getTimestring();
-        mToolbarTime.setText(timestring);
+        if (null!=mToolbarTime){
+            mToolbarTime.setText(timestring);
+        }
     }
 
     @Override

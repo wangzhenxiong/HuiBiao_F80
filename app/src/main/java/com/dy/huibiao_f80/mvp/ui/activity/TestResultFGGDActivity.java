@@ -20,6 +20,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.dy.huibiao_f80.Constants;
 import com.dy.huibiao_f80.MyAppLocation;
 import com.dy.huibiao_f80.R;
+import com.dy.huibiao_f80.app.service.ExamOperationService;
 import com.dy.huibiao_f80.bean.GalleryBean;
 import com.dy.huibiao_f80.bean.base.BaseProjectMessage;
 import com.dy.huibiao_f80.bean.eventBusBean.FGTestMessageBean;
@@ -31,6 +32,7 @@ import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -72,9 +74,39 @@ public class TestResultFGGDActivity extends BaseActivity<TestResultFGGDPresenter
     Button mBtnBackhome;
     @BindView(R.id.btn_writereport)
     Button mBtnWritereport;
+    @BindView(R.id.toolbar_time)
+    TextView mToolbarTime;
     private List<GalleryBean> dataList = new ArrayList<>();
     private FGGDTestResultAdapter fggdAdapter;
     String pjName;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent2(ExamOperationService.ExamOperationServiceEventBean tags) {
+
+        if (tags.getTime() == 0) {
+            if (null!=mToolbarTime){
+                mToolbarTime.setText("正在提交考试结果");
+            }
+            return;
+        }
+        String timestring = tags.getTimestring();
+        if (null!=mToolbarTime){
+            mToolbarTime.setText(timestring);
+        }
+
+
+    }
 
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
@@ -127,10 +159,10 @@ public class TestResultFGGDActivity extends BaseActivity<TestResultFGGDPresenter
                 fggdAdapter.notifyDataSetChanged();
             }
         });
-        if (MyAppLocation.myAppLocation.mExamOperationService.isStartExamOperation()){
+        if (MyAppLocation.myAppLocation.mExamOperationService.isStartExamOperation()) {
             mBtnWritereport.setVisibility(View.VISIBLE);
             mBtnBackhome.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             mBtnWritereport.setVisibility(View.GONE);
             mBtnBackhome.setVisibility(View.GONE);
         }
@@ -215,13 +247,13 @@ public class TestResultFGGDActivity extends BaseActivity<TestResultFGGDPresenter
         }
     }
 
-    @OnClick({R.id.btn_retest, R.id.btn_restart, R.id.btn_record,R.id.btn_backhome,R.id.btn_writereport})
+    @OnClick({R.id.btn_retest, R.id.btn_restart, R.id.btn_record, R.id.btn_backhome, R.id.btn_writereport})
     public void onClick(View view) {
         Intent intent = new Intent();
         intent.putExtra("project", pjName);
         switch (view.getId()) {
             case R.id.btn_backhome:
-                ArmsUtils.startActivity(new Intent(this,ExamOperationActivity.class));
+                ArmsUtils.startActivity(new Intent(this, ExamOperationActivity.class));
 
                 break;
             case R.id.btn_writereport:
@@ -235,11 +267,11 @@ public class TestResultFGGDActivity extends BaseActivity<TestResultFGGDPresenter
             case R.id.btn_retest://复检
                 for (int i = 0; i < dataList.size(); i++) {
                     GalleryBean galleryBean = dataList.get(i);
-                    if (galleryBean.checkd){
+                    if (galleryBean.checkd) {
                         intent.setClass(TestResultFGGDActivity.this, TestFGGDActivity.class);
                         ArmsUtils.startActivity(intent);
                         this.finish();
-                       return;
+                        return;
 
                     }
                 }

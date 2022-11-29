@@ -14,6 +14,7 @@ import com.dy.huibiao_f80.api.back.IsTeacherSubmit_Back;
 import com.dy.huibiao_f80.api.back.TestFormSubmit_Back;
 import com.dy.huibiao_f80.app.utils.DataUtils;
 import com.dy.huibiao_f80.bean.ReportBean;
+import com.dy.huibiao_f80.mvp.ui.activity.ExamStateActivity;
 import com.google.gson.Gson;
 import com.jess.arms.base.BaseService;
 import com.jess.arms.utils.ArmsUtils;
@@ -39,7 +40,7 @@ import okhttp3.RequestBody;
 public class ExamOperationService extends BaseService {
     private IBinder bind = new ExamOperationService.MyBinder();
     private ScheduledThreadPoolExecutor mScheduledThreadPoolExecutor;
-    private Integer operationExamTime;
+    private int operationExamTime;
     public boolean isTeacherSubmit;
     /**
      * 实操题实体
@@ -68,6 +69,11 @@ public class ExamOperationService extends BaseService {
     private BeginOperationExam_Back.EntityBean.OperationPaperListBean nowOperationExam;
 
     /**
+     * 开始考试状态
+     */
+    private boolean isStartExamOperation;
+
+    /**
      * 是否开始考试
      *
      * @return
@@ -84,46 +90,38 @@ public class ExamOperationService extends BaseService {
     public void startExamOperation(int examTime) {
         isStartExamOperation = true;
         operationExamTime = examTime;
-        command_countdownState = true;
-        commandisTeacherSubmitState = true;
     }
 
-    /**
-     * 倒计时 状态
-     */
-    boolean command_countdownState = false;
+
     Runnable command_countdown = new Runnable() {
         @Override
         public void run() {
-            if (isStartExamOperation && command_countdownState) {
-                if (operationExamTime > 0) {
+            int i = operationExamTime / 60;
+            int i1 = operationExamTime % 60;
+            ExamOperationServiceEventBean event = new ExamOperationServiceEventBean();
+            if (operationExamTime > 0) {
+                event.setTime(operationExamTime);
+                event.setTimestring("剩余时间  " + (i < 10 ? "0" + i : "" + i) + ":" + (i1 < 10 ? "0" + i1 : "" + i1));
+                EventBus.getDefault().post(event);
 
-                    int i = operationExamTime / 60;
-                    int i1 = operationExamTime % 60;
+            } else if (operationExamTime == 0) {
+                event.setTime(operationExamTime);
+                event.setTimestring("剩余时间  " + (i < 10 ? "0" + i : "" + i) + ":" + (i1 < 10 ? "0" + i1 : "" + i1));
+                EventBus.getDefault().post(event);
+                isStartExamOperation = false;
+                // TODO: 11/5/22 倒计时结束，需要强制上传实验报告
+                forceUploadReport();
+            }else {
 
-                    // mToolbarTime.setText("剩余时间  " + (i < 10 ? "0" + i : "" + i) + ":" + (i1 < 10 ? "0" + i1 : "" + i1));
-                    ExamOperationServiceEventBean event = new ExamOperationServiceEventBean();
-                    event.setTime(operationExamTime);
-                    event.setTimestring("剩余时间  " + (i < 10 ? "0" + i : "" + i) + ":" + (i1 < 10 ? "0" + i1 : "" + i1));
-                    EventBus.getDefault().post(event);
-                    operationExamTime--;
-                } else {
-                    //mPresenter.submit(examinationId, examinerId, beginAnalyseExamBack);
-                    isStartExamOperation = false;
-                    // TODO: 11/5/22 倒计时结束，需要强制上传实验报告
-                    forceUploadReport();
-                }
             }
+            operationExamTime--;
         }
     };
-    /**
-     * 查询考评员分数是否提交  状态
-     */
-    boolean commandisTeacherSubmitState = false;
+
     Runnable commandisTeacherSubmit = new Runnable() {
         @Override
         public void run() {
-            if (!isTeacherSubmit && commandisTeacherSubmitState) {
+            if (!isTeacherSubmit&&isStartExamOperation) {
                 RetrofitUrlManager.getInstance().putDomain("xxx", Constants.URL);
                 ArmsUtils.obtainAppComponentFromContext(ExamOperationService.this)
                         .repositoryManager().obtainRetrofitService(HuiBiaoService.class)
@@ -150,16 +148,10 @@ public class ExamOperationService extends BaseService {
 
 
     /**
-     * 开始考试
-     */
-    private boolean isStartExamOperation;
-
-    /**
      * 结束考试
      */
     public void finishOperationExam() {
-        command_countdownState = false;
-        commandisTeacherSubmitState = false;
+        operationExamTime=-1;
         isStartExamOperation = false;
         isTeacherSubmit = false;
         beginOperationExam_back = null;
@@ -270,11 +262,20 @@ public class ExamOperationService extends BaseService {
                             //isTeacherSubmit = back.isSuccess();
                             getTestForm_backMap.remove(next);
                             if (getTestForm_backMap.keySet().size() == 0) {
+
+                                Intent content = new Intent(ExamOperationService.this, ExamStateActivity.class);
+                                content.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                content.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                content.putExtra("examinationId", examinationId);
+                                content.putExtra("examinerId", examinerId);
+                                ArmsUtils.startActivity(content);
+
                                 finishOperationExam();
                                 ArmsUtils.snackbarText("考试已结束");
-                                ExamOperationService.ExamOperationServiceEventBean event = new ExamOperationService.ExamOperationServiceEventBean();
+
+                               /* ExamOperationService.ExamOperationServiceEventBean event = new ExamOperationService.ExamOperationServiceEventBean();
                                 event.state = -1;
-                                EventBus.getDefault().post(event);
+                                EventBus.getDefault().post(event);*/
                                 //ArmsUtils.startActivity(ExamStateActivity.class);
                             }
                         } else {

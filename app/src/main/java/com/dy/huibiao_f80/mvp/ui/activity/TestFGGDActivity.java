@@ -21,6 +21,7 @@ import com.apkfuns.logutils.LogUtils;
 import com.dy.huibiao_f80.Constants;
 import com.dy.huibiao_f80.MyAppLocation;
 import com.dy.huibiao_f80.R;
+import com.dy.huibiao_f80.app.service.ExamOperationService;
 import com.dy.huibiao_f80.bean.GalleryBean;
 import com.dy.huibiao_f80.bean.base.BaseProjectMessage;
 import com.dy.huibiao_f80.bean.eventBusBean.FGTestMessageBean;
@@ -42,6 +43,7 @@ import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -78,11 +80,39 @@ public class TestFGGDActivity extends BaseActivity<TestFGGDPresenter> implements
     Button mBtnClean;
     @BindView(R.id.btn_starttest)
     Button mBtnStarttest;
+    @BindView(R.id.toolbar_time)
+    TextView mToolbarTime;
     private String projectname;
     private BaseProjectMessage baseProjectMessage;
     private List<GalleryBean> dataList = new ArrayList<>();
     private FGGDAdapter fggdAdapter;
+    @Override
+    protected void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent2(ExamOperationService.ExamOperationServiceEventBean tags) {
+
+        if (tags.getTime() == 0) {
+            if (null!=mToolbarTime){
+                mToolbarTime.setText("正在提交考试结果");
+            }
+            return;
+        }
+        String timestring = tags.getTimestring();
+        if (null!=mToolbarTime){
+            mToolbarTime.setText(timestring);
+        }
+
+
+    }
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
         DaggerTestFGGDComponent //如找不到该类,请编译一下项目
@@ -146,7 +176,7 @@ public class TestFGGDActivity extends BaseActivity<TestFGGDPresenter> implements
                     double c0 = ((ProjectFGGD) baseProjectMessage).getC0();
                     double d0 = ((ProjectFGGD) baseProjectMessage).getD0();
                     LineData data = getData(mChartview, a0, b0, c0, d0);
-                    setupChart(mChartview, data,a0,b0,c0,d0);
+                    setupChart(mChartview, data, a0, b0, c0, d0);
                 }
                 LogUtils.d(baseProjectMessage);
                 for (int i = 0; i < dataList.size(); i++) {
@@ -192,7 +222,7 @@ public class TestFGGDActivity extends BaseActivity<TestFGGDPresenter> implements
         Description desc = new Description();
         desc.setTextColor(getResources().getColor(R.color.red));
         desc.setTextSize(16);
-        desc.setText("y="+a0+"+"+b0+"*X+"+c0+"*X^2+"+d0+"*X^3");
+        desc.setText("y=" + a0 + "+" + b0 + "*X+" + c0 + "*X^2+" + d0 + "*X^3");
         chart.setDescription(desc);
         // chart.setDrawHorizontalGrid(false);
         //

@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.apkfuns.logutils.LogUtils;
 import com.dy.huibiao_f80.MyAppLocation;
 import com.dy.huibiao_f80.R;
+import com.dy.huibiao_f80.app.service.ExamOperationService;
 import com.dy.huibiao_f80.bean.GalleryBean;
 import com.dy.huibiao_f80.di.component.DaggerChoseGalleryJTJComponent;
 import com.dy.huibiao_f80.greendao.TestRecord;
@@ -30,6 +31,10 @@ import com.dy.huibiao_f80.mvp.presenter.ChoseGalleryJTJPresenter;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -90,10 +95,42 @@ public class ChoseGalleryJTJActivity extends BaseActivity<ChoseGalleryJTJPresent
     CheckBox mCheckbox4;
     @BindView(R.id.background4)
     LinearLayout mBackground4;
+    @BindView(R.id.toolbar_time)
+    TextView mToolbarTime;
+
     private int nowCheckId = R.id.background1;
     private int nowCheckindex = 1;
     private TestRecord nowCheckGallery;
     private String project;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent2(ExamOperationService.ExamOperationServiceEventBean tags) {
+
+        if (tags.getTime() == 0) {
+            if (null != mToolbarTime) {
+                mToolbarTime.setText("正在提交考试结果");
+            }
+            return;
+        }
+        String timestring = tags.getTimestring();
+        if (null != mToolbarTime) {
+            mToolbarTime.setText(timestring);
+        }
+
+
+    }
 
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
@@ -243,7 +280,6 @@ public class ChoseGalleryJTJActivity extends BaseActivity<ChoseGalleryJTJPresent
     }
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -279,48 +315,48 @@ public class ChoseGalleryJTJActivity extends BaseActivity<ChoseGalleryJTJPresent
     }
 
     private void nextStep() {
-        boolean ischeck=false;
+        boolean ischeck = false;
         List<GalleryBean> mJTJGalleryBeanList = MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList;
         for (int i = 0; i < mJTJGalleryBeanList.size(); i++) {
             GalleryBean galleryBean = mJTJGalleryBeanList.get(i);
-            if (i==0){
+            if (i == 0) {
                 boolean checked = mCheckbox1.isChecked();
-                if (checked){
-                    ischeck=true;
+                if (checked) {
+                    ischeck = true;
                 }
                 galleryBean.setCheckd(checked);
 
             }
-            if (i==1){
+            if (i == 1) {
                 boolean checked = mCheckbox2.isChecked();
-                if (checked){
-                    ischeck=true;
+                if (checked) {
+                    ischeck = true;
                 }
                 galleryBean.setCheckd(checked);
             }
-            if (i==2){
+            if (i == 2) {
                 boolean checked = mCheckbox3.isChecked();
-                if (checked){
-                    ischeck=true;
+                if (checked) {
+                    ischeck = true;
                 }
                 galleryBean.setCheckd(checked);
             }
-            if (i==3){
+            if (i == 3) {
                 boolean checked = mCheckbox4.isChecked();
-                if (checked){
-                    ischeck=true;
+                if (checked) {
+                    ischeck = true;
                 }
                 galleryBean.setCheckd(checked);
             }
         }
-         if (ischeck){
-             Intent content1 = new Intent(getActivity(), TestSettingJTJActivity.class);
-             content1.putExtra("data", nowCheckindex);
-             content1.putExtra("project", project);
-             ArmsUtils.startActivity(getActivity(), content1);
-         }else {
-             ArmsUtils.snackbarText("请选择通道");
-         }
+        if (ischeck) {
+            Intent content1 = new Intent(getActivity(), TestSettingJTJActivity.class);
+            content1.putExtra("data", nowCheckindex);
+            content1.putExtra("project", project);
+            ArmsUtils.startActivity(getActivity(), content1);
+        } else {
+            ArmsUtils.snackbarText("请选择通道");
+        }
     }
 
     private void clean() {

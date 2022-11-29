@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.dy.huibiao_f80.MyAppLocation;
 import com.dy.huibiao_f80.R;
+import com.dy.huibiao_f80.app.service.ExamOperationService;
 import com.dy.huibiao_f80.bean.GalleryBean;
 import com.dy.huibiao_f80.di.component.DaggerChoseGalleryFGGDComponent;
 import com.dy.huibiao_f80.greendao.TestRecord;
@@ -27,6 +28,10 @@ import com.dy.huibiao_f80.mvp.presenter.ChoseGalleryFGGDPresenter;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -130,11 +135,41 @@ public class ChoseGalleryFGGDActivity extends BaseActivity<ChoseGalleryFGGDPrese
     CheckBox mCheckboxDuizhao;
     @BindView(R.id.dr)
     AutoCompleteTextView mDr;
+    @BindView(R.id.toolbar_time)
+    TextView mToolbarTime;
 
     private int nowCheckId = R.id.background1;
     private int nowCheckindex = 1;
     private TestRecord nowCheckGallery;
     private String projectname;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent2(ExamOperationService.ExamOperationServiceEventBean tags) {
+
+        if (tags.getTime() == 0) {
+            if (null!=mToolbarTime){
+                mToolbarTime.setText("正在提交考试结果");
+            }
+            return;
+        }
+        String timestring = tags.getTimestring();
+        if (null!=mToolbarTime){
+            mToolbarTime.setText(timestring);
+        }
+
+
+    }
 
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
@@ -221,9 +256,9 @@ public class ChoseGalleryFGGDActivity extends BaseActivity<ChoseGalleryFGGDPrese
             @Override
             public void afterTextChanged(Editable s) {
                 String dr = s.toString();
-                if (dr.isEmpty()){
-                    dr="1";
-                    mDr.setText("1");
+                if (dr.isEmpty()) {
+                    dr = "1";
+                    //mDr.setText("1");
                 }
 
                 nowCheckGallery.setDilutionratio(Double.parseDouble(dr));
@@ -233,7 +268,7 @@ public class ChoseGalleryFGGDActivity extends BaseActivity<ChoseGalleryFGGDPrese
         //先将所有通道设为未选择
         List<GalleryBean> mFGGDGalleryBeanList = MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList;
         for (int i = 0; i < mFGGDGalleryBeanList.size(); i++) {
-           mFGGDGalleryBeanList.get(i).setCheckd(false);
+            mFGGDGalleryBeanList.get(i).setCheckd(false);
         }
     }
 
@@ -371,20 +406,20 @@ public class ChoseGalleryFGGDActivity extends BaseActivity<ChoseGalleryFGGDPrese
         MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(13).setCheckd(mCheckbox14.isChecked());
         MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(14).setCheckd(mCheckbox15.isChecked());
         MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(15).setCheckd(mCheckbox16.isChecked());
-        boolean check=false;
+        boolean check = false;
         for (int i = 0; i < MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.size(); i++) {
             if (MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(i).isCheckd()) {
-                check=true;
+                check = true;
                 break;
             }
         }
-         if (check){
-             Intent content = new Intent(this, TestFGGDActivity.class);
-             content.putExtra("projectname",projectname);
-             ArmsUtils.startActivity(content);
-         }else {
-             ArmsUtils.snackbarText("请选择通道");
-         }
+        if (check) {
+            Intent content = new Intent(this, TestFGGDActivity.class);
+            content.putExtra("projectname", projectname);
+            ArmsUtils.startActivity(content);
+        } else {
+            ArmsUtils.snackbarText("请选择通道");
+        }
 
     }
 

@@ -20,7 +20,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.apkfuns.logutils.LogUtils;
-import com.dy.huibiao_f80.BuildConfig;
 import com.dy.huibiao_f80.MyAppLocation;
 import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.api.back.BeginOperationExam_Back;
@@ -93,15 +92,31 @@ public class ExamOperationActivity extends BaseActivity<ExamOperationPresenter> 
     public int initView(@Nullable Bundle savedInstanceState) {
         return R.layout.activity_examoperation; //如果你不需要框架帮你设置 setContentView(id) 需要自行设置,请返回 0
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
+    }
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent2(ExamOperationService.ExamOperationServiceEventBean tags) {
-        if (tags.getState()==-1){
-           submitSuccess();
-        } else {
-            String timestring = tags.getTimestring();
+
+        if (tags.getTime() == 0) {
+            if (null!=mToolbarTime){
+                mToolbarTime.setText("正在提交考试结果");
+            }
+            return;
+        }
+        String timestring = tags.getTimestring();
+        if (null!=mToolbarTime){
             mToolbarTime.setText(timestring);
         }
+
 
     }
 
@@ -120,17 +135,7 @@ public class ExamOperationActivity extends BaseActivity<ExamOperationPresenter> 
 
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        EventBus.getDefault().register(this);
-    }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        EventBus.getDefault().unregister(this);
-    }
 
     @Override
     public boolean useEventBus() {
@@ -194,13 +199,8 @@ public class ExamOperationActivity extends BaseActivity<ExamOperationPresenter> 
         MyAppLocation.myAppLocation.mExamOperationService.setBeginOperationExam_back(back);
         MyAppLocation.myAppLocation.mExamOperationService.setExaminationId(examinationId);
         MyAppLocation.myAppLocation.mExamOperationService.setExaminerId(examinerId);
-
-        if (BuildConfig.DEBUG){
-            MyAppLocation.myAppLocation.mExamOperationService.startExamOperation(10);
-        } else {
-            MyAppLocation.myAppLocation.mExamOperationService.startExamOperation(operationExamTime);
-        }
-        initExamCont(operationPaperList.get(0),0);
+        MyAppLocation.myAppLocation.mExamOperationService.startExamOperation(operationExamTime);
+        initExamCont(operationPaperList.get(0), 0);
 
     }
 
@@ -221,11 +221,11 @@ public class ExamOperationActivity extends BaseActivity<ExamOperationPresenter> 
 
     BeginOperationExam_Back.EntityBean.OperationPaperListBean onoeperationPaper;
 
-    private void initExamCont(BeginOperationExam_Back.EntityBean.OperationPaperListBean operationPaperListBean,int index) {
+    private void initExamCont(BeginOperationExam_Back.EntityBean.OperationPaperListBean operationPaperListBean, int index) {
         for (int i = 0; i < textviewTitleList.size(); i++) {
-            if (index==i){
+            if (index == i) {
                 textviewTitleList.get(i).setTextColor(getResources().getColor(R.color.red));
-            }else {
+            } else {
                 textviewTitleList.get(i).setTextColor(getResources().getColor(R.color.black));
             }
         }
@@ -245,7 +245,7 @@ public class ExamOperationActivity extends BaseActivity<ExamOperationPresenter> 
             @Override
             public void onClick(View v) {
                 BeginOperationExam_Back.EntityBean.OperationPaperListBean operationPaperListBean = operationPaperList.get(v.getId());
-                initExamCont(operationPaperListBean,v.getId());
+                initExamCont(operationPaperListBean, v.getId());
             }
         };
     }

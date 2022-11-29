@@ -11,11 +11,14 @@ import android.support.v7.widget.Toolbar;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.apkfuns.logutils.LogUtils;
 import com.dy.huibiao_f80.R;
+import com.dy.huibiao_f80.app.service.ExamOperationService;
 import com.dy.huibiao_f80.bean.base.BaseProjectMessage;
 import com.dy.huibiao_f80.di.component.DaggerStartTestComponent;
 import com.dy.huibiao_f80.greendao.daos.ProjectFGGDDao;
@@ -29,6 +32,7 @@ import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -70,16 +74,51 @@ public class StartTestActivity extends BaseActivity<StartTestPresenter> implemen
     List<BaseProjectMessage> mDateList_jtj;
     @Inject
     AlertDialog mSportDialog;
+    @BindView(R.id.toolbar_time)
+    TextView mToolbarTime;
+    @BindView(R.id.project_fram)
+    FrameLayout mProjectFram;
+    @BindView(R.id.layout1)
+    LinearLayout mLayout1;
     private SparseArray<String> mSparseTags_Project = new SparseArray<>();
     private ProjectFGGDDao projectFGGDDao;
     private ProjectJTJDao projectJTJDao;
-   
+
     private TitleItemDecoration mDecoration;
     private int checkmoudle = 1;
     private BaseProjectMessage chosedProject_FGGD;
     private BaseProjectMessage chosedProject_JTJ;
     private FGGDProjectFragment fggdProjectFragment;
     private JTJProjectFragment jtjProjectFragment;
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent2(ExamOperationService.ExamOperationServiceEventBean tags) {
+
+        if (tags.getTime() == 0) {
+            if (null!=mToolbarTime){
+                mToolbarTime.setText("正在提交考试结果");
+            }
+            return;
+        }
+        String timestring = tags.getTimestring();
+        if (null!=mToolbarTime){
+            mToolbarTime.setText(timestring);
+        }
+
+
+    }
 
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
@@ -95,19 +134,15 @@ public class StartTestActivity extends BaseActivity<StartTestPresenter> implemen
     public int initView(@Nullable Bundle savedInstanceState) {
         return R.layout.activity_starttest; //如果你不需要框架帮你设置 setContentView(id) 需要自行设置,请返回 0
     }
+
     private void initsparr() {
 
         mSparseTags_Project.put(R.id.fggd, "fggd_project");
         mSparseTags_Project.put(R.id.jtj, "jtj_project");
 
     }
-    @Override
-    protected void onResume() {
-        super.onResume();
 
-        //mPresenter.loadFGGD(null);
-        //mPresenter.loadjtj(null);
-    }
+
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
@@ -118,9 +153,6 @@ public class StartTestActivity extends BaseActivity<StartTestPresenter> implemen
         checkFGGD();
         mPresenter.loadData(null);
     }
-
-
-
 
 
     @Override
@@ -181,31 +213,32 @@ public class StartTestActivity extends BaseActivity<StartTestPresenter> implemen
     private void startTest() {
 
         if (checkmoudle == 1) {
-            if (null==chosedProject_FGGD){
+            if (null == chosedProject_FGGD) {
                 ArmsUtils.snackbarText("请选择检测项目");
                 return;
             }
             Intent content = new Intent(this, ChoseGalleryFGGDActivity.class);
-            content.putExtra("project",chosedProject_FGGD.getPjName());
+            content.putExtra("project", chosedProject_FGGD.getPjName());
             ArmsUtils.startActivity(content);
         } else if (checkmoudle == 2) {
-            if (null==chosedProject_JTJ){
+            if (null == chosedProject_JTJ) {
                 ArmsUtils.snackbarText("请选择检测项目");
                 return;
             }
             Intent content = new Intent(this, ChoseGalleryJTJActivity.class);
-            content.putExtra("project",chosedProject_JTJ.getPjName());
+            content.putExtra("project", chosedProject_JTJ.getPjName());
             ArmsUtils.startActivity(content);
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent1(FGGDProjectFragment.FGGDProjectFragmentEvent tags) {
-        chosedProject_FGGD= tags.getProjectFGGD();
+        chosedProject_FGGD = tags.getProjectFGGD();
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent2(JTJProjectFragment.JTJProjectFragmentEvent tags) {
-        chosedProject_JTJ= tags.getProjectJTJ();
+        chosedProject_JTJ = tags.getProjectJTJ();
     }
 
     private void checkJTJ() {

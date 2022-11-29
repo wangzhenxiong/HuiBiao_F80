@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.apkfuns.logutils.LogUtils;
 import com.dy.huibiao_f80.MyAppLocation;
 import com.dy.huibiao_f80.R;
+import com.dy.huibiao_f80.app.service.ExamOperationService;
 import com.dy.huibiao_f80.bean.GalleryBean;
 import com.dy.huibiao_f80.bean.base.BaseProjectMessage;
 import com.dy.huibiao_f80.di.component.DaggerTestSettingJTJComponent;
@@ -35,6 +36,10 @@ import com.dy.huibiao_f80.mvp.ui.adapter.MySpinnerAdapter;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,6 +107,8 @@ public class TestSettingJTJActivity extends BaseActivity<TestSettingTJPresenter>
     Button mBtnCardout2;
     @BindView(R.id.btn_cardin2)
     Button mBtnCardin2;
+    @BindView(R.id.toolbar_time)
+    TextView mToolbarTime;
     private SurfaceHolder mSurfaceHolder1;
     private SurfaceHolder mSurfaceHolder2;
     private int mSurfaceviewState1;
@@ -109,6 +116,35 @@ public class TestSettingJTJActivity extends BaseActivity<TestSettingTJPresenter>
     private String project;
     private BaseProjectMessage baseProjectMessage1;
     private BaseProjectMessage baseProjectMessage2;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent2(ExamOperationService.ExamOperationServiceEventBean tags) {
+
+        if (tags.getTime() == 0) {
+            if (null != mToolbarTime) {
+                mToolbarTime.setText("正在提交考试结果");
+            }
+            return;
+        }
+        String timestring = tags.getTimestring();
+        if (null != mToolbarTime) {
+            mToolbarTime.setText(timestring);
+        }
+
+
+    }
 
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
@@ -165,7 +201,7 @@ public class TestSettingJTJActivity extends BaseActivity<TestSettingTJPresenter>
 
     private void initSpinner() {
         List<BaseProjectMessage> list = new ArrayList<>();
-         LogUtils.d(project);
+        LogUtils.d(project);
         list.addAll(DBHelper.getProjectJTJDao().queryBuilder()
                 .where(ProjectJTJDao.Properties.ProjectName.eq(project))
                 .where(ProjectJTJDao.Properties.FinishState.eq(true))
@@ -203,7 +239,13 @@ public class TestSettingJTJActivity extends BaseActivity<TestSettingTJPresenter>
                 baseProjectMessage2 = list.get(position);
                 // TODO: 10/17/22 根据曲线信息画曲线
                 LogUtils.d(baseProjectMessage2);
-                MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(1).setmProjectMessage(baseProjectMessage2);
+                if (MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.size() == 1) {
+                    MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(0).setmProjectMessage(baseProjectMessage2);
+
+                } else if (MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.size() == 2) {
+                    MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(1).setmProjectMessage(baseProjectMessage2);
+
+                }
             }
 
             @Override
@@ -384,7 +426,7 @@ public class TestSettingJTJActivity extends BaseActivity<TestSettingTJPresenter>
     }
 
 
-    @OnClick({R.id.left1, R.id.up1, R.id.down1, R.id.right1, R.id.left2, R.id.up2, R.id.down2, R.id.right2,R.id.btn_cardout1, R.id.btn_cardin1, R.id.btn_cardout2, R.id.btn_cardin2, R.id.btn_starttest})
+    @OnClick({R.id.left1, R.id.up1, R.id.down1, R.id.right1, R.id.left2, R.id.up2, R.id.down2, R.id.right2, R.id.btn_cardout1, R.id.btn_cardin1, R.id.btn_cardout2, R.id.btn_cardin2, R.id.btn_starttest})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left1:
@@ -419,7 +461,7 @@ public class TestSettingJTJActivity extends BaseActivity<TestSettingTJPresenter>
             case R.id.btn_cardin1:
                 MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(0).cardGet_Argmen();
                 MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(0).cardInNotScan();
-                MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(0).getJTJRWHelper().stratReadData_P(4000,true);
+                MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(0).getJTJRWHelper().stratReadData_P(4000, true);
                 break;
 
             case R.id.btn_cardout2:
@@ -429,7 +471,7 @@ public class TestSettingJTJActivity extends BaseActivity<TestSettingTJPresenter>
             case R.id.btn_cardin2:
                 MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(1).cardGet_Argmen();
                 MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(1).cardInNotScan();
-                MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(1).getJTJRWHelper().stratReadData_P(4000,true);
+                MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(1).getJTJRWHelper().stratReadData_P(4000, true);
                 break;
 
             case R.id.btn_starttest:
@@ -438,14 +480,14 @@ public class TestSettingJTJActivity extends BaseActivity<TestSettingTJPresenter>
                     GalleryBean galleryBean = MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(i);
                     if (galleryBean.isCheckd()) {
                         if (galleryBean.getGalleryNum() == 1) {
-                            if (bitmap1==null){
-                              ArmsUtils.snackbarText("通道1图像未加载完成，请稍后");
-                              return;
+                            if (bitmap1 == null) {
+                                ArmsUtils.snackbarText("通道1图像未加载完成，请稍后");
+                                return;
                             }
                             galleryBean.setBitmap(bitmap1);
 
                         } else if (galleryBean.getGalleryNum() == 2) {
-                            if (bitmap2==null){
+                            if (bitmap2 == null) {
                                 ArmsUtils.snackbarText("通道2图像未加载完成，请稍后");
                                 return;
                             }

@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.dy.huibiao_f80.MyAppLocation;
 import com.dy.huibiao_f80.R;
+import com.dy.huibiao_f80.app.service.ExamOperationService;
 import com.dy.huibiao_f80.app.utils.NumberUtils;
 import com.dy.huibiao_f80.bean.GalleryBean;
 import com.dy.huibiao_f80.di.component.DaggerTestResultJTJComponent;
@@ -35,6 +36,10 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,9 +112,37 @@ public class TestResultJTJActivity extends BaseActivity<TestResultJTJPresenter> 
     Button mBtnBackhome;
     @BindView(R.id.btn_writereport)
     Button mBtnWritereport;
+    @BindView(R.id.toolbar_time)
+    TextView mToolbarTime;
     private Typeface mTf;
     private String pjName;
+    @Override
+    protected void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent2(ExamOperationService.ExamOperationServiceEventBean tags) {
+
+        if (tags.getTime() == 0) {
+            if (null!=mToolbarTime){
+                mToolbarTime.setText("正在提交考试结果");
+            }
+            return;
+        }
+        String timestring = tags.getTimestring();
+        if (null!=mToolbarTime){
+            mToolbarTime.setText(timestring);
+        }
+
+
+    }
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
         DaggerTestResultJTJComponent //如找不到该类,请编译一下项目
@@ -243,7 +276,7 @@ public class TestResultJTJActivity extends BaseActivity<TestResultJTJPresenter> 
             checklist.get(i).setCheckd(true);
             checklist.get(i).cardGet_Argmen();
             checklist.get(i).cardInNotScan();
-           // checklist.get(i).getJTJRWHelper().sendMessage(Constants.COLLAURUM_ENT_SCANNING_REQUEST_P, true);
+            // checklist.get(i).getJTJRWHelper().sendMessage(Constants.COLLAURUM_ENT_SCANNING_REQUEST_P, true);
             checklist.get(i).getJTJRWHelper().stratReadData_P(4000, true);
         }
         Intent intent = new Intent();
@@ -294,7 +327,14 @@ public class TestResultJTJActivity extends BaseActivity<TestResultJTJPresenter> 
         mCValue2.setText(NumberUtils.three(datas[1]) + "");
         mTValue2.setText(NumberUtils.three(datas[3]) + "");
         mTcValue2.setText(NumberUtils.three(datas[3] / datas[1]) + "");
-        GalleryBean galleryBean = MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(1);
+        GalleryBean galleryBean;
+        if (MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.size() == 1) {
+            galleryBean = MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(0);
+
+        } else {
+            galleryBean = MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(1);
+
+        }
         mResult2.setText(((TestRecord) galleryBean).getDecisionoutcome());
         if (galleryBean.getmProjectMessage().getMethod_sp() == 0) {
 

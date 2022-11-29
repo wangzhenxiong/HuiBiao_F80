@@ -267,10 +267,10 @@ public class ExamStateActivity extends BaseActivity<ExamStatePresenter> implemen
                 break;
             case R.id.startexam3:
                 if (operationStatus == 1) {
-                    if (analyseStatus == 1) {
+                    /*if (analyseStatus == 1) {
                         ArmsUtils.snackbarText("请先完成分析题考试");
                         return;
-                    }
+                    }*/
                     intent.setClass(this, ExamOperationActivity.class);
                     ArmsUtils.startActivity(intent);
                     finish();

@@ -21,6 +21,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.TextView;
 
 import com.dy.huibiao_f80.R;
@@ -84,6 +85,9 @@ public class ActivityLifecycleCallbacksImpl implements Application.ActivityLifec
                     activity.onBackPressed();
                 });
             }
+            View decorView = activity.getWindow().getDecorView();
+            decorView.setFocusable(true);
+            decorView.setFocusableInTouchMode(true);
 
         }
     }
