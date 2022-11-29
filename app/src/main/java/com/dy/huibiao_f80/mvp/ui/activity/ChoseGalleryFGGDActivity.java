@@ -142,7 +142,10 @@ public class ChoseGalleryFGGDActivity extends BaseActivity<ChoseGalleryFGGDPrese
     private int nowCheckindex = 1;
     private TestRecord nowCheckGallery;
     private String projectname;
-
+    @Override
+    public boolean useEventBus() {
+        return false;
+    }
     @Override
     protected void onResume() {
         super.onResume();

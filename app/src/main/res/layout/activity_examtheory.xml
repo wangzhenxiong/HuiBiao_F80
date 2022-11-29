@@ -36,7 +36,7 @@
             android:layout_height="match_parent"
             android:layout_weight="3"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:padding="22dp">
 
             <TextView
                 android:id="@+id/titletype"
@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:text="一、单选题"
                 android:textColor="@color/black"
-                android:textSize="20dp"
+                android:textSize="22dp"
                 android:textStyle="bold" />
 
             <TextView
@@ -52,9 +52,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/titletype"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginLeft="22dp"
+                android:layout_marginTop="22dp"
+                android:layout_marginRight="22dp"
                 android:textSize="18dp" />
 
             <RadioGroup
@@ -63,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/itemcontent"
                 android:layout_marginLeft="40dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="22dp"
                 android:orientation="vertical">
 
                 <RadioButton
@@ -72,7 +72,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:button="@drawable/a_select"
-                    android:textSize="20dp" />
+                    android:paddingLeft="10dp"
+                    android:textSize="22dp" />
 
                 <RadioButton
                     android:id="@+id/radio2"
@@ -80,7 +81,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:button="@drawable/b_select"
-                    android:textSize="20dp" />
+                    android:paddingLeft="10dp"
+                    android:textSize="22dp" />
 
                 <RadioButton
                     android:id="@+id/radio3"
@@ -88,7 +90,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:button="@drawable/c_select"
-                    android:textSize="20dp" />
+                    android:paddingLeft="10dp"
+                    android:textSize="22dp" />
 
                 <RadioButton
                     android:id="@+id/radio4"
@@ -96,7 +99,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:button="@drawable/d_select"
-                    android:textSize="20dp" />
+                    android:paddingLeft="10dp"
+                    android:textSize="22dp" />
 
             </RadioGroup>
 
@@ -106,7 +110,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/group_checksingle"
                 android:layout_marginLeft="40dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="22dp"
                 android:orientation="vertical">
 
                 <CheckBox
@@ -115,7 +119,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:button="@drawable/a_select"
-                    android:textSize="20dp" />
+                    android:paddingLeft="10dp"
+                    android:textSize="22dp" />
 
                 <CheckBox
                     android:id="@+id/checkbox2"
@@ -123,7 +128,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:button="@drawable/b_select"
-                    android:textSize="20dp" />
+                    android:paddingLeft="10dp"
+                    android:textSize="22dp" />
 
                 <CheckBox
                     android:id="@+id/checkbox3"
@@ -131,7 +137,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:button="@drawable/c_select"
-                    android:textSize="20dp" />
+                    android:paddingLeft="10dp"
+                    android:textSize="22dp" />
 
                 <CheckBox
                     android:id="@+id/checkbox4"
@@ -139,7 +146,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:button="@drawable/d_select"
-                    android:textSize="20dp" />
+                    android:paddingLeft="10dp"
+                    android:textSize="22dp" />
             </RadioGroup>
 
             <RadioGroup
@@ -148,7 +156,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/group_multiple"
                 android:layout_marginLeft="40dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="22dp"
                 android:orientation="vertical"
                 android:visibility="visible">
 
@@ -156,15 +164,19 @@
                     android:id="@+id/radio_right"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="22dp"
                     android:button="@drawable/v_select"
+                    android:text="正确"
+                    android:paddingLeft="10dp"
                     android:textSize="18dp" />
 
                 <RadioButton
                     android:id="@+id/radio_error"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="22dp"
+                    android:text="错误"
+                    android:paddingLeft="10dp"
                     android:button="@drawable/x_select"
                     android:textSize="18dp" />
 
@@ -186,11 +198,11 @@
                     android:layout_height="wrap_content"
                     android:layout_toLeftOf="@id/btn_record"
                     android:background="@drawable/btn_background_blue"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="20dp"
+                    android:paddingLeft="22dp"
+                    android:paddingRight="22dp"
                     android:text=""
                     android:textColor="@color/white"
-                    android:textSize="20dp" />
+                    android:textSize="22dp" />
 
                 <Button
                     android:id="@+id/btn_down"
@@ -199,11 +211,11 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginLeft="40dp"
                     android:background="@drawable/btn_background_blue"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="20dp"
+                    android:paddingLeft="22dp"
+                    android:paddingRight="22dp"
                     android:text=""
                     android:textColor="@color/white"
-                    android:textSize="20dp" />
+                    android:textSize="22dp" />
             </LinearLayout>
 
         </LinearLayout>

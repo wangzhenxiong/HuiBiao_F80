@@ -90,7 +90,10 @@ public class StartTestActivity extends BaseActivity<StartTestPresenter> implemen
     private BaseProjectMessage chosedProject_JTJ;
     private FGGDProjectFragment fggdProjectFragment;
     private JTJProjectFragment jtjProjectFragment;
-
+    @Override
+    public boolean useEventBus() {
+        return false;
+    }
 
     @Override
     protected void onResume() {

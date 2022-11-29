@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dy.huibiao_f80.R;
+import com.dy.huibiao_f80.app.service.ExamOperationService;
 import com.dy.huibiao_f80.di.component.DaggerRecordDetailComponent;
 import com.dy.huibiao_f80.greendao.DBHelper;
 import com.dy.huibiao_f80.greendao.Sampling;
@@ -22,6 +23,10 @@ import com.dy.huibiao_f80.mvp.presenter.RecordDetailPresenter;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -71,8 +76,43 @@ public class RecordDetailActivity extends BaseActivity<RecordDetailPresenter> im
     TextView mTestsite;
     @BindView(R.id.latitudeandlongitude)
     TextView mLatitudeandlongitude;
+    @BindView(R.id.toolbar_time)
+    TextView mToolbarTime;
 
     private TestRecord testRecord;
+
+
+    @Override
+    public boolean useEventBus() {
+        return false;
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent2(ExamOperationService.ExamOperationServiceEventBean tags) {
+
+        if (tags.getTime() == 0) {
+            if (null!=mToolbarTime){
+                mToolbarTime.setText("正在提交考试结果");
+            }
+            return;
+        }
+        String timestring = tags.getTimestring();
+        if (null!=mToolbarTime){
+            mToolbarTime.setText(timestring);
+        }
+
+
+    }
 
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
@@ -120,7 +160,7 @@ public class RecordDetailActivity extends BaseActivity<RecordDetailPresenter> im
         mStandnum.setText(testRecord.getStand_num());
         mMethodlimit.setText(testRecord.getMethodsDetectionLimit());
         mTestsite.setText(testRecord.getTestsite());
-        mLatitudeandlongitude.setText(testRecord.getLatitude()+","+testRecord.getLongitude());
+        mLatitudeandlongitude.setText(testRecord.getLatitude() + "," + testRecord.getLongitude());
 
     }
 

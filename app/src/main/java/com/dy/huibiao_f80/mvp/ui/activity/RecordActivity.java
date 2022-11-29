@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.dy.huibiao_f80.MyAppLocation;
 import com.dy.huibiao_f80.R;
+import com.dy.huibiao_f80.app.service.ExamOperationService;
 import com.dy.huibiao_f80.bean.GalleryBean;
 import com.dy.huibiao_f80.di.component.DaggerRecordComponent;
 import com.dy.huibiao_f80.greendao.DBHelper;
@@ -33,6 +34,10 @@ import com.dy.huibiao_f80.printer.MyPrinterIntentService;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,11 +82,43 @@ public class RecordActivity extends BaseActivity<RecordPresenter> implements Rec
     TestRecrdAdapter testRecrdAdapter;
     @Inject
     AlertDialog sportDialog;
+    @BindView(R.id.toolbar_time)
+    TextView mToolbarTime;
     private boolean isSeaching = false;
     private String examinationId = "";
     private String examinerId = "";
     private String examId = "";
+    @Override
+    public boolean useEventBus() {
+        return false;
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent2(ExamOperationService.ExamOperationServiceEventBean tags) {
+
+        if (tags.getTime() == 0) {
+            if (null!=mToolbarTime){
+                mToolbarTime.setText("正在提交考试结果");
+            }
+            return;
+        }
+        String timestring = tags.getTimestring();
+        if (null!=mToolbarTime){
+            mToolbarTime.setText(timestring);
+        }
+
+
+    }
     @Override
     public void setupActivityComponent(@NonNull AppComponent appComponent) {
         DaggerRecordComponent //如找不到该类,请编译一下项目
@@ -105,7 +142,7 @@ public class RecordActivity extends BaseActivity<RecordPresenter> implements Rec
         if (MyAppLocation.myAppLocation.mExamOperationService.isStartExamOperation()) {
             examinationId = MyAppLocation.myAppLocation.mExamOperationService.getExaminationId();
             examinerId = MyAppLocation.myAppLocation.mExamOperationService.getExaminerId();
-            examId=MyAppLocation.myAppLocation.mExamOperationService.getNowOperationExam().getId();
+            examId = MyAppLocation.myAppLocation.mExamOperationService.getNowOperationExam().getId();
         }
         ArmsUtils.configRecyclerView(mRecylerview, new GridLayoutManager(this, 1));
         testRecrdAdapter.setEmptyView(R.layout.emptyview, (ViewGroup) mRecylerview.getParent());

@@ -117,6 +117,10 @@ public class TestResultJTJActivity extends BaseActivity<TestResultJTJPresenter> 
     private Typeface mTf;
     private String pjName;
     @Override
+    public boolean useEventBus() {
+        return false;
+    }
+    @Override
     protected void onResume() {
         super.onResume();
         EventBus.getDefault().register(this);

@@ -116,7 +116,10 @@ public class TestSettingJTJActivity extends BaseActivity<TestSettingTJPresenter>
     private String project;
     private BaseProjectMessage baseProjectMessage1;
     private BaseProjectMessage baseProjectMessage2;
-
+    @Override
+    public boolean useEventBus() {
+        return false;
+    }
     @Override
     protected void onResume() {
         super.onResume();

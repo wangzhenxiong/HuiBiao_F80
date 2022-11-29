@@ -79,7 +79,10 @@ public class TestResultFGGDActivity extends BaseActivity<TestResultFGGDPresenter
     private List<GalleryBean> dataList = new ArrayList<>();
     private FGGDTestResultAdapter fggdAdapter;
     String pjName;
-
+    @Override
+    public boolean useEventBus() {
+        return false;
+    }
     @Override
     protected void onResume() {
         super.onResume();

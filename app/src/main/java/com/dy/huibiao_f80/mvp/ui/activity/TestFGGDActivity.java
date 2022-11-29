@@ -87,6 +87,10 @@ public class TestFGGDActivity extends BaseActivity<TestFGGDPresenter> implements
     private List<GalleryBean> dataList = new ArrayList<>();
     private FGGDAdapter fggdAdapter;
     @Override
+    public boolean useEventBus() {
+        return false;
+    }
+    @Override
     protected void onResume() {
         super.onResume();
         EventBus.getDefault().register(this);

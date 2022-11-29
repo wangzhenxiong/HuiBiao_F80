@@ -102,7 +102,10 @@ public class ChoseGalleryJTJActivity extends BaseActivity<ChoseGalleryJTJPresent
     private int nowCheckindex = 1;
     private TestRecord nowCheckGallery;
     private String project;
-
+    @Override
+    public boolean useEventBus() {
+        return false;
+    }
     @Override
     protected void onResume() {
         super.onResume();
