@@ -1,6 +1,7 @@
 package com.dy.huibiao_f80.mvp.ui.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -20,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.apkfuns.logutils.LogUtils;
+import com.dy.huibiao_f80.BuildConfig;
 import com.dy.huibiao_f80.MyAppLocation;
 import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.api.back.BeginOperationExam_Back;
@@ -42,6 +44,8 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -74,6 +78,8 @@ public class ExamOperationActivity extends BaseActivity<ExamOperationPresenter> 
     Button mBtnReport;
     @BindView(R.id.btn_submit)
     Button mBtnSubmit;
+    @Inject
+    AlertDialog mSportDialog;
     private String examinationId;
     private String examinerId;
     private ScheduledThreadPoolExecutor mScheduledThreadPoolExecutor;
@@ -96,6 +102,7 @@ public class ExamOperationActivity extends BaseActivity<ExamOperationPresenter> 
     protected void onResume() {
         super.onResume();
         EventBus.getDefault().register(this);
+
     }
 
     @Override
@@ -105,7 +112,7 @@ public class ExamOperationActivity extends BaseActivity<ExamOperationPresenter> 
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent2(ExamOperationService.ExamOperationServiceEventBean tags) {
-
+        LogUtils.d(tags);
         if (tags.getTime() == 0) {
             if (null!=mToolbarTime){
                 mToolbarTime.setText("正在提交考试结果");
@@ -144,12 +151,16 @@ public class ExamOperationActivity extends BaseActivity<ExamOperationPresenter> 
 
     @Override
     public void showLoading() {
-
+        if (!mSportDialog.isShowing()) {
+            mSportDialog.show();
+        }
     }
 
     @Override
     public void hideLoading() {
-
+        if (mSportDialog.isShowing()) {
+            mSportDialog.dismiss();
+        }
     }
 
     @Override
@@ -171,7 +182,11 @@ public class ExamOperationActivity extends BaseActivity<ExamOperationPresenter> 
 
     @Override
     public void onBackPressed() {
-        ArmsUtils.snackbarText("考试中，请勿退出");
+        if (MyAppLocation.myAppLocation.mExamOperationService.isStartExamOperation()){
+            ArmsUtils.snackbarText("考试中，请勿退出");
+        }else {
+            super.onBackPressed();
+        }
     }
 
     List<BeginOperationExam_Back.EntityBean.OperationPaperListBean> operationPaperList;
@@ -195,11 +210,14 @@ public class ExamOperationActivity extends BaseActivity<ExamOperationPresenter> 
             mExamTitle.addView(inflate);
         }
         Integer operationExamTime = entity.getExamination().getOperationExamTime() * 60;
-
         MyAppLocation.myAppLocation.mExamOperationService.setBeginOperationExam_back(back);
         MyAppLocation.myAppLocation.mExamOperationService.setExaminationId(examinationId);
         MyAppLocation.myAppLocation.mExamOperationService.setExaminerId(examinerId);
-        MyAppLocation.myAppLocation.mExamOperationService.startExamOperation(operationExamTime);
+        if (BuildConfig.DEBUG){
+            MyAppLocation.myAppLocation.mExamOperationService.startExamOperation(10);
+        }else {
+            MyAppLocation.myAppLocation.mExamOperationService.startExamOperation(operationExamTime);
+        }
         initExamCont(operationPaperList.get(0), 0);
 
     }

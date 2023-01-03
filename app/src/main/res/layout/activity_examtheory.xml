@@ -37,155 +37,166 @@
             android:layout_weight="3"
             android:orientation="vertical"
             android:padding="22dp">
+          <ScrollView
+              android:layout_width="match_parent"
+              android:layout_height="0dp"
+              android:layout_weight="3">
+              <LinearLayout
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:orientation="vertical">
+                  <TextView
+                      android:id="@+id/titletype"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:text="一、单选题"
+                      android:textColor="@color/black"
+                      android:textSize="22dp"
+                      android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/titletype"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="一、单选题"
-                android:textColor="@color/black"
-                android:textSize="22dp"
-                android:textStyle="bold" />
+                  <TextView
+                      android:id="@+id/itemcontent"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_below="@id/titletype"
+                      android:layout_marginLeft="22dp"
+                      android:layout_marginTop="22dp"
+                      android:layout_marginRight="22dp"
+                      android:textSize="18dp" />
 
-            <TextView
-                android:id="@+id/itemcontent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/titletype"
-                android:layout_marginLeft="22dp"
-                android:layout_marginTop="22dp"
-                android:layout_marginRight="22dp"
-                android:textSize="18dp" />
+                  <RadioGroup
+                      android:id="@+id/group_checksingle"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_below="@id/itemcontent"
+                      android:layout_marginLeft="40dp"
+                      android:layout_marginTop="22dp"
+                      android:orientation="vertical">
 
-            <RadioGroup
-                android:id="@+id/group_checksingle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/itemcontent"
-                android:layout_marginLeft="40dp"
-                android:layout_marginTop="22dp"
-                android:orientation="vertical">
+                      <RadioButton
+                          android:id="@+id/radio1"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="10dp"
+                          android:button="@drawable/a_select"
+                          android:paddingLeft="10dp"
+                          android:textSize="22dp" />
 
-                <RadioButton
-                    android:id="@+id/radio1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:button="@drawable/a_select"
-                    android:paddingLeft="10dp"
-                    android:textSize="22dp" />
+                      <RadioButton
+                          android:id="@+id/radio2"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="10dp"
+                          android:button="@drawable/b_select"
+                          android:paddingLeft="10dp"
+                          android:textSize="22dp" />
 
-                <RadioButton
-                    android:id="@+id/radio2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:button="@drawable/b_select"
-                    android:paddingLeft="10dp"
-                    android:textSize="22dp" />
+                      <RadioButton
+                          android:id="@+id/radio3"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="10dp"
+                          android:button="@drawable/c_select"
+                          android:paddingLeft="10dp"
+                          android:textSize="22dp" />
 
-                <RadioButton
-                    android:id="@+id/radio3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:button="@drawable/c_select"
-                    android:paddingLeft="10dp"
-                    android:textSize="22dp" />
+                      <RadioButton
+                          android:id="@+id/radio4"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="10dp"
+                          android:button="@drawable/d_select"
+                          android:paddingLeft="10dp"
+                          android:textSize="22dp" />
 
-                <RadioButton
-                    android:id="@+id/radio4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:button="@drawable/d_select"
-                    android:paddingLeft="10dp"
-                    android:textSize="22dp" />
+                  </RadioGroup>
 
-            </RadioGroup>
+                  <RadioGroup
+                      android:id="@+id/group_multiple"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_below="@id/group_checksingle"
+                      android:layout_marginLeft="40dp"
+                      android:layout_marginTop="22dp"
+                      android:orientation="vertical">
 
-            <RadioGroup
-                android:id="@+id/group_multiple"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/group_checksingle"
-                android:layout_marginLeft="40dp"
-                android:layout_marginTop="22dp"
-                android:orientation="vertical">
+                      <CheckBox
+                          android:id="@+id/checkbox1"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="10dp"
+                          android:button="@drawable/a_select"
+                          android:paddingLeft="10dp"
+                          android:textSize="22dp" />
 
-                <CheckBox
-                    android:id="@+id/checkbox1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:button="@drawable/a_select"
-                    android:paddingLeft="10dp"
-                    android:textSize="22dp" />
+                      <CheckBox
+                          android:id="@+id/checkbox2"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="10dp"
+                          android:button="@drawable/b_select"
+                          android:paddingLeft="10dp"
+                          android:textSize="22dp" />
 
-                <CheckBox
-                    android:id="@+id/checkbox2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:button="@drawable/b_select"
-                    android:paddingLeft="10dp"
-                    android:textSize="22dp" />
+                      <CheckBox
+                          android:id="@+id/checkbox3"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="10dp"
+                          android:button="@drawable/c_select"
+                          android:paddingLeft="10dp"
+                          android:textSize="22dp" />
 
-                <CheckBox
-                    android:id="@+id/checkbox3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:button="@drawable/c_select"
-                    android:paddingLeft="10dp"
-                    android:textSize="22dp" />
+                      <CheckBox
+                          android:id="@+id/checkbox4"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="10dp"
+                          android:button="@drawable/d_select"
+                          android:paddingLeft="10dp"
+                          android:textSize="22dp" />
+                  </RadioGroup>
 
-                <CheckBox
-                    android:id="@+id/checkbox4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:button="@drawable/d_select"
-                    android:paddingLeft="10dp"
-                    android:textSize="22dp" />
-            </RadioGroup>
+                  <RadioGroup
+                      android:id="@+id/group_judger"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_below="@id/group_multiple"
+                      android:layout_marginLeft="40dp"
+                      android:layout_marginTop="22dp"
+                      android:orientation="vertical"
+                      android:visibility="visible">
 
-            <RadioGroup
-                android:id="@+id/group_judger"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/group_multiple"
-                android:layout_marginLeft="40dp"
-                android:layout_marginTop="22dp"
-                android:orientation="vertical"
-                android:visibility="visible">
+                      <RadioButton
+                          android:id="@+id/radio_right"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="22dp"
+                          android:button="@drawable/v_select"
+                          android:text="正确"
+                          android:paddingLeft="10dp"
+                          android:textSize="18dp" />
 
-                <RadioButton
-                    android:id="@+id/radio_right"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="22dp"
-                    android:button="@drawable/v_select"
-                    android:text="正确"
-                    android:paddingLeft="10dp"
-                    android:textSize="18dp" />
-
-                <RadioButton
-                    android:id="@+id/radio_error"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="22dp"
-                    android:text="错误"
-                    android:paddingLeft="10dp"
-                    android:button="@drawable/x_select"
-                    android:textSize="18dp" />
+                      <RadioButton
+                          android:id="@+id/radio_error"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="22dp"
+                          android:text="错误"
+                          android:paddingLeft="10dp"
+                          android:button="@drawable/x_select"
+                          android:textSize="18dp" />
 
 
-            </RadioGroup>
+                  </RadioGroup>
+              </LinearLayout>
+          </ScrollView>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:layout_below="@id/group_multiple"
                 android:layout_centerInParent="true"
                 android:layout_marginTop="100dp"

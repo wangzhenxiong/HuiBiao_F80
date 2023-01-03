@@ -41,7 +41,7 @@ import butterknife.OnClick;
 
 import static com.jess.arms.utils.Preconditions.checkNotNull;
 
-public class ChoseGalleryFGGDActivity extends BaseActivity<ChoseGalleryFGGDPresenter> implements ChoseGalleryFGGDContract.View {
+public class ChoseGalleryFGGDActivity extends BaseActivity<ChoseGalleryFGGDPresenter> implements ChoseGalleryFGGDContract.View, CompoundButton.OnCheckedChangeListener {
 
     @BindView(R.id.toolbar_back)
     RelativeLayout mToolbarBack;
@@ -142,10 +142,12 @@ public class ChoseGalleryFGGDActivity extends BaseActivity<ChoseGalleryFGGDPrese
     private int nowCheckindex = 1;
     private TestRecord nowCheckGallery;
     private String projectname;
+
     @Override
     public boolean useEventBus() {
         return false;
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -157,17 +159,18 @@ public class ChoseGalleryFGGDActivity extends BaseActivity<ChoseGalleryFGGDPrese
         super.onPause();
         EventBus.getDefault().unregister(this);
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent2(ExamOperationService.ExamOperationServiceEventBean tags) {
 
         if (tags.getTime() == 0) {
-            if (null!=mToolbarTime){
+            if (null != mToolbarTime) {
                 mToolbarTime.setText("正在提交考试结果");
             }
             return;
         }
         String timestring = tags.getTimestring();
-        if (null!=mToolbarTime){
+        if (null != mToolbarTime) {
             mToolbarTime.setText(timestring);
         }
 
@@ -191,21 +194,33 @@ public class ChoseGalleryFGGDActivity extends BaseActivity<ChoseGalleryFGGDPrese
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
+
+        for (int i = 0; i < MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.size(); i++) {
+            GalleryBean galleryBean = MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(i);
+            ((TestRecord) galleryBean).setSamplename(null);
+            ((TestRecord) galleryBean).setSamplenum(null);
+            ((TestRecord) galleryBean).setDilutionratio(1);
+            ((TestRecord) galleryBean).setEveryresponse(1);
+        }
         Intent intent = getIntent();
         projectname = intent.getStringExtra("project");
         refishMessage(1, R.id.background1);
-        mCheckall1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mCheckall1.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                check01(isChecked);
+            public void onClick(View v) {
+                boolean checked = mCheckall1.isChecked();
+                check01(checked);
             }
         });
-        mCheckall2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+        mCheckall2.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                check02(isChecked);
+            public void onClick(View v) {
+                boolean checked = mCheckall2.isChecked();
+                check02(checked);
             }
         });
+        
         mCheckboxDuizhao.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -272,6 +287,62 @@ public class ChoseGalleryFGGDActivity extends BaseActivity<ChoseGalleryFGGDPrese
         List<GalleryBean> mFGGDGalleryBeanList = MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList;
         for (int i = 0; i < mFGGDGalleryBeanList.size(); i++) {
             mFGGDGalleryBeanList.get(i).setCheckd(false);
+        }
+        initCheckBox();
+    }
+
+    private void initCheckBox() {
+        mCheckbox1.setOnCheckedChangeListener(this);
+        mCheckbox2.setOnCheckedChangeListener(this);
+        mCheckbox3.setOnCheckedChangeListener(this);
+        mCheckbox4.setOnCheckedChangeListener(this);
+        mCheckbox5.setOnCheckedChangeListener(this);
+        mCheckbox6.setOnCheckedChangeListener(this);
+        mCheckbox7.setOnCheckedChangeListener(this);
+        mCheckbox8.setOnCheckedChangeListener(this);
+        mCheckbox9.setOnCheckedChangeListener(this);
+        mCheckbox10.setOnCheckedChangeListener(this);
+        mCheckbox11.setOnCheckedChangeListener(this);
+        mCheckbox12.setOnCheckedChangeListener(this);
+        mCheckbox13.setOnCheckedChangeListener(this);
+        mCheckbox14.setOnCheckedChangeListener(this);
+        mCheckbox15.setOnCheckedChangeListener(this);
+        mCheckbox16.setOnCheckedChangeListener(this);
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        switch (buttonView.getId()) {
+            case R.id.checkbox1:
+            case R.id.checkbox2:
+            case R.id.checkbox3:
+            case R.id.checkbox4:
+            case R.id.checkbox5:
+            case R.id.checkbox6:
+            case R.id.checkbox7:
+            case R.id.checkbox8:
+                if (!isChecked){
+                    if (mCheckall1.isChecked()) {
+                        mCheckall1.setChecked(false);
+                    }
+                }
+                break;
+            case R.id.checkbox9:
+            case R.id.checkbox10:
+            case R.id.checkbox11:
+            case R.id.checkbox12:
+            case R.id.checkbox13:
+            case R.id.checkbox14:
+            case R.id.checkbox15:
+            case R.id.checkbox16:
+                if (!isChecked){
+                    if (mCheckall2.isChecked()) {
+                        mCheckall2.setChecked(false);
+                    }
+                }
+                break;
+
+
         }
     }
 
@@ -447,4 +518,6 @@ public class ChoseGalleryFGGDActivity extends BaseActivity<ChoseGalleryFGGDPrese
         mDr.setText(nowCheckGallery.getDilutionratio() + "");
         mCheckboxDuizhao.setChecked(nowCheckGallery.getDowhat() == 2 ? true : false);
     }
+
+
 }

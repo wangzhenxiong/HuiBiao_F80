@@ -16,9 +16,15 @@
 package com.dy.huibiao_f80.app.service;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.hardware.usb.UsbDevice;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.os.Binder;
 import android.os.Environment;
 import android.os.Handler;
@@ -44,6 +50,7 @@ import com.dy.huibiao_f80.app.utils.FileUtils;
 import com.dy.huibiao_f80.bean.GalleryBean;
 import com.dy.huibiao_f80.bean.base.BaseProjectMessage;
 import com.dy.huibiao_f80.bean.eventBusBean.FGTestMessageBean;
+import com.dy.huibiao_f80.bean.eventBusBean.NetWorkState;
 import com.dy.huibiao_f80.greendao.DBHelper;
 import com.dy.huibiao_f80.greendao.ProjectFGGD;
 import com.dy.huibiao_f80.greendao.TestRecord;
@@ -179,8 +186,48 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
         FileUtils.deleteDir(path);
         mHandler = new Handler(Looper.getMainLooper());
 
+        initReceiver();
     }
 
+    private void initReceiver() {
+        IntentFilter timeFilter = new IntentFilter();
+        timeFilter.addAction("android.net.ethernet.ETHERNET_STATE_CHANGED");
+        timeFilter.addAction("android.net.ethernet.STATE_CHANGE");
+        timeFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        timeFilter.addAction("android.net.wifi.WIFI_STATE_CHANGED");
+        timeFilter.addAction("android.net.wifi.STATE_CHANGE");
+        timeFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+        registerReceiver(netReceiver, timeFilter);
+    }
+
+
+
+    BroadcastReceiver netReceiver =new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            LogUtils.d(intent.getAction());
+            if (intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {//监听网络连接
+                //获取联网状态的NetworkInfo对象
+                NetworkInfo info = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
+                if (info != null) {
+                    //如果当前的网络连接成功并且网络连接可用
+                    if (NetworkInfo.State.CONNECTED == info.getState() && info.isAvailable()) {
+                        if (info.getType() == ConnectivityManager.TYPE_WIFI){
+                            LogUtils.d("连接上WiFi");
+                            EventBus.getDefault().post(new NetWorkState(true,"连接上WiFi"));
+                        }else if (info.getType() == ConnectivityManager.TYPE_MOBILE){
+                            LogUtils.d("连接上移动网络数据");
+                            EventBus.getDefault().post(new NetWorkState(true,"连接上移动网络数据"));
+                        }
+                    } else {
+                        LogUtils.d("网络断开");
+                        EventBus.getDefault().post(new NetWorkState(false,"网络断开"));
+
+                    }
+                }
+            }
+        }
+    };
 
 
 
@@ -1593,7 +1640,10 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
         mOpenComPort = false;
         mData_SerialControl.CloseComPort(mData_SerialControl);
         mPrint_SerialControl.CloseComPort(mPrint_SerialControl);
-        //unregisterReceiver(mReceiver);
+        if (netReceiver != null) {
+            unregisterReceiver(netReceiver);
+            netReceiver = null;
+        }
     }
 
     @Override

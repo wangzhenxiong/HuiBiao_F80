@@ -103,7 +103,10 @@ public class FGGDTestResultAdapter extends BaseQuickAdapter<GalleryBean, BaseVie
             abs_=0;
         }
         String four = NumberUtils.fourString(abs_);
-        helper.setText(R.id.abs_value,four+"");
+        if (item.getState()==1){
+            helper.setText(R.id.abs_value,four+"");
+        }
+
 
        /* helper.setOnCheckedChangeListener(R.id.checkbox, new CompoundButton.OnCheckedChangeListener() {
             @Override

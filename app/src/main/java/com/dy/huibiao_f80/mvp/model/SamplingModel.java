@@ -88,7 +88,7 @@ public class SamplingModel extends BaseModel implements SamplingContract.Model {
         return Observable.create(new ObservableOnSubscribe<List<Sampling>>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<Sampling>> emitter) throws Exception {
-                List<Sampling> list = DBHelper.getSamplingDao().queryBuilder().orderDesc(SamplingDao.Properties.TestingTime).list();
+                List<Sampling> list = DBHelper.getSamplingDao().queryBuilder().orderDesc(SamplingDao.Properties.CreationTime).list();
                 LogUtils.d(list);
                 emitter.onNext(list);
                 emitter.onComplete();

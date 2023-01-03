@@ -152,18 +152,69 @@ public class ChoseGalleryJTJActivity extends BaseActivity<ChoseGalleryJTJPresent
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
+        for (int i = 0; i < MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.size(); i++) {
+            GalleryBean galleryBean = MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(i);
+            ((TestRecord) galleryBean).setSamplename(null);
+            ((TestRecord) galleryBean).setSamplenum(null);
+            ((TestRecord) galleryBean).setDilutionratio(1);
+            ((TestRecord) galleryBean).setEveryresponse(1);
+        }
         Intent intent = getIntent();
         project = intent.getStringExtra("project");
         mPresenter.initJTJUSB();
-        mCheckall.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+        mCheckall.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            public void onClick(View v) {
+                boolean isChecked = mCheckall.isChecked();
                 mCheckbox1.setChecked(isChecked);
                 mCheckbox2.setChecked(isChecked);
                 mCheckbox3.setChecked(isChecked);
                 mCheckbox4.setChecked(isChecked);
             }
         });
+
+        mCheckbox1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!isChecked){
+                    if (mCheckall.isChecked()){
+                        mCheckall.setChecked(false);
+                    }
+                }
+            }
+        });
+        mCheckbox2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!isChecked){
+                    if (mCheckall.isChecked()){
+                        mCheckall.setChecked(false);
+                    }
+                }
+            }
+        });
+        mCheckbox3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!isChecked){
+                    if (mCheckall.isChecked()){
+                        mCheckall.setChecked(false);
+                    }
+                }
+            }
+        });
+        mCheckbox4.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!isChecked){
+                    if (mCheckall.isChecked()){
+                        mCheckall.setChecked(false);
+                    }
+                }
+            }
+        });
+
         mSampleserial.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

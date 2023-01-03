@@ -40,6 +40,7 @@ public class SamplingAdapter extends BaseQuickAdapter<Sampling, BaseViewHolder> 
     public SamplingAdapter(int layoutResId, @Nullable List<Sampling> data) {
         super(layoutResId, data);
     }
+    public boolean showCheckBox=true;
 
     @Override
     protected void convert(BaseViewHolder helper, Sampling item) {
@@ -53,6 +54,11 @@ public class SamplingAdapter extends BaseQuickAdapter<Sampling, BaseViewHolder> 
                 .setText(R.id.testresult,item.getTestResult())
         ;
         helper.setChecked(R.id.checkbox,item.check);
+        if (showCheckBox){
+            helper.setGone(R.id.checkbox,true);
+        }else {
+            helper.setGone(R.id.checkbox,false);
+        }
        /* helper.setOnCheckedChangeListener(R.id.checkbox, new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

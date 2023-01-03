@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dy.huibiao_f80.R;
+import com.dy.huibiao_f80.app.utils.NetworkUtils;
 import com.dy.huibiao_f80.di.component.DaggerExamHintsComponent;
 import com.dy.huibiao_f80.mvp.contract.ExamHintsContract;
 import com.dy.huibiao_f80.mvp.presenter.ExamHintsPresenter;
@@ -124,6 +125,10 @@ public class ExamHintsActivity extends BaseActivity<ExamHintsPresenter> implemen
             case R.id.examname:
                 break;
             case R.id.startexam:
+                if (!NetworkUtils.getNetworkType()) {
+                    ArmsUtils.snackbarText("当前无网络连接，请检查后重试");
+                    return;
+                }
                 if (!mCheckbox.isChecked()) {
                     ArmsUtils.snackbarText("请阅读并同意考试注意事项！");
                     return;

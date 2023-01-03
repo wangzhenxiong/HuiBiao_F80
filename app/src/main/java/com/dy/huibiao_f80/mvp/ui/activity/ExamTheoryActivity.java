@@ -2,7 +2,6 @@ package com.dy.huibiao_f80.mvp.ui.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,6 +10,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.apkfuns.logutils.LogUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.dy.huibiao_f80.BuildConfig;
 import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.api.back.BeginTheoryExam_Back;
 import com.dy.huibiao_f80.di.component.DaggerExamTheoryComponent;
@@ -38,6 +39,8 @@ import com.jess.arms.utils.ArmsUtils;
 import java.util.List;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -98,6 +101,9 @@ public class ExamTheoryActivity extends BaseActivity<ExamTheoryPresenter> implem
     CheckBox mCheckbox3;
     @BindView(R.id.checkbox4)
     CheckBox mCheckbox4;
+
+    @Inject
+    AlertDialog mSportDialog;
     private String examinationId;
     private String examinerId;
     private ScheduledThreadPoolExecutor mScheduledThreadPoolExecutor;
@@ -348,12 +354,16 @@ public class ExamTheoryActivity extends BaseActivity<ExamTheoryPresenter> implem
 
     @Override
     public void showLoading() {
-
+        if (!mSportDialog.isShowing()) {
+           mSportDialog.show();
+        }
     }
 
     @Override
     public void hideLoading() {
-
+        if (mSportDialog.isShowing()) {
+            mSportDialog.dismiss();
+        }
     }
 
     @Override
@@ -382,6 +392,9 @@ public class ExamTheoryActivity extends BaseActivity<ExamTheoryPresenter> implem
         BeginTheoryExam_Back.EntityBean entity = back.getEntity();
         BeginTheoryExam_Back.EntityBean.TheoryPaperBean theoryPaper = entity.getTheoryPaper();
         theoryExamTime = theoryPaper.getTheoryExamTime() * 60;
+        if (BuildConfig.DEBUG){
+            theoryExamTime=10;
+        }
         mScheduledThreadPoolExecutor.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
@@ -401,7 +414,7 @@ public class ExamTheoryActivity extends BaseActivity<ExamTheoryPresenter> implem
                         });
 
                     } else {
-                        mPresenter.submit(examinationId, examinerId, beginTheoryExamBack);
+                        mPresenter.submit(examinationId, examinerId, beginTheoryExamBack,false);
                         runflag = false;
                     }
                 }
@@ -765,23 +778,40 @@ public class ExamTheoryActivity extends BaseActivity<ExamTheoryPresenter> implem
             }
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("提示");
-        builder.setMessage("一共"+(analysePaperList.size()+theoryQuestionMultipleList.size()+theoryQuestionRadioList.size())
-                +"道题，已经完成"+(analysePaperList.size()+theoryQuestionMultipleList.size()+theoryQuestionRadioList.size()-noanswer)+",未完成"+noanswer+"道\r\n"+"确定要交卷吗？");
-        builder.setNegativeButton("确定", new DialogInterface.OnClickListener() {
+        View inflate = LayoutInflater.from(this).inflate(R.layout.submithint_layout, null);
+        TextView title = (TextView) inflate.findViewById(R.id.title);
+        TextView message = (TextView) inflate.findViewById(R.id.message);
+        Button confirm = (Button) inflate.findViewById(R.id.confirm);
+        Button cancle = (Button) inflate.findViewById(R.id.cancle);
+        title.setText("提示");
+        builder.setView(inflate);
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+        String content = " <font style=\"font-size:16dp\" color=\"#3856FC\">"+"一共"+(analysePaperList.size()+theoryQuestionMultipleList.size()+theoryQuestionRadioList.size())
+                +"道题，已经完成"+(analysePaperList.size()+theoryQuestionMultipleList.size()+theoryQuestionRadioList.size()-noanswer)+"</font>\n" +
+                " <font style=\"font-size:16dp\" color=\"#FF0000\">" + ",未完成"+noanswer+"道" + "</font>" +
+                " <font style=\"font-size:16dp\" color=\"#3856FC\">确定要交卷吗？</font>\n";
+        //"正在检测...富集倒计时 "+message.num + " 秒！"
+        message.setText(Html.fromHtml(content));
+
+        confirm.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                mPresenter.submit(examinationId,examinerId,beginTheoryExamBack);
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                mPresenter.submit(examinationId,examinerId,beginTheoryExamBack,true);
             }
         });
-        builder.setNeutralButton("取消", new DialogInterface.OnClickListener() {
+
+        cancle.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+            public void onClick(View v) {
+                alertDialog.dismiss();
             }
         });
-        builder.show();
+
+
+
 
     }
     //下一题

@@ -17,7 +17,6 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.map.BaiduMap;
-import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.MapBaseIndoorMapInfo;
 import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
@@ -52,7 +51,6 @@ public class BaiduMapActivity extends BaseActivity<BaiduMapPresenter> implements
     BaiduMap mBaiduMap;
     boolean isFirstLoc = true; // 是否首次定位
     private Button requestLocButton;
-    BitmapDescriptor mCurrentMarker;
     private TextView mAdreessView;
 
     @Override
@@ -69,42 +67,46 @@ public class BaiduMapActivity extends BaseActivity<BaiduMapPresenter> implements
         mAdreessView = ((TextView) mainview.findViewById(R.id.adreess));
         mCurrentMode = MyLocationConfiguration.LocationMode.NORMAL;
         requestLocButton.setText("普通");
-        View.OnClickListener btnClickListener = new View.OnClickListener() {
+        requestLocButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mBaiduMap.clear();
                 switch (mCurrentMode) {
-                    case NORMAL:
+                    case NORMAL: //普通
                         requestLocButton.setText("跟随");
                         mCurrentMode = MyLocationConfiguration.LocationMode.FOLLOWING;
                         mBaiduMap.setMyLocationConfigeration(new MyLocationConfiguration(mCurrentMode, true,
-                                mCurrentMarker));
+                                null));
                         break;
-                    case COMPASS:
-                        requestLocButton.setText("普通");
-                        mCurrentMode = MyLocationConfiguration.LocationMode.NORMAL;
-                        mBaiduMap.setMyLocationConfigeration(new MyLocationConfiguration(mCurrentMode, true,
-                                mCurrentMarker));
-                        break;
-                    case FOLLOWING:
+                    case FOLLOWING: //跟随
                         requestLocButton.setText("罗盘");
                         mCurrentMode = MyLocationConfiguration.LocationMode.COMPASS;
                         mBaiduMap.setMyLocationConfigeration(new MyLocationConfiguration(mCurrentMode, true,
-                                mCurrentMarker));
+                                null));
                         break;
+                    case COMPASS://罗盘
+                        requestLocButton.setText("普通");
+                        mCurrentMode = MyLocationConfiguration.LocationMode.NORMAL;
+                        mBaiduMap.setMyLocationConfigeration(new MyLocationConfiguration(mCurrentMode, true,
+                                null));
+
+                        break;
+
                     default:
                         break;
                 }
+                // 开启定位图层
+                mBaiduMap.setMyLocationEnabled(true);
             }
-        };
-        requestLocButton.setOnClickListener(btnClickListener);
+        });
 
         // 地图初始化
         mMapView = (MapView) mainview.findViewById(R.id.bmapView);
         mBaiduMap = mMapView.getMap();
-        // 开启定位图层
-        mBaiduMap.setMyLocationEnabled(true);
         // 开启室内图
         mBaiduMap.setIndoorEnable(true);
+        // 开启定位图层
+        mBaiduMap.setMyLocationEnabled(true);
         // 定位初始化
         mLocClient = new LocationClient(this);
         mLocClient.registerLocationListener(myListener);

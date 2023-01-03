@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -153,6 +152,9 @@ public class RecordActivity extends BaseActivity<RecordPresenter> implements Rec
                     GalleryBean galleryBean = testRecordList.get(position);
                     if (galleryBean.isCheckd()) {
                         galleryBean.setCheckd(false);
+                        if (mChoseall.isChecked()){
+                            mChoseall.setChecked(false);
+                        }
                     } else {
                         galleryBean.setCheckd(true);
                     }
@@ -160,15 +162,17 @@ public class RecordActivity extends BaseActivity<RecordPresenter> implements Rec
             }
         });
         mRecylerview.setAdapter(testRecrdAdapter);
-        mChoseall.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mChoseall.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            public void onClick(View v) {
+                boolean checked = mChoseall.isChecked();
                 for (int i = 0; i < testRecordList.size(); i++) {
-                    testRecordList.get(i).setCheckd(isChecked);
+                    testRecordList.get(i).setCheckd(checked);
                 }
                 testRecrdAdapter.notifyDataSetChanged();
             }
         });
+
         testRecrdAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
@@ -298,6 +302,8 @@ public class RecordActivity extends BaseActivity<RecordPresenter> implements Rec
         }
     }
 
+
+
     private void makeDeleteDialog(List<TestRecord> checkSamples) {
         AlertDialog dialog = new AlertDialog.Builder(this).create();
         dialog.setTitle("提示");
@@ -327,11 +333,11 @@ public class RecordActivity extends BaseActivity<RecordPresenter> implements Rec
     }
 
     private void makeDialogChoseJujdger() {
-        String[] strings = new String[]{"合格", "不合格", "可疑", "--"};
+        String[] strings = new String[]{"合格", "不合格", "可疑", "无效","其它"};
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setIcon(R.mipmap.ic_launcher);
         builder.setTitle("请选择判断结果");
-        builder.setSingleChoiceItems(strings, 0, new DialogInterface.OnClickListener() {
+        builder.setSingleChoiceItems(strings, -1, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String string = strings[which];

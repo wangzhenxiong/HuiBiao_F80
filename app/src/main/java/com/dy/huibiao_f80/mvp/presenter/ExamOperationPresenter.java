@@ -2,14 +2,20 @@ package com.dy.huibiao_f80.mvp.presenter;
 
 import android.app.AlertDialog;
 import android.app.Application;
-import android.content.DialogInterface;
+import android.text.Html;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.apkfuns.logutils.LogUtils;
 import com.dy.huibiao_f80.Constants;
 import com.dy.huibiao_f80.MyAppLocation;
+import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.api.back.BeginOperationExam_Back;
 import com.dy.huibiao_f80.api.back.GetTestForm_Back;
 import com.dy.huibiao_f80.api.back.TestFormSubmit_Back;
+import com.dy.huibiao_f80.app.utils.NetworkUtils;
 import com.dy.huibiao_f80.bean.ReportBean;
 import com.dy.huibiao_f80.mvp.contract.ExamOperationContract;
 import com.jess.arms.di.scope.ActivityScope;
@@ -111,6 +117,10 @@ public class ExamOperationPresenter extends BasePresenter<ExamOperationContract.
 
 
     public void submitOperation() {
+        if (!NetworkUtils.getNetworkType()) {
+            ArmsUtils.snackbarText("当前无网络连接，请检查后重试");
+            return;
+        }
         if (MyAppLocation.myAppLocation.mExamOperationService.isTeacherSubmit){
             Map<String, GetTestForm_Back> getTestForm_backMap = MyAppLocation.myAppLocation.mExamOperationService.getGetTestForm_backMap();
             Map<String, ReportBean> reportBeanMap = MyAppLocation.myAppLocation.mExamOperationService.getReportBeanMap();
@@ -176,7 +186,44 @@ public class ExamOperationPresenter extends BasePresenter<ExamOperationContract.
     }
 
     private void makeDialog(int i) {
-        AlertDialog.Builder builder=new AlertDialog.Builder(mRootView.getActivity());
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(mRootView.getActivity());
+        View inflate = LayoutInflater.from(mRootView.getActivity()).inflate(R.layout.submithint_layout, null);
+        TextView title = (TextView) inflate.findViewById(R.id.title);
+        TextView message = (TextView) inflate.findViewById(R.id.message);
+        Button confirm = (Button) inflate.findViewById(R.id.confirm);
+        Button cancle = (Button) inflate.findViewById(R.id.cancle);
+        title.setText("提示");
+        builder.setView(inflate);
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+        if (i==0){
+            message.setText("确定要提交吗？");
+        }else {
+            String content = " <font style=\"font-size:16dp\" color=\"#3856FC\">还有</font>\n" +
+                    " <font style=\"font-size:16dp\" color=\"#FF0000\">" + i + "</font>" +
+                    " <font style=\"font-size:16dp\" color=\"#3856FC\">道题实验报告还未填写完成，确定要提交吗？</font>\n";
+            message.setText(Html.fromHtml(content));
+        }
+
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                submit();
+            }
+        });
+
+        cancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+
+
+
+       /* AlertDialog.Builder builder=new AlertDialog.Builder(mRootView.getActivity());
         builder.setTitle("提示");
         if (i==0){
             builder.setMessage("确定要提交吗？");
@@ -197,6 +244,6 @@ public class ExamOperationPresenter extends BasePresenter<ExamOperationContract.
                 dialog.dismiss();
             }
         }) ;
-        builder.show();
+        builder.show();*/
     }
 }

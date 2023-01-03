@@ -23,6 +23,7 @@ import com.dy.huibiao_f80.BuildConfig;
 import com.dy.huibiao_f80.Constants;
 import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.app.utils.DataBaseUtil;
+import com.dy.huibiao_f80.app.utils.NetworkUtils;
 import com.dy.huibiao_f80.app.utils.SPUtils;
 import com.dy.huibiao_f80.bean.UpdateMessage;
 import com.dy.huibiao_f80.di.component.DaggerHomeComponent;
@@ -209,6 +210,10 @@ public class HomeActivity extends BaseActivity<HomePresenter> implements HomeCon
                 //ArmsUtils.startActivity(new Intent(getActivity(),TrainActivity.class));
                 break;
             case R.id.exam:
+                if (!NetworkUtils.getNetworkType()){
+                    ArmsUtils.snackbarText("当前无网络连接，请检查后重试");
+                  return;
+                }
                 mPresenter.existExam(Constants.URL,Constants.DEVICENUM);
                 break;
         }

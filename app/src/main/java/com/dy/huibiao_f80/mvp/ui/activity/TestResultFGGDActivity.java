@@ -12,10 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.GravityEnum;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.dy.huibiao_f80.Constants;
 import com.dy.huibiao_f80.MyAppLocation;
@@ -25,6 +27,7 @@ import com.dy.huibiao_f80.bean.GalleryBean;
 import com.dy.huibiao_f80.bean.base.BaseProjectMessage;
 import com.dy.huibiao_f80.bean.eventBusBean.FGTestMessageBean;
 import com.dy.huibiao_f80.di.component.DaggerTestResultFGGDComponent;
+import com.dy.huibiao_f80.greendao.TestRecord;
 import com.dy.huibiao_f80.mvp.contract.TestResultFGGDContract;
 import com.dy.huibiao_f80.mvp.presenter.TestResultFGGDPresenter;
 import com.dy.huibiao_f80.mvp.ui.adapter.FGGDTestResultAdapter;
@@ -79,10 +82,13 @@ public class TestResultFGGDActivity extends BaseActivity<TestResultFGGDPresenter
     private List<GalleryBean> dataList = new ArrayList<>();
     private FGGDTestResultAdapter fggdAdapter;
     String pjName;
+    private MaterialDialog mUploadDialog;
+
     @Override
     public boolean useEventBus() {
         return false;
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -94,17 +100,18 @@ public class TestResultFGGDActivity extends BaseActivity<TestResultFGGDPresenter
         super.onPause();
         EventBus.getDefault().unregister(this);
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent2(ExamOperationService.ExamOperationServiceEventBean tags) {
 
         if (tags.getTime() == 0) {
-            if (null!=mToolbarTime){
+            if (null != mToolbarTime) {
                 mToolbarTime.setText("正在提交考试结果");
             }
             return;
         }
         String timestring = tags.getTimestring();
-        if (null!=mToolbarTime){
+        if (null != mToolbarTime) {
             mToolbarTime.setText(timestring);
         }
 
@@ -130,7 +137,6 @@ public class TestResultFGGDActivity extends BaseActivity<TestResultFGGDPresenter
     public void initData(@Nullable Bundle savedInstanceState) {
         getdata();
         if (dataList.size() > 0) {
-
             pjName = dataList.get(0).getmProjectMessage().getPjName();
             mTitle.setText("分光光度检测——" + pjName);
         } else {
@@ -145,6 +151,9 @@ public class TestResultFGGDActivity extends BaseActivity<TestResultFGGDPresenter
                     GalleryBean galleryBean = dataList.get(position);
                     if (galleryBean.isCheckd()) {
                         galleryBean.setCheckd(false);
+                        if (mChoseall.isChecked()) {
+                            mChoseall.setChecked(false);
+                        }
                     } else {
                         galleryBean.setCheckd(true);
                     }
@@ -153,15 +162,17 @@ public class TestResultFGGDActivity extends BaseActivity<TestResultFGGDPresenter
         });
         fggdAdapter.setEmptyView(R.layout.emptyview, (ViewGroup) mRecylerview.getParent());
         mRecylerview.setAdapter(fggdAdapter);
-        mChoseall.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mChoseall.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            public void onClick(View v) {
+                boolean checked = mChoseall.isChecked();
                 for (int i = 0; i < dataList.size(); i++) {
-                    dataList.get(i).setCheckd(isChecked);
+                    dataList.get(i).setCheckd(checked);
                 }
                 fggdAdapter.notifyDataSetChanged();
             }
         });
+
         if (MyAppLocation.myAppLocation.mExamOperationService.isStartExamOperation()) {
             mBtnWritereport.setVisibility(View.VISIBLE);
             mBtnBackhome.setVisibility(View.VISIBLE);
@@ -169,6 +180,7 @@ public class TestResultFGGDActivity extends BaseActivity<TestResultFGGDPresenter
             mBtnWritereport.setVisibility(View.GONE);
             mBtnBackhome.setVisibility(View.GONE);
         }
+        makeDialog();
     }
 
 
@@ -223,8 +235,10 @@ public class TestResultFGGDActivity extends BaseActivity<TestResultFGGDPresenter
         ButterKnife.bind(this);
     }
 
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(FGTestMessageBean tags) {
+
         switch (tags.tag) {
             case 0:
                 fggdAdapter.notifyDataSetChanged();
@@ -233,9 +247,40 @@ public class TestResultFGGDActivity extends BaseActivity<TestResultFGGDPresenter
                 if (dataList.size() > 0) {
                     BaseProjectMessage baseProjectMessage = dataList.get(0).getmProjectMessage();
                     initControValue(baseProjectMessage.getMethod_sp());
+                    TestRecord testRecord = (TestRecord) dataList.get(0);
+                    int remainingtime = testRecord.getRemainingtime();
+
+                    if (remainingtime <= 0) {
+                        mUploadDialog.setContent("检测完成");
+                        mUploadDialog.getActionButton(DialogAction.POSITIVE).setVisibility(View.VISIBLE);
+                        mUploadDialog.getActionButton(DialogAction.NEUTRAL).setVisibility(View.GONE);
+                    } else {
+                        mUploadDialog.setContent("倒计时" + remainingtime + "秒");
+                        mUploadDialog.getActionButton(DialogAction.POSITIVE).setVisibility(View.GONE);
+                        mUploadDialog.getActionButton(DialogAction.NEUTRAL).setVisibility(View.GONE);
+                    }
                 }
                 break;
         }
+    }
+
+
+    private void makeDialog() {
+
+
+        if (mUploadDialog == null) {
+            mUploadDialog = new MaterialDialog.Builder(this)
+                    .cancelable(false)
+                    .canceledOnTouchOutside(false)
+                    .positiveText("确定")
+                    .neutralText("取消")
+                    .contentGravity(GravityEnum.CENTER)
+                    .build();
+        }
+        mUploadDialog.setTitle("正在测试");
+        mUploadDialog.getActionButton(DialogAction.POSITIVE).setVisibility(View.GONE);
+        mUploadDialog.getActionButton(DialogAction.NEUTRAL).setVisibility(View.GONE);
+        mUploadDialog.show();
     }
 
     private void initControValue(int method_sp) {

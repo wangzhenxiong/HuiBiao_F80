@@ -12,9 +12,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.dy.huibiao_f80.BuildConfig;
 import com.dy.huibiao_f80.MyAppLocation;
 import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.api.back.GetExamPage_Back;
+import com.dy.huibiao_f80.app.utils.NetworkUtils;
 import com.dy.huibiao_f80.di.component.DaggerExamStateComponent;
 import com.dy.huibiao_f80.mvp.contract.ExamStateContract;
 import com.dy.huibiao_f80.mvp.presenter.ExamStatePresenter;
@@ -80,6 +82,9 @@ public class ExamStateActivity extends BaseActivity<ExamStatePresenter> implemen
     public void onBackPressed() {
         super.onBackPressed();
         runFlag = false;
+        Intent intent = new Intent(ExamStateActivity.this, ExamActivity.class);
+        startActivity(intent);
+        finish();
     }
      /*@Override
     public void onBackPressed() {
@@ -242,6 +247,16 @@ public class ExamStateActivity extends BaseActivity<ExamStatePresenter> implemen
         intent.putExtra("examinerId", examinerId);
         switch (view.getId()) {
             case R.id.startexam1:
+                if (BuildConfig.DEBUG){
+                    intent.setClass(this, ExamTheoryActivity.class);
+                    ArmsUtils.startActivity(intent);
+                    finish();
+                    return;
+                }
+                if (!NetworkUtils.getNetworkType()) {
+                    ArmsUtils.snackbarText("当前无网络连接，请检查后重试");
+                    return;
+                }
                 if (examStatus == 1) {
                     intent.setClass(this, ExamTheoryActivity.class);
                     ArmsUtils.startActivity(intent);
@@ -252,6 +267,16 @@ public class ExamStateActivity extends BaseActivity<ExamStatePresenter> implemen
 
                 break;
             case R.id.startexa2:
+                if (BuildConfig.DEBUG){
+                    intent.setClass(this, ExamAnalyseActivity.class);
+                    ArmsUtils.startActivity(intent);
+                    finish();
+                    return;
+                }
+                if (!NetworkUtils.getNetworkType()) {
+                    ArmsUtils.snackbarText("当前无网络连接，请检查后重试");
+                    return;
+                }
                 if (analyseStatus == 1) {
                     if (examStatus == 1){
                         ArmsUtils.snackbarText("请先完成理论考试");
@@ -266,6 +291,16 @@ public class ExamStateActivity extends BaseActivity<ExamStatePresenter> implemen
 
                 break;
             case R.id.startexam3:
+                if (BuildConfig.DEBUG){
+                    intent.setClass(this, ExamOperationActivity.class);
+                    ArmsUtils.startActivity(intent);
+                    finish();
+                    return;
+                }
+                if (!NetworkUtils.getNetworkType()) {
+                    ArmsUtils.snackbarText("当前无网络连接，请检查后重试");
+                    return;
+                }
                 if (operationStatus == 1) {
                     /*if (analyseStatus == 1) {
                         ArmsUtils.snackbarText("请先完成分析题考试");

@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -116,6 +115,9 @@ public class SamplingActivity extends BaseActivity<SamplingPresenter> implements
                     Sampling galleryBean = samplingList.get(position);
                     if (galleryBean.isCheck()) {
                         galleryBean.setCheck(false);
+                        if (mChoseall.isChecked()){
+                            mChoseall.setChecked(false);
+                        }
                     } else {
                         galleryBean.setCheck(true);
                     }
@@ -124,17 +126,23 @@ public class SamplingActivity extends BaseActivity<SamplingPresenter> implements
         });
 
         mPresenter.load(true);
-        mChoseall.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mChoseall.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            public void onClick(View v) {
+                boolean isChecked = mChoseall.isChecked();
                 for (int i = 0; i < samplingList.size(); i++) {
                     samplingList.get(i).setCheck(isChecked);
                 }
                 samplingAdapter.notifyDataSetChanged();
             }
         });
+       
         int requestcode = getIntent().getIntExtra("requestcode", 0);
         if (requestcode == RecordDetailActivity.REQUESTCODE) {
+            setTitle("选择采样单");
+            mChoseall.setVisibility(View.GONE);
+            samplingAdapter.showCheckBox=false;
+            samplingAdapter.notifyDataSetChanged();
             samplingAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
@@ -321,8 +329,12 @@ public class SamplingActivity extends BaseActivity<SamplingPresenter> implements
                 String number = samplenumber.getText().toString();
                 String beunit = unitsunderinspection.getText().toString();
                 String unit = testunit.getText().toString();
-                if (name.isEmpty() || number.isEmpty() || beunit.isEmpty() || unit.isEmpty()) {
+                /*if (name.isEmpty() || number.isEmpty() || beunit.isEmpty() || unit.isEmpty()) {
                     ArmsUtils.snackbarText("请完善抽样单信息");
+                    return;
+                }*/
+                if (name.isEmpty()) {
+                    ArmsUtils.snackbarText("请完输入样品名称");
                     return;
                 }
 
@@ -477,7 +489,7 @@ public class SamplingActivity extends BaseActivity<SamplingPresenter> implements
                     ArmsUtils.snackbarText("请输入样品名称");
                     return;
                 }
-                if (number.isEmpty()) {
+                /*if (number.isEmpty()) {
                     ArmsUtils.snackbarText("请输入采样单编号");
                     return;
                 }
@@ -488,7 +500,7 @@ public class SamplingActivity extends BaseActivity<SamplingPresenter> implements
                 if (unit.isEmpty()) {
                     ArmsUtils.snackbarText("请输入检测单位");
                     return;
-                }
+                }*/
 
                 Sampling entity = new Sampling();
                 entity.setId(null);

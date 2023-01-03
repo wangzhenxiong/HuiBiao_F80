@@ -106,7 +106,7 @@ public class GlobalHttpHandlerImpl implements GlobalHttpHandler {
     @NonNull
     @Override
     public Request onHttpRequestBefore(@NonNull Interceptor.Chain chain, @NonNull Request request) {
-        //LogUtils.d(request);
+        LogUtils.d(request);
         /* 如果需要在请求服务器之前做一些操作, 则重新构建一个做过操作的 Request 并 return, 如增加 Header、Params 等请求信息, 不做操作则直接返回参数 request
         return chain.request().newBuilder().header("token", tokenId)
                               .build(); */

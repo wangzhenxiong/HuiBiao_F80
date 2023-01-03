@@ -117,7 +117,7 @@ public class PrintTask_Single implements Itask {
         }
 
 
-        String out = "检测依据：" + q.getStand_num();
+        String out = "判定依据：" + q.getStand_num();
         CharUtils.splitLine180(control, out,31, 32);
         if (checkPrintMessage.isCheckBox_testtime()) {
             control.sendPortData(control, MyAppLocation.myAppLocation.getString(R.string.print_testdata) + q.getdfTestingtimeyy_mm_dd_hh_mm_ss() + "\r");
@@ -255,7 +255,7 @@ public class PrintTask_Single implements Itask {
 
 
 
-        String out = "检测依据：" + q.getStand_num();
+        String out = "判定依据：" + q.getStand_num();
         CharUtils.splitLine(control, out, 31, 32);
 
         if ("0".equals(method)) {

@@ -173,7 +173,7 @@ public class PrintTask_Multiple implements Itask {
             CharUtils.splitLine180(control, MyAppLocation.myAppLocation.getString(R.string.print_mothed) + method, 31, 32);
         }
 
-        String out = "检测依据：" + nc1.getStand_num();
+        String out = "判定依据：" + nc1.getStand_num();
         CharUtils.splitLine180(control, out,31,32);
 
 
@@ -315,7 +315,7 @@ public class PrintTask_Multiple implements Itask {
         }
 
 
-        String out = "检测依据：" + nc1.getStand_num();
+        String out = "判定依据：" + nc1.getStand_num();
         CharUtils.splitLine(control, out, 31, 32);
 
         if (nc1.getTest_Moudle().equals("分光光度")){

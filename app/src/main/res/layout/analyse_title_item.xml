@@ -7,19 +7,35 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="10dp"
     android:gravity="center|left"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingBottom="30dp">
+
     <TextView
         android:id="@+id/title_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20dp"
+        android:padding="20dp"
         android:text="题目一"
-        android:padding="20dp"/>
+        android:textSize="20dp" />
+
+
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="18dp"
+        android:padding="20dp"
         android:text="题目一"
-        android:padding="20dp"/>
+        android:textSize="18dp" />
+
+    <Button
+        android:id="@+id/startTest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/background_item_blue"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="开始答题"
+        android:textColor="@color/white" />
 </LinearLayout>

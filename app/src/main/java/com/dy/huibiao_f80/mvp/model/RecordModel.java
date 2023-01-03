@@ -124,7 +124,15 @@ public class RecordModel extends BaseModel implements RecordContract.Model {
                     testRecordQueryBuilder=testRecordQueryBuilder.where(TestRecordDao.Properties.Test_project.eq(testproject));
                 }
                 if (!jujdger.equals("选择判定结果")) {
-                    testRecordQueryBuilder=testRecordQueryBuilder.where(TestRecordDao.Properties.Decisionoutcome.eq(jujdger));
+                    if (jujdger.equals("其它")){
+                        testRecordQueryBuilder=testRecordQueryBuilder
+                                .where(TestRecordDao.Properties.Decisionoutcome.notEq("合格"))
+                                .where(TestRecordDao.Properties.Decisionoutcome.notEq("不合格"))
+                                .where(TestRecordDao.Properties.Decisionoutcome.notEq("无效"))
+                                .where(TestRecordDao.Properties.Decisionoutcome.notEq("可疑"));
+                    }else {
+                        testRecordQueryBuilder=testRecordQueryBuilder.where(TestRecordDao.Properties.Decisionoutcome.eq(jujdger));
+                    }
                 }
                 if (!examinationId.isEmpty()) {
                     testRecordQueryBuilder= testRecordQueryBuilder

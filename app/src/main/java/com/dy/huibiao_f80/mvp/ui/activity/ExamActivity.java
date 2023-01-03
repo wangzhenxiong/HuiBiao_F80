@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.dy.huibiao_f80.BuildConfig;
 import com.dy.huibiao_f80.R;
+import com.dy.huibiao_f80.app.utils.NetworkUtils;
 import com.dy.huibiao_f80.di.component.DaggerExamComponent;
 import com.dy.huibiao_f80.mvp.contract.ExamContract;
 import com.dy.huibiao_f80.mvp.presenter.ExamPresenter;
@@ -70,8 +71,8 @@ public class ExamActivity extends BaseActivity<ExamPresenter> implements ExamCon
         id = intent.getStringExtra("id");
         personTestMethod = intent.getIntExtra("personTestMethod",1);
         if (BuildConfig.DEBUG){
-            mRealname.setText("小虎1");
-            mCardnumber.setText("43072420001010113X");
+            mRealname.setText("小蛇15");
+            mCardnumber.setText("123");
         }
     }
 
@@ -90,6 +91,10 @@ public class ExamActivity extends BaseActivity<ExamPresenter> implements ExamCon
         super.onResume();
         mRealname.setText("");
         mCardnumber.setText("");
+        if (BuildConfig.DEBUG){
+            mRealname.setText("大飞5");
+            mCardnumber.setText("123");
+        }
     }
 
     @Override
@@ -122,6 +127,10 @@ public class ExamActivity extends BaseActivity<ExamPresenter> implements ExamCon
             case R.id.cardnumber:
                 break;
             case R.id.btn_login:
+                if (!NetworkUtils.getNetworkType()) {
+                    ArmsUtils.snackbarText("当前无网络连接，请检查后重试");
+                    return;
+                }
                 String name = mRealname.getText().toString();
                 String number = mCardnumber.getText().toString();
                 if (name.isEmpty()){

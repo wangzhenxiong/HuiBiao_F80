@@ -1,9 +1,14 @@
 package com.dy.huibiao_f80.app.service;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.view.View;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.GravityEnum;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.apkfuns.logutils.LogUtils;
 import com.dy.huibiao_f80.Constants;
 import com.dy.huibiao_f80.MyAppLocation;
@@ -13,13 +18,17 @@ import com.dy.huibiao_f80.api.back.GetTestForm_Back;
 import com.dy.huibiao_f80.api.back.IsTeacherSubmit_Back;
 import com.dy.huibiao_f80.api.back.TestFormSubmit_Back;
 import com.dy.huibiao_f80.app.utils.DataUtils;
+import com.dy.huibiao_f80.app.utils.NetworkUtils;
 import com.dy.huibiao_f80.bean.ReportBean;
+import com.dy.huibiao_f80.bean.eventBusBean.NetWorkState;
 import com.dy.huibiao_f80.mvp.ui.activity.ExamStateActivity;
 import com.google.gson.Gson;
 import com.jess.arms.base.BaseService;
 import com.jess.arms.utils.ArmsUtils;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,6 +47,20 @@ import okhttp3.MediaType;
 import okhttp3.RequestBody;
 
 public class ExamOperationService extends BaseService {
+    private MaterialDialog mWaiteDialog;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        //EventBusManager.getInstance().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //EventBusManager.getInstance().unregister(this);
+    }
+
     private IBinder bind = new ExamOperationService.MyBinder();
     private ScheduledThreadPoolExecutor mScheduledThreadPoolExecutor;
     private int operationExamTime;
@@ -88,6 +111,7 @@ public class ExamOperationService extends BaseService {
      * @param examTime
      */
     public void startExamOperation(int examTime) {
+        LogUtils.d(isStartExamOperation+"  "+operationExamTime);
         isStartExamOperation = true;
         operationExamTime = examTime;
     }
@@ -96,25 +120,27 @@ public class ExamOperationService extends BaseService {
     Runnable command_countdown = new Runnable() {
         @Override
         public void run() {
-            int i = operationExamTime / 60;
-            int i1 = operationExamTime % 60;
-            ExamOperationServiceEventBean event = new ExamOperationServiceEventBean();
-            if (operationExamTime > 0) {
-                event.setTime(operationExamTime);
-                event.setTimestring("剩余时间  " + (i < 10 ? "0" + i : "" + i) + ":" + (i1 < 10 ? "0" + i1 : "" + i1));
-                EventBus.getDefault().post(event);
+            //LogUtils.d(operationExamTime+"  "+isStartExamOperation);
+            if (operationExamTime>=0&&isStartExamOperation){
+                int i = operationExamTime / 60;
+                int i1 = operationExamTime % 60;
+                ExamOperationServiceEventBean event = new ExamOperationServiceEventBean();
+                if (operationExamTime > 0) {
+                    event.setTime(operationExamTime);
+                    event.setTimestring("剩余时间  " + (i < 10 ? "0" + i : "" + i) + ":" + (i1 < 10 ? "0" + i1 : "" + i1));
+                    EventBus.getDefault().post(event);
+                    operationExamTime--;
+                } else if (operationExamTime == 0) {
+                    event.setTime(operationExamTime);
+                    event.setTimestring("剩余时间  " + (i < 10 ? "0" + i : "" + i) + ":" + (i1 < 10 ? "0" + i1 : "" + i1));
+                    EventBus.getDefault().post(event);
 
-            } else if (operationExamTime == 0) {
-                event.setTime(operationExamTime);
-                event.setTimestring("剩余时间  " + (i < 10 ? "0" + i : "" + i) + ":" + (i1 < 10 ? "0" + i1 : "" + i1));
-                EventBus.getDefault().post(event);
-                isStartExamOperation = false;
-                // TODO: 11/5/22 倒计时结束，需要强制上传实验报告
-                forceUploadReport();
-            }else {
+                    // TODO: 11/5/22 倒计时结束，需要强制上传实验报告
+                    forceUploadReport();
+                }
 
             }
-            operationExamTime--;
+
         }
     };
 
@@ -122,6 +148,9 @@ public class ExamOperationService extends BaseService {
         @Override
         public void run() {
             if (!isTeacherSubmit&&isStartExamOperation) {
+                if (!NetworkUtils.getNetworkType()){
+                   return;
+                }
                 RetrofitUrlManager.getInstance().putDomain("xxx", Constants.URL);
                 ArmsUtils.obtainAppComponentFromContext(ExamOperationService.this)
                         .repositoryManager().obtainRetrofitService(HuiBiaoService.class)
@@ -198,9 +227,47 @@ public class ExamOperationService extends BaseService {
         mScheduledThreadPoolExecutor.scheduleAtFixedRate(commandisTeacherSubmit, 0, 5000, TimeUnit.MILLISECONDS);
 
     }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(NetWorkState tags) {
+        if (tags.isLinkstate()) {
+            if (mWaiteDialog!=null&&mWaiteDialog.isShowing()){
+                mWaiteDialog.dismiss();
+                forceUploadReport();
+            }
+        }
+    }
+    Activity currentActivity;
+    private void makeDialog() {
+        currentActivity = ArmsUtils.obtainAppComponentFromContext(MyAppLocation.myAppLocation).appManager().getCurrentActivity();
+        currentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (mWaiteDialog == null) {
+                    mWaiteDialog = new MaterialDialog.Builder(currentActivity)
+                            .cancelable(false)
+                            .canceledOnTouchOutside(false)
+                            .positiveText("确定")
+                            .neutralText("取消")
+                            .contentGravity(GravityEnum.CENTER)
+                            .build();
+                }
+                //mWaiteDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+                mWaiteDialog.setContent("网络连接失败，请检查网络连接");
+                mWaiteDialog.getActionButton(DialogAction.POSITIVE).setVisibility(View.GONE);
+                mWaiteDialog.getActionButton(DialogAction.NEUTRAL).setVisibility(View.GONE);
+                mWaiteDialog.show();
+            }
+        });
 
+
+    }
 
     private void forceUploadReport() {
+        if (!NetworkUtils.getNetworkType()) {
+            //强制上传时无网络连接
+            makeDialog();
+            return;
+        }
 
         Set<String> strings = getTestForm_backMap.keySet();
         for (int i = 0; i < strings.size(); i++) {
@@ -262,10 +329,10 @@ public class ExamOperationService extends BaseService {
                             //isTeacherSubmit = back.isSuccess();
                             getTestForm_backMap.remove(next);
                             if (getTestForm_backMap.keySet().size() == 0) {
-
-                                Intent content = new Intent(ExamOperationService.this, ExamStateActivity.class);
-                                content.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                content.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                isStartExamOperation = false;
+                                Activity topActivity = ArmsUtils.obtainAppComponentFromContext(ExamOperationService.this).appManager().getTopActivity();
+                                Intent content = new Intent(topActivity, ExamStateActivity.class);
+                               // content.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
                                 content.putExtra("examinationId", examinationId);
                                 content.putExtra("examinerId", examinerId);
                                 ArmsUtils.startActivity(content);

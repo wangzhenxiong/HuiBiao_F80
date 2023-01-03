@@ -17,6 +17,7 @@ package com.dy.huibiao_f80.app;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -24,7 +25,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
+import com.dy.huibiao_f80.MyAppLocation;
 import com.dy.huibiao_f80.R;
+import com.dy.huibiao_f80.mvp.ui.activity.HomeActivity;
 
 
 //import timber.log.Timber;
@@ -83,6 +86,16 @@ public class ActivityLifecycleCallbacksImpl implements Application.ActivityLifec
             if (activity.findViewById(R.id.toolbar_back) != null) {
                 activity.findViewById(R.id.toolbar_back).setOnClickListener(v -> {
                     activity.onBackPressed();
+                });
+            }
+            if (activity.findViewById(R.id.toolbar_home) != null) {
+                if (MyAppLocation.myAppLocation.mExamOperationService.isStartExamOperation()){
+                    activity.findViewById(R.id.toolbar_home).setVisibility(View.GONE);
+                }else {
+                    activity.findViewById(R.id.toolbar_home).setVisibility(View.VISIBLE);
+                }
+                activity.findViewById(R.id.toolbar_home).setOnClickListener(v -> {
+                    activity.startActivity(new Intent(activity, HomeActivity.class));
                 });
             }
             View decorView = activity.getWindow().getDecorView();
