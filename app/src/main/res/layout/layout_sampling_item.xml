@@ -4,48 +4,51 @@
     android:layout_width="match_parent"
     android:layout_height="50dp"
     android:gravity="center"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
     android:orientation="horizontal">
 
     <CheckBox
         android:id="@+id/checkbox"
         android:layout_width="40dp"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:layout_marginLeft="10dp"/>
+        android:gravity="center" />
     <TextView
         android:id="@+id/sampleserial"
         android:layout_width="0dp"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:layout_height="wrap_content"
         android:text="采样单编号"/>
     <TextView
         android:id="@+id/samplename"
         android:layout_width="0dp"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:layout_height="wrap_content"
         android:text="样品名称"/>
     <TextView
         android:id="@+id/beunits"
         android:layout_width="0dp"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:layout_height="wrap_content"
         android:text="被检单位"/>
     <TextView
         android:id="@+id/testunit"
         android:layout_width="0dp"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:layout_height="wrap_content"
         android:text="检测单位"/>
     <TextView
+        android:paddingRight="10dp"
         android:id="@+id/creationtime"
         android:layout_width="0dp"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:layout_height="wrap_content"
         android:text="创建时间"/>
     <TextView
+        android:paddingRight="10dp"
         android:id="@+id/testtime"
         android:layout_width="0dp"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:layout_height="wrap_content"
         android:text="2022-10-12\r\nasda"/>
     <TextView

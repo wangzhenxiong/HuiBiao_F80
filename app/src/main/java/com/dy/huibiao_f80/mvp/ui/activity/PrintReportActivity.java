@@ -173,7 +173,7 @@ public class PrintReportActivity extends BaseActivity<PrintReportPresenter> impl
             linearLayout1.setLayoutParams(params1);
             GetTestForm_Back.EntityBean.TestFormListBean testFormListBean = testFormList.get(i);
 
-            View inflate_ = LayoutInflater.from(this).inflate(R.layout.analyse_title_item, null);
+            View inflate_ = LayoutInflater.from(this).inflate(R.layout.analyse_title_item_printreport, null);
             TextView title_number = (TextView) inflate_.findViewById(R.id.title_number);
             TextView viewById = (TextView) inflate_.findViewById(R.id.title);
             viewById.setId(i);

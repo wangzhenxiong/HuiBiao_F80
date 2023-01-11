@@ -76,41 +76,42 @@
             android:background="#D3D2D2"
             android:layout_marginTop="10dp"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
             <CheckBox
                 android:id="@+id/choseall"
                 android:layout_width="40dp"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:layout_marginLeft="10dp"/>
+                android:gravity="center" />
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:layout_height="wrap_content"
                 android:text="采样单编号"/>
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:layout_height="wrap_content"
                 android:text="样品名称"/>
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:layout_height="wrap_content"
                 android:text="被检单位"/>
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:layout_height="wrap_content"
                 android:text="检测单位"/>
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:layout_height="wrap_content"
                 android:text="创建时间"/>
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:layout_height="wrap_content"
                 android:text="检测时间"/>
             <TextView

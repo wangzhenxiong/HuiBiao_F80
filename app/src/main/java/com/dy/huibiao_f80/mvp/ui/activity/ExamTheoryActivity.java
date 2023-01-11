@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
@@ -149,6 +150,7 @@ public class ExamTheoryActivity extends BaseActivity<ExamTheoryPresenter> implem
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
         Intent intent = getIntent();
+        WindowManager windowManager = this.getActivity().getWindowManager();
         examinationId = intent.getStringExtra("examinationId");
         examinerId = intent.getStringExtra("examinerId");
         mPresenter.beginTheoryExam(examinationId);
@@ -789,9 +791,9 @@ public class ExamTheoryActivity extends BaseActivity<ExamTheoryPresenter> implem
         alertDialog.show();
 
         String content = " <font style=\"font-size:16dp\" color=\"#3856FC\">"+"一共"+(analysePaperList.size()+theoryQuestionMultipleList.size()+theoryQuestionRadioList.size())
-                +"道题，已经完成"+(analysePaperList.size()+theoryQuestionMultipleList.size()+theoryQuestionRadioList.size()-noanswer)+"</font>\n" +
-                " <font style=\"font-size:16dp\" color=\"#FF0000\">" + ",未完成"+noanswer+"道" + "</font>" +
-                " <font style=\"font-size:16dp\" color=\"#3856FC\">确定要交卷吗？</font>\n";
+                +"道题，已经完成"+(analysePaperList.size()+theoryQuestionMultipleList.size()+theoryQuestionRadioList.size()-noanswer)+"道，未完成</font>\n" +
+                " <font style=\"font-size:16dp\" color=\"#FF0000\">" +noanswer + "</font>" +
+                " <font style=\"font-size:16dp\" color=\"#3856FC\">道，确定要交卷吗？</font>\n";
         //"正在检测...富集倒计时 "+message.num + " 秒！"
         message.setText(Html.fromHtml(content));
 

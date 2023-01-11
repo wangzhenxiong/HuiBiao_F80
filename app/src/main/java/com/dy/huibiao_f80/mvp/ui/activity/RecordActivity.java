@@ -336,7 +336,7 @@ public class RecordActivity extends BaseActivity<RecordPresenter> implements Rec
         String[] strings = new String[]{"合格", "不合格", "可疑", "无效","其它"};
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setIcon(R.mipmap.ic_launcher);
-        builder.setTitle("请选择判断结果");
+        builder.setTitle("请选择判定结果");
         builder.setSingleChoiceItems(strings, -1, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -357,7 +357,7 @@ public class RecordActivity extends BaseActivity<RecordPresenter> implements Rec
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setIcon(R.mipmap.ic_launcher);
         builder.setTitle("请选择检测模块");
-        builder.setSingleChoiceItems(strings, 0, new DialogInterface.OnClickListener() {
+        builder.setSingleChoiceItems(strings, -1, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String string = strings[which];

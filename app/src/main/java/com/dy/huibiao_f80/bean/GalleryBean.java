@@ -164,7 +164,10 @@ public abstract class GalleryBean implements Parcelable, UsbReadWriteHelper.onUs
         this.checkd = checkd;
     }
 
-
+    public void stopFGGDTest(){
+        state=0;
+        remainingtime=0;
+    }
     /**
      * 胶体金卡样式 3为三连卡 0为单卡
      *

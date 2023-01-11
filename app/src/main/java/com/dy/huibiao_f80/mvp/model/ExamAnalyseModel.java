@@ -80,9 +80,11 @@ public class ExamAnalyseModel extends BaseModel implements ExamAnalyseContract.M
             for (int i = 0; i < theoryQuestionRadioList.size(); i++) {
                 BeginAnalyseExam_Back.EntityBean.AnalysePaperListBean theoryQuestionRadioListBean = theoryQuestionRadioList.get(i);
                 String answer = theoryQuestionRadioListBean.getStudentAnswer();
+                String replace = answer.replace("\n", "<br>").replace(" ","&nbsp;");
+
                 JSONObject value1 = new JSONObject();
                 value1.put("analysePaperDetailId",theoryQuestionRadioListBean.getId());
-                value1.put("answer",answer);
+                value1.put("answer",replace);
                 value1.put("status", answer.isEmpty()?"3":"4");
                 value.put(value1);
             }

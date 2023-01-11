@@ -284,6 +284,13 @@ public class ProjectFGGD extends BaseProjectMessage {
         this.standardName = standardName == null ? "" : standardName;
     }
 
+    /**
+     * 0 抑制率法
+     * 1 标准曲线法
+     * 2 动力学法
+     * 3 系数法
+     * @return
+     */
     public int getMethod() {
         return method;
     }

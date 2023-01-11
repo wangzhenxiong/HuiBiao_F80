@@ -1,5 +1,6 @@
 package com.dy.huibiao_f80.mvp.ui.activity;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,6 +9,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -15,9 +17,6 @@ import android.widget.CheckBox;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.GravityEnum;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.dy.huibiao_f80.Constants;
 import com.dy.huibiao_f80.MyAppLocation;
@@ -82,7 +81,7 @@ public class TestResultFGGDActivity extends BaseActivity<TestResultFGGDPresenter
     private List<GalleryBean> dataList = new ArrayList<>();
     private FGGDTestResultAdapter fggdAdapter;
     String pjName;
-    private MaterialDialog mUploadDialog;
+    //private MaterialDialog mUploadDialog;
 
     @Override
     public boolean useEventBus() {
@@ -246,29 +245,65 @@ public class TestResultFGGDActivity extends BaseActivity<TestResultFGGDPresenter
 
                 if (dataList.size() > 0) {
                     BaseProjectMessage baseProjectMessage = dataList.get(0).getmProjectMessage();
-                    initControValue(baseProjectMessage.getMethod_sp());
+
                     TestRecord testRecord = (TestRecord) dataList.get(0);
                     int remainingtime = testRecord.getRemainingtime();
 
                     if (remainingtime <= 0) {
-                        mUploadDialog.setContent("检测完成");
-                        mUploadDialog.getActionButton(DialogAction.POSITIVE).setVisibility(View.VISIBLE);
-                        mUploadDialog.getActionButton(DialogAction.NEUTRAL).setVisibility(View.GONE);
+                        ((TextView) inflate.findViewById(R.id.message)).setText("检测完成");
+                        Button cancle=((Button) inflate.findViewById(R.id.cancle));
+                        cancle.setVisibility(View.GONE);
+                        Button confirm=((Button) inflate.findViewById(R.id.confirm));
+                        confirm.setVisibility(View.VISIBLE);
+                        confirm.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                               alertDialog.dismiss();
+                            }
+                        });
+
+
+                        initControValue(baseProjectMessage.getMethod_sp());
+
                     } else {
-                        mUploadDialog.setContent("倒计时" + remainingtime + "秒");
+                        ((TextView) inflate.findViewById(R.id.message)).setText("倒计时："+remainingtime+"S");
+                        Button cancle=((Button) inflate.findViewById(R.id.cancle));
+                        cancle.setVisibility(View.VISIBLE);
+                        Button confirm=((Button) inflate.findViewById(R.id.confirm));
+                        confirm.setVisibility(View.GONE);
+                        cancle.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                alertDialog.dismiss();
+                                for (int i = 0; i < dataList.size(); i++) {
+                                    GalleryBean galleryBean = dataList.get(i);
+                                    galleryBean.stopFGGDTest();
+                                }
+                            }
+                        });
+
+                        /*mUploadDialog.setContent("正在检测：" + remainingtime + "S");
                         mUploadDialog.getActionButton(DialogAction.POSITIVE).setVisibility(View.GONE);
-                        mUploadDialog.getActionButton(DialogAction.NEUTRAL).setVisibility(View.GONE);
+                        mUploadDialog.getActionButton(DialogAction.NEUTRAL).setVisibility(View.VISIBLE);*/
                     }
                 }
                 break;
         }
     }
 
-
+    private AlertDialog alertDialog;
+    private AlertDialog.Builder builder;
+    private View inflate;
     private void makeDialog() {
+        builder = new AlertDialog.Builder(this);
+        inflate = LayoutInflater.from(this).inflate(R.layout.fggd_test_dialog_layout, null);
+        builder.setView(inflate);
+        builder.setTitle("正在检测");
+        alertDialog = builder.create();
+        alertDialog.setCancelable(false);
+        alertDialog.show();
 
-
-        if (mUploadDialog == null) {
+        /*if (mUploadDialog == null) {
             mUploadDialog = new MaterialDialog.Builder(this)
                     .cancelable(false)
                     .canceledOnTouchOutside(false)
@@ -279,8 +314,8 @@ public class TestResultFGGDActivity extends BaseActivity<TestResultFGGDPresenter
         }
         mUploadDialog.setTitle("正在测试");
         mUploadDialog.getActionButton(DialogAction.POSITIVE).setVisibility(View.GONE);
-        mUploadDialog.getActionButton(DialogAction.NEUTRAL).setVisibility(View.GONE);
-        mUploadDialog.show();
+        mUploadDialog.getActionButton(DialogAction.NEUTRAL).setVisibility(View.VISIBLE);
+        mUploadDialog.show();*/
     }
 
     private void initControValue(int method_sp) {

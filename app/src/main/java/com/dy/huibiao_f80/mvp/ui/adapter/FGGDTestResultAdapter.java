@@ -78,6 +78,7 @@ public class FGGDTestResultAdapter extends BaseQuickAdapter<GalleryBean, BaseVie
                 .setText(R.id.jujdger, decisionoutcome +"");
 
         double abs_ = 0;
+        double abs_now = 0;
         BaseProjectMessage baseProjectMessage = item.getmProjectMessage();
         if (null!=baseProjectMessage){
             ProjectFGGD baseProjectMessage1 = (ProjectFGGD) baseProjectMessage;
@@ -86,19 +87,29 @@ public class FGGDTestResultAdapter extends BaseQuickAdapter<GalleryBean, BaseVie
             switch (wavelength) {
                 case 0:
                     abs_ = item.getAbsorbance1()-item.getAbsorbance1_start();
+                    abs_now=item.getAbsorbance1();
                     break;
                 case 1:
                     abs_ =  item.getAbsorbance2()-item.getAbsorbance2_start();
+                    abs_now=item.getAbsorbance2();
                     break;
                 case 2:
                     abs_ =  item.getAbsorbance3()-item.getAbsorbance2_start();
+                    abs_now=item.getAbsorbance3();
                     break;
                 case 3:
                     abs_ =  item.getAbsorbance4()-item.getAbsorbance4_start();
+                    abs_now=item.getAbsorbance4();
                     break;
             }
 
+           /* int method = baseProjectMessage1.getMethod();
+            if (method!=0){
+               abs_= abs_now;
+            }*/
+
         }
+
         if (abs_<0){
             abs_=0;
         }

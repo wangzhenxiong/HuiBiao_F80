@@ -164,9 +164,9 @@ public class ExamAnalyseActivity extends BaseActivity<ExamAnalysePresenter> impl
         alertDialog.show();
 
         String content = " <font style=\"font-size:16dp\" color=\"#3856FC\">"+"一共"+(analysePaperList.size())
-                +"道题，已经完成"+(analysePaperList.size()-noanswer)+"</font>\n" +
-                " <font style=\"font-size:16dp\" color=\"#FF0000\">" + ",未完成"+noanswer+"道" + "</font>" +
-                " <font style=\"font-size:16dp\" color=\"#3856FC\">确定要交卷吗？</font>\n";
+                +"道题，已经完成"+(analysePaperList.size()-noanswer)+"道，未完成</font>\n" +
+                " <font style=\"font-size:16dp\" color=\"#FF0000\">" +noanswer + "</font>" +
+                " <font style=\"font-size:16dp\" color=\"#3856FC\">道，确定要交卷吗？</font>\n";
         //"正在检测...富集倒计时 "+message.num + " 秒！"
         message.setText(Html.fromHtml(content));
 
