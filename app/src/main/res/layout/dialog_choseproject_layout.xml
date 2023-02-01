@@ -2,15 +2,25 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:background="#00000000">
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="请选择检测项目"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:textSize="20dp"
+        android:padding="10dp"
+        />
     <LinearLayout
+        android:layout_below="@id/title"
         android:id="@+id/seachlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp">
 
         <EditText
@@ -33,12 +43,10 @@
 
     </LinearLayout>
     <android.support.v7.widget.RecyclerView
-
         android:id="@+id/re_recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/seachlayout"
-        android:paddingTop="4dp"/>
+        android:layout_height="500dp"
+        android:layout_below="@id/seachlayout" />
 
 
 </RelativeLayout>

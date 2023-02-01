@@ -88,8 +88,8 @@ public class RecordPresenter extends BasePresenter<RecordContract.Model, RecordC
 
     public void makeDialogChoseProject() {
         AlertDialog.Builder builder = new AlertDialog.Builder(mRootView.getActivity());
-        builder.setIcon(R.mipmap.ic_launcher);
-        builder.setTitle("选择检测项目");
+        //builder.setIcon(R.mipmap.ic_launcher);
+        //builder.setTitle("选择检测项目");
         View view2 = View.inflate(mRootView.getActivity(), R.layout.dialog_choseproject_layout, null);
         EditText keyword = (EditText) view2.findViewById(R.id.keyword);
         Button btnseach = (Button) view2.findViewById(R.id.btn_seach);

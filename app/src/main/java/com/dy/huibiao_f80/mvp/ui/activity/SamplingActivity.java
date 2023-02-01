@@ -63,7 +63,7 @@ public class SamplingActivity extends BaseActivity<SamplingPresenter> implements
     @BindView(R.id.chose_result)
     Button mChoseResult;
     @BindView(R.id.seach)
-    Button mSeach;
+    RelativeLayout mSeach;
     @BindView(R.id.choseall)
     CheckBox mChoseall;
     @BindView(R.id.recylerview)
@@ -141,6 +141,9 @@ public class SamplingActivity extends BaseActivity<SamplingPresenter> implements
         if (requestcode == RecordDetailActivity.REQUESTCODE) {
             setTitle("选择采样单");
             mChoseall.setVisibility(View.GONE);
+            mChoseTime.setVisibility(View.GONE);
+            mEditor.setVisibility(View.GONE);
+            mDelete.setVisibility(View.GONE);
             samplingAdapter.showCheckBox=false;
             samplingAdapter.notifyDataSetChanged();
             samplingAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
@@ -214,7 +217,6 @@ public class SamplingActivity extends BaseActivity<SamplingPresenter> implements
                 break;
             case R.id.seach:
                 if (isSeaching) {
-                    mSeach.setText("查询");
                     isSeaching = false;
 
                     mChoseSampletime.setText("选择创建时间");
@@ -228,7 +230,6 @@ public class SamplingActivity extends BaseActivity<SamplingPresenter> implements
                         ArmsUtils.snackbarText("请选择搜索条件");
                         return;
                     }
-                    mSeach.setText("取消");
                     isSeaching = true;
                     mPresenter.seach(startsampletime,stopsampletime,starttime, stoptime, mChoseResult.getText().toString(), true);
                 }
@@ -353,7 +354,7 @@ public class SamplingActivity extends BaseActivity<SamplingPresenter> implements
     private void choseResult() {
         String[] strings = new String[]{"合格", "不合格", "可疑", "--"};
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setIcon(R.mipmap.ic_launcher);
+        //builder.setIcon(R.mipmap.huibiaoicn);
         builder.setTitle("请选择判定结果");
         builder.setSingleChoiceItems(strings, -1, new DialogInterface.OnClickListener() {
             @Override

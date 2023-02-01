@@ -54,14 +54,7 @@
                 android:textSize="20sp" />
         </android.support.v7.widget.Toolbar>
 
-        <com.miguelcatalan.materialsearchview.MaterialSearchView
-            android:id="@+id/search_view"
-            style="@style/MyMaterialSearchViewStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="请输入搜索关键字"
-            android:textColor="@color/white"
-            android:visibility="visible" />
+
         <RelativeLayout
             android:visibility="visible"
             android:id="@+id/toolbar_home"

@@ -66,7 +66,7 @@ public class RecordActivity extends BaseActivity<RecordPresenter> implements Rec
     @BindView(R.id.jujdger)
     Button mJujdger;
     @BindView(R.id.seach)
-    Button mSeach;
+    RelativeLayout mSeach;
     @BindView(R.id.choseall)
     CheckBox mChoseall;
     @BindView(R.id.recylerview)
@@ -243,7 +243,6 @@ public class RecordActivity extends BaseActivity<RecordPresenter> implements Rec
             case R.id.seach:
                 if (isSeaching) {
                     isSeaching = false;
-                    mSeach.setText("查询");
                     mTestmoudle.setText("选择检测方式");
                     mTestprojectname.setText("选择检测项目");
                     mJujdger.setText("选择判定结果");
@@ -259,7 +258,6 @@ public class RecordActivity extends BaseActivity<RecordPresenter> implements Rec
                         return;
                     }
                     isSeaching = true;
-                    mSeach.setText("取消");
                     mPresenter.seach(testmoudle, testproject, jujdger, examinationId, examinerId, examId);
                 }
                 break;
@@ -335,7 +333,7 @@ public class RecordActivity extends BaseActivity<RecordPresenter> implements Rec
     private void makeDialogChoseJujdger() {
         String[] strings = new String[]{"合格", "不合格", "可疑", "无效","其它"};
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setIcon(R.mipmap.ic_launcher);
+        //builder.setIcon(R.mipmap.ic_launcher);
         builder.setTitle("请选择判定结果");
         builder.setSingleChoiceItems(strings, -1, new DialogInterface.OnClickListener() {
             @Override
@@ -355,7 +353,7 @@ public class RecordActivity extends BaseActivity<RecordPresenter> implements Rec
     private void makeDialogChoseMoudle() {
         String[] strings = new String[]{"分光光度", "胶体金"};
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setIcon(R.mipmap.ic_launcher);
+        //builder.setIcon(R.mipmap.ic_launcher);
         builder.setTitle("请选择检测模块");
         builder.setSingleChoiceItems(strings, -1, new DialogInterface.OnClickListener() {
             @Override

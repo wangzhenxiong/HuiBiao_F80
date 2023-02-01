@@ -131,10 +131,9 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
     private UsbReadWriteHelper mUSBRWHelper;
 
 
-    /*
+    /**
      * 真菌读数相关
-     * */
-
+     */
     boolean zjds_gettem_flag = false;
     boolean zjds_settem_flag = false;
     boolean zjds_balance_flag = false;
@@ -935,11 +934,11 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
             return;
         }
         double df_abs = stop_Absorbance - start_Absorbance;
-        if (df_abs < Constants.FGCONTROVALUE_YIZHILVFA()) {
+        /*if (df_abs < Constants.FGCONTROVALUE_YIZHILVFA()) {
             ArmsUtils.snackbarText(getString(R.string.sampleerro_message3));
             detection_record_fggd_nc.setState(3);
             return;
-        }
+        }*/
         String format = mFormatContro_3.format(df_abs);
         Float value = Float.valueOf(format);
         LogUtils.d(format + "");

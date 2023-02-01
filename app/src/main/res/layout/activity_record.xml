@@ -2,164 +2,227 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/beijing_img"
+    android:background="#f0f1f3"
     android:gravity="center"
     android:orientation="vertical">
 
     <include layout="@layout/include_title" />
 
     <LinearLayout
-        android:layout_width="900dp"
-
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginBottom="25dp"
         android:orientation="vertical">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:gravity="center_vertical|right"
-            android:layout_marginTop="20dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
+            <RelativeLayout
+                android:id="@+id/unkonw"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_centerVertical="true"
+                android:background="#ffffff"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/pic11" />
+            </RelativeLayout>
+
             <Button
-                android:id="@+id/testmoudle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/background_item_blue"
-                android:text="选择检测方式"
+                android:id="@+id/delete"
+                android:layout_width="80dp"
+                android:layout_height="32dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/unkonw"
+                android:background="#ffffff"
+                android:drawableLeft="@drawable/pic13"
+                android:gravity="center"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:textColor="@color/white" />
+                android:text="删除"
+                android:textColor="#a1affd" />
+
+            <Button
+                android:id="@+id/print"
+                android:layout_width="80dp"
+                android:layout_height="32dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@id/delete"
+                android:background="#ffffff"
+                android:drawableLeft="@drawable/pic14"
+                android:gravity="center"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="打印"
+                android:textColor="#a1affd" />
+
+            <Button
+
+                android:id="@+id/testmoudle"
+                android:layout_width="150dp"
+                android:layout_height="32dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:layout_toLeftOf="@id/testprojectname"
+                android:background="@null"
+                android:drawableLeft="@drawable/pic4"
+                android:drawableRight="@drawable/pic3"
+                android:gravity="center"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="选择检测方式"
+                android:textColor="#7d7e7e" />
 
             <Button
                 android:id="@+id/testprojectname"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/background_item_blue"
-                android:text="选择检测项目"
+                android:layout_width="150dp"
+                android:layout_height="32dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toLeftOf="@id/jujdger"
+                android:background="@null"
+                android:drawableLeft="@drawable/pic1"
+                android:drawableRight="@drawable/pic3"
+                android:gravity="center"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:textColor="@color/white" />
+                android:text="选择检测项目"
+                android:textColor="#7d7e7e" />
+
             <Button
                 android:id="@+id/jujdger"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/background_item_blue"
+                android:layout_width="150dp"
+                android:layout_height="32dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toLeftOf="@id/seach"
+                android:background="@null"
+                android:drawableLeft="@drawable/pic2"
+                android:drawableRight="@drawable/pic3"
+                android:gravity="center"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
                 android:text="选择判定结果"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:textColor="@color/white" />
+                android:textColor="#7d7e7e" />
 
-            <Button
+            <RelativeLayout
                 android:id="@+id/seach"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="40dp"
-                android:background="@drawable/background_item_blue"
-                android:text="查询"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:textColor="@color/white" />
+                android:layout_width="57dp"
+                android:layout_height="57dp"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/seach_background"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/pic6" />
+            </RelativeLayout>
 
 
-        </LinearLayout>
+        </RelativeLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="#D3D2D2"
-            android:layout_marginTop="10dp"
+            android:layout_height="55dp"
+            android:background="#f0f1f3"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
             <CheckBox
                 android:id="@+id/choseall"
                 android:layout_width="40dp"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:layout_marginLeft="10dp"/>
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="样品编号"/>
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="检测样品"/>
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="检测方式"/>
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="检测项目"/>
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="检测通道"/>
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="结果"/>
+                android:gravity="center" />
 
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="判定结果"/>
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="检测样品"
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                android:textStyle="bold"/>
+
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="检测时间"/>
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="检测方式"
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.2"
+                android:gravity="center"
+                android:text="检测项目"
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.8"
+                android:gravity="center"
+                android:text="检测通道"
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="结果"
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="判定结果"
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.6"
+                android:gravity="center"
+                android:text="检测时间"
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                android:textStyle="bold" />
         </LinearLayout>
+
         <android.support.v7.widget.RecyclerView
-            android:background="#ffffff"
             android:id="@+id/recylerview"
             android:layout_width="match_parent"
-            android:layout_height="490dp"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:gravity="center_vertical|right"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
-
-
-
-            <Button
-                android:id="@+id/print"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/background_item_blue"
-                android:text="打印"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:textColor="@color/white" />
-
-            <Button
-                android:id="@+id/delete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="40dp"
-                android:background="@drawable/btn_background_rad"
-                android:text="删除"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:textColor="@color/white" />
-
-
-        </LinearLayout>
+            android:layout_height="490dp"
+            android:background="#ffffff" />
 
 
     </LinearLayout>

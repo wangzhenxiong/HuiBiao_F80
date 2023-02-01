@@ -56,6 +56,7 @@
                     android:textColor="@color/black"
                     android:textSize="18dp"
                     android:text=""
+                    android:background="@null"
                     android:hint="请在此处作答"
                     android:gravity="left|top"
                     android:minHeight="400dp"/>

@@ -6,7 +6,7 @@
     android:background="@drawable/beijing_img"
     android:orientation="vertical">
 
-    <include layout="@layout/include_title_standard"></include>
+    <include layout="@layout/include_title"></include>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">

@@ -1,61 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/parent_layout"
     android:layout_width="match_parent"
     android:layout_height="50dp"
     android:gravity="center"
+    android:orientation="horizontal"
     android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:orientation="horizontal">
+    android:paddingRight="10dp">
 
     <CheckBox
         android:id="@+id/checkbox"
         android:layout_width="40dp"
         android:layout_height="match_parent"
         android:gravity="center" />
+
     <TextView
         android:id="@+id/sampleserial"
         android:layout_width="0dp"
-        android:layout_weight="2"
         android:layout_height="wrap_content"
-        android:text="采样单编号"/>
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="采样单编号"
+        android:textColor="@color/black"
+        android:textSize="16dp" />
+
     <TextView
         android:id="@+id/samplename"
         android:layout_width="0dp"
-        android:layout_weight="2"
         android:layout_height="wrap_content"
-        android:text="样品名称"/>
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="样品名称"
+        android:textColor="@color/black"
+        android:textSize="16dp" />
+
     <TextView
         android:id="@+id/beunits"
         android:layout_width="0dp"
-        android:layout_weight="2"
         android:layout_height="wrap_content"
-        android:text="被检单位"/>
+        android:layout_weight="1.5"
+        android:gravity="center"
+        android:text="被检单位"
+        android:textColor="@color/black"
+        android:textSize="16dp" />
+
     <TextView
         android:id="@+id/testunit"
         android:layout_width="0dp"
-        android:layout_weight="2"
         android:layout_height="wrap_content"
-        android:text="检测单位"/>
+        android:layout_weight="1.5"
+        android:gravity="center"
+        android:text="检测单位"
+        android:textColor="@color/black"
+        android:textSize="16dp" />
+
     <TextView
-        android:paddingRight="10dp"
         android:id="@+id/creationtime"
         android:layout_width="0dp"
-        android:layout_weight="2"
         android:layout_height="wrap_content"
-        android:text="创建时间"/>
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="创建时间"
+        android:textColor="@color/black"
+        android:textSize="16dp" />
+
     <TextView
-        android:paddingRight="10dp"
         android:id="@+id/testtime"
         android:layout_width="0dp"
-        android:layout_weight="2"
         android:layout_height="wrap_content"
-        android:text="2022-10-12\r\nasda"/>
-    <TextView
-        android:id="@+id/testresult"
-        android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="wrap_content"
-        android:text="判定结果"/>
+        android:gravity="center"
+        android:text="2022-10-12\r\nasda"
+        android:textColor="@color/black"
+        android:textSize="16dp" />
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+        <TextView
+            android:id="@+id/testresult"
+            android:padding="6dp"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="判定结果"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="16dp" />
+    </RelativeLayout>
+
 
 </LinearLayout>

@@ -481,19 +481,31 @@ public class ChoseGalleryFGGDActivity extends BaseActivity<ChoseGalleryFGGDPrese
         MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(14).setCheckd(mCheckbox15.isChecked());
         MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(15).setCheckd(mCheckbox16.isChecked());
         boolean check = false;
+        boolean check_contro = false;
         for (int i = 0; i < MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.size(); i++) {
-            if (MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(i).isCheckd()) {
+            GalleryBean galleryBean = MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(i);
+            if (galleryBean.isCheckd()) {
                 check = true;
-                break;
+                if (galleryBean.getDowhat()==2){
+                    check_contro=true;
+                    break;
+                }
             }
         }
+
         if (check) {
+            if (!check_contro){
+                ArmsUtils.snackbarText("请选择对照组");
+                return;
+            }
             Intent content = new Intent(this, TestFGGDActivity.class);
             content.putExtra("projectname", projectname);
             ArmsUtils.startActivity(content);
         } else {
             ArmsUtils.snackbarText("请选择通道");
         }
+
+
 
     }
 

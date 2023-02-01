@@ -16,7 +16,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -29,7 +28,6 @@ import com.dy.huibiao_f80.mvp.ui.adapter.LocalFileAdapter;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
-import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.paginate.Paginate;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
@@ -47,12 +45,14 @@ public class StandMessageActivity extends BaseActivity<StandMessagePresenter> im
 
     @Inject
     LocalFileAdapter mAdapter;
-    /* @Inject
-     Standard_LawsAdapter mStandardAdapter;*/
     @BindView(R.id.toolbar_back)
     RelativeLayout mToolbarBack;
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
+    @BindView(R.id.toolbar_time)
+    TextView mToolbarTime;
+    @BindView(R.id.toolbar_home)
+    RelativeLayout mToolbarHome;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
     @BindView(R.id.toolbarly)
@@ -63,10 +63,7 @@ public class StandMessageActivity extends BaseActivity<StandMessagePresenter> im
     SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.showpage)
     TextView mShowpage;
-    @BindView(R.id.search_view)
-    MaterialSearchView mSearchView;
-    @BindView(R.id.toolbar_container)
-    FrameLayout mToolbarContainer;
+
     private boolean isLoadingMore;
     private Paginate mPaginate;
     private boolean hasLoadedAllItems;
@@ -211,7 +208,7 @@ public class StandMessageActivity extends BaseActivity<StandMessagePresenter> im
         //item.setVisible(false);
         menu.findItem(R.id.action_search).setVisible(false);
 
-        mSearchView.setMenuItem(item);
+        //mSearchView.setMenuItem(item);
         return true;
     }
 
@@ -231,11 +228,8 @@ public class StandMessageActivity extends BaseActivity<StandMessagePresenter> im
 
 
         } else {
-            if (mSearchView.isSearchOpen()) {
-                mSearchView.closeSearch();
-            } else {
-                super.onBackPressed();
-            }
+
+            super.onBackPressed();
         }
 
     }
