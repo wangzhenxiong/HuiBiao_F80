@@ -47,6 +47,7 @@ import com.dy.huibiao_f80.android_serialport_api.SerialControl;
 import com.dy.huibiao_f80.android_serialport_api.SerialHelper;
 import com.dy.huibiao_f80.app.utils.ByteUtils;
 import com.dy.huibiao_f80.app.utils.FileUtils;
+import com.dy.huibiao_f80.app.utils.NumberUtils;
 import com.dy.huibiao_f80.bean.GalleryBean;
 import com.dy.huibiao_f80.bean.base.BaseProjectMessage;
 import com.dy.huibiao_f80.bean.eventBusBean.FGTestMessageBean;
@@ -554,14 +555,15 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
                         }
 
                         int state = bean.getState();
-
+                         LogUtils.d(state);
+                         LogUtils.d(method);
+                         LogUtils.d(remainingtime);
                         if (state == 1 && remainingtime == 0) {
                             bean.testFinished();
                             switch (method) {
                                 case 0: //抑制率法  检测项目自带限量值判断
                                     switch (bean.getDowhat()) {
                                         case 1:
-
                                             getFGmethod1result(i);
                                             break;
                                         case 2:
@@ -579,10 +581,11 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
                                             break;
                                     }
                                     break;
-                                case 3: //动力学法  检测项目自带限量值判断
+                                case 2: //动力学法  检测项目自带限量值判断
+                                    LogUtils.d("动力学法");
                                     getFGmethod3result(i);
                                     break;
-                                case 4: //系数法  需要根据样品的限量值来判断结果 （或者从匹配的检测项目中获取）
+                                case 3: //系数法  需要根据样品的限量值来判断结果 （或者从匹配的检测项目中获取）
                                     getFGmethod4result(i);
                                     break;
                             }
@@ -683,38 +686,38 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
         }
         LogUtils.d(start_Absorbance);
         LogUtils.d(stop_Absorbance);
-        if ("Infinity".equals(start_Absorbance + "") || "Infinity".equals(stop_Absorbance + "")) {
-            ArmsUtils.snackbarText(getString(R.string.contro_erromessage1));
-            detection_record_fggd_nc.setState(3);
-            return;
-        }
-        double df_abs = 0; //吸光度差
-        //吸光度差 = 结束时吸光度 - 开始时吸光度
-        df_abs = 0;
-        if (start_Absorbance < stop_Absorbance) {
-            df_abs = stop_Absorbance - start_Absorbance;
-        }
-        LogUtils.d(df_abs);
+
+
         // 抑制率= (对照值-df_abs) / 对照值
-        double df_contro_abs = 0;
+
+        String conclusion;
         //对照值
         //double controlValue = Constants.FGGD_YIZHILV_CONTROL_VALUE;
-        float controValue0 = Constants.controvalue0;
-        LogUtils.d(controValue0);
-        double controlValue = controValue0;
-        if (controlValue == 0) {
-            ArmsUtils.snackbarText(getString(R.string.lastcontrovalue));
+        float controlValue = Constants.controvalue0;
+        double testResult=0;
+        if (controlValue <= 0||"Infinity".equals(start_Absorbance + "") || "Infinity".equals(stop_Absorbance + "")) {
+           // ArmsUtils.snackbarText(getString(R.string.lastcontrovalue));
             detection_record_fggd_nc.setState(3);
-            return;
+            conclusion="无效";
+        }else {
+            double df_abs = 0; //吸光度差
+            //吸光度差 = 结束时吸光度 - 开始时吸光度
+            df_abs = 0;
+            if (start_Absorbance < stop_Absorbance) {
+                df_abs = stop_Absorbance - start_Absorbance;
+            }
+            LogUtils.d(df_abs);
+            double df_contro_abs = 0;
+            if (controlValue > df_abs) {
+                df_contro_abs = controlValue - df_abs;
+            }
+            //检测结果
+             testResult = (df_contro_abs / controlValue) * 100;
+            LogUtils.d(testResult);
+            //判断结果
+             conclusion = judge(testResult, message2);
         }
-        if (controlValue > df_abs) {
-            df_contro_abs = controlValue - df_abs;
-        }
-        //检测结果
-        double testResult = (df_contro_abs / controlValue) * 100;
-        LogUtils.d(testResult);
-        //判断结果
-        String conclusion = judge(testResult, message2);
+
 
 
         //设置一些检测完成时需要添加的信息
@@ -736,7 +739,7 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
 
         //对照值
         //detection_record_fggd_nc.setControlvalue(Constants.FGGD_YIZHILV_CONTROL_VALUE + "");
-        detection_record_fggd_nc.setControlvalue(controValue0 + "");
+        detection_record_fggd_nc.setControlvalue(NumberUtils.threeString(controlValue ));
         //检测人员   这里填的是本地登录的账号名称
         //detection_record_fggd_nc.setInspector(Constants.NOWUSER.getUsername());
         //设置检测模块
@@ -926,11 +929,13 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
         if ("Infinity".equals(start_Absorbance + "") || "Infinity".equals(stop_Absorbance + "")) {
             ArmsUtils.snackbarText(getString(R.string.sampleerro_message1));
             detection_record_fggd_nc.setState(3);
+            Constants.setControValue0(-1);
             return;
         }
-        if (stop_Absorbance <= start_Absorbance) {
+        if (stop_Absorbance < start_Absorbance) {
             ArmsUtils.snackbarText(getString(R.string.sampleerro_message2));
             detection_record_fggd_nc.setState(3);
+            Constants.setControValue0(-2);
             return;
         }
         double df_abs = stop_Absorbance - start_Absorbance;
@@ -999,47 +1004,46 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
                 stop_Absorbance = detection_record_fggd_nc.getAbsorbance4_after(); //结束吸光度
                 break;
         }
-        if ("Infinity".equals(stop_Absorbance + "")) {
-            ArmsUtils.snackbarText("结束时吸光度无穷大，此次对照无效！");
-            detection_record_fggd_nc.setState(3);
-            return;
-        }
+
         //稀释倍数
         double dilutionratio = detection_record_fggd_nc.getDilutionratio();
         //对照值
         //double controlValue = Constants.FGGD_BIAOZHUN_CONTROL_VALUE;
         double controlValue = Constants.controvalue1;
         LogUtils.d("对照值：" + controlValue);
-        if (controlValue == 0) {
-            ArmsUtils.snackbarText("对照值为0，检测无效！");
-            detection_record_fggd_nc.setState(3);
-            return;
-        }
-        //吸光度差
-        double df_abs_cont = 0;
-        if (controlValue < stop_Absorbance) {
-            df_abs_cont = stop_Absorbance - controlValue;
-        }
-        //浓度值
+        String conclusion;
         double testresult = 0;
-
-        if (df_abs_cont >= from0 && df_abs_cont < to0) {
-            testresult = (a0 + b0 * df_abs_cont + c0 * df_abs_cont * df_abs_cont + d0 * df_abs_cont * df_abs_cont * df_abs_cont) * dilutionratio;
-        } else if (df_abs_cont >= from1 && df_abs_cont < to1) {
-            testresult = (a1 + b1 * df_abs_cont + c1 * df_abs_cont * df_abs_cont + d1 * df_abs_cont * df_abs_cont * df_abs_cont) * dilutionratio;
-        } else {
-            ArmsUtils.snackbarText("吸光度超出判断范围，请检查检测方法参数是否正确！");
+        if (controlValue <= 0||"Infinity".equals(stop_Absorbance + "")) {
             detection_record_fggd_nc.setState(3);
+            conclusion="无效";
+        }else {
+            //吸光度差
+            double df_abs_cont = 0;
+            if (controlValue < stop_Absorbance) {
+                df_abs_cont = stop_Absorbance - controlValue;
+            }
+            //浓度值
 
-            return;
+
+            if (df_abs_cont >= from0 && df_abs_cont < to0) {
+                testresult = (a0 + b0 * df_abs_cont + c0 * df_abs_cont * df_abs_cont + d0 * df_abs_cont * df_abs_cont * df_abs_cont) * dilutionratio;
+            } else if (df_abs_cont >= from1 && df_abs_cont < to1) {
+                testresult = (a1 + b1 * df_abs_cont + c1 * df_abs_cont * df_abs_cont + d1 * df_abs_cont * df_abs_cont * df_abs_cont) * dilutionratio;
+            } else {
+                ArmsUtils.snackbarText("吸光度超出判断范围，请检查检测方法参数是否正确！");
+                detection_record_fggd_nc.setState(3);
+
+                return;
+            }
+            testresult = testresult * jzha + jzhb;
+            if (testresult < 0) {
+                testresult = 0;
+            }
+            LogUtils.d(testresult);
+            //判断结果
+            conclusion= judge(testresult, projectMessage);
         }
-        testresult = testresult * jzha + jzhb;
-        if (testresult < 0) {
-            testresult = 0;
-        }
-        LogUtils.d(testresult);
-        //判断结果
-        String conclusion = judge(testresult, projectMessage);
+
 
 
         LogUtils.d(testresult);
@@ -1060,7 +1064,7 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
         //对照值
         //当前平台
         //detection_record_fggd_nc.setControlvalue(Constants.FGGD_BIAOZHUN_CONTROL_VALUE + "");
-        detection_record_fggd_nc.setControlvalue(controlValue + "");
+        detection_record_fggd_nc.setControlvalue(NumberUtils.threeString(controlValue ));
         //检测人员   这里填的是本地登录的账号名称
         //detection_record_fggd_nc.setInspector(Constants.NOWUSER.getUsername());
         //设置检测模块
@@ -1117,13 +1121,14 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
         if ("Infinity".equals("" + stop_Absorbance)) {
             ArmsUtils.snackbarText("结束时吸光度为无穷大，此次对照无效！");
             detection_record_fggd_nc.setState(3);
+            Constants.setControValue1(-1);
             return;
         }
-        if (stop_Absorbance <= 0) {
+        /*if (stop_Absorbance <= 0) {
             ArmsUtils.snackbarText("结束时吸光度为0，此次对照无效！");
             detection_record_fggd_nc.setState(3);
             return;
-        }
+        }*/
 
         String format = mFormatContro_3.format(stop_Absorbance);
         Float aFloat = Float.valueOf(format);
@@ -1139,7 +1144,7 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
         TestRecord detection_record_fggd_nc = (TestRecord) mFGGDGalleryBeanList.get(i);
         ProjectFGGD projectMessage = (ProjectFGGD) detection_record_fggd_nc.getmProjectMessage();
         String unit_input = projectMessage.getUnit_input();
-
+       LogUtils.d(projectMessage);
         double a3 = projectMessage.getA();
         double b3 = projectMessage.getB();
         //计算结果所需的参数
@@ -1165,28 +1170,32 @@ public class SerialDataService extends BaseService implements UsbReadWriteHelper
                 stop_Absorbance = detection_record_fggd_nc.getAbsorbance4_after(); //结束吸光度
                 break;
         }
-        if ("Infinity".equals(start_Absorbance + "") || "Infinity".equals(stop_Absorbance + "")) {
-            ArmsUtils.snackbarText("开始或结束时吸光度无穷大，此次对照无效！");
-            detection_record_fggd_nc.setState(3);
-            return;
-        }
         double df_abs = 0; //吸光度差
         double testresult = 0; //检测结果
-
-        if (start_Absorbance < stop_Absorbance) {
-            df_abs = stop_Absorbance - start_Absorbance;
-        }
-        testresult = a3 * df_abs + b3;
-        if (testresult < 0) {
-            testresult = 0;
-        }
+        String conclusion;
+        if ("Infinity".equals(start_Absorbance + "") || "Infinity".equals(stop_Absorbance + "")) {
+            //ArmsUtils.snackbarText("开始或结束时吸光度无穷大，此次对照无效！");
+            detection_record_fggd_nc.setState(3);
+            conclusion="无效";
+        }else {
+            if (start_Absorbance < stop_Absorbance) {
+                df_abs = stop_Absorbance - start_Absorbance;
+            }
+            testresult = a3 * df_abs + b3;
+            if (testresult < 0) {
+                testresult = 0;
+            }
 
        /* if ("%".equals(detection_record_fggd_nc.getCov_unit())) {
             testresult = testresult * 100;
         }*/
-        LogUtils.d(testresult);
-        //判断结果
-        String conclusion = judge(testresult, projectMessage);
+            LogUtils.d(testresult);
+            //判断结果
+             conclusion = judge(testresult, projectMessage);
+        }
+
+
+
         //设置一些检测完成时需要添加的信息
         String unit = detection_record_fggd_nc.getCov_unit();
         if ("".equals(unit)) {

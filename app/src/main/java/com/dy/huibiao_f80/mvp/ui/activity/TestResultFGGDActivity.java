@@ -320,10 +320,22 @@ public class TestResultFGGDActivity extends BaseActivity<TestResultFGGDPresenter
 
     private void initControValue(int method_sp) {
         if (method_sp == 0) {
-            mControvalue.setText("当前对照:" + Constants.getControValue0());
+            float controValue0 = Constants.getControValue0();
+            if (controValue0==-1){
+                mControvalue.setText(getString(R.string.sampleerro_message1));
+            }else if (controValue0==-2){
+                mControvalue.setText(getString(R.string.sampleerro_message2));
+            }else {
+                mControvalue.setText("当前对照:" + Constants.getControValue0());
+            }
             mControvalue.setVisibility(View.VISIBLE);
         } else if (method_sp == 1) {
-            mControvalue.setText("当前对照:" + Constants.getControValue1());
+            float controValue1 = Constants.getControValue1();
+            if (controValue1==-1){
+                mControvalue.setText(getString(R.string.sampleerro_message1));
+            }else {
+                mControvalue.setText("当前对照:" + Constants.getControValue1());
+            }
             mControvalue.setVisibility(View.VISIBLE);
         } else {
             mControvalue.setVisibility(View.GONE);

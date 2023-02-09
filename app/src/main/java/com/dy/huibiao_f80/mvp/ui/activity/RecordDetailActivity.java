@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.dy.huibiao_f80.MyAppLocation;
 import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.app.service.ExamOperationService;
 import com.dy.huibiao_f80.di.component.DaggerRecordDetailComponent;
@@ -20,6 +21,7 @@ import com.dy.huibiao_f80.greendao.Sampling;
 import com.dy.huibiao_f80.greendao.TestRecord;
 import com.dy.huibiao_f80.mvp.contract.RecordDetailContract;
 import com.dy.huibiao_f80.mvp.presenter.RecordDetailPresenter;
+import com.dy.huibiao_f80.mvp.ui.widget.MyTextView;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
@@ -78,6 +80,10 @@ public class RecordDetailActivity extends BaseActivity<RecordDetailPresenter> im
     TextView mLatitudeandlongitude;
     @BindView(R.id.toolbar_time)
     TextView mToolbarTime;
+    @BindView(R.id.toolbar_home)
+    RelativeLayout mToolbarHome;
+    @BindView(R.id.controvalue)
+    MyTextView mControvalue;
 
     private TestRecord testRecord;
 
@@ -86,6 +92,7 @@ public class RecordDetailActivity extends BaseActivity<RecordDetailPresenter> im
     public boolean useEventBus() {
         return false;
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -97,17 +104,18 @@ public class RecordDetailActivity extends BaseActivity<RecordDetailPresenter> im
         super.onPause();
         EventBus.getDefault().unregister(this);
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent2(ExamOperationService.ExamOperationServiceEventBean tags) {
 
         if (tags.getTime() == 0) {
-            if (null!=mToolbarTime){
+            if (null != mToolbarTime) {
                 mToolbarTime.setText("正在提交考试结果");
             }
             return;
         }
         String timestring = tags.getTimestring();
-        if (null!=mToolbarTime){
+        if (null != mToolbarTime) {
             mToolbarTime.setText(timestring);
         }
 
@@ -155,9 +163,24 @@ public class RecordDetailActivity extends BaseActivity<RecordDetailPresenter> im
         mTestproject.setText(testRecord.getTest_project());
         mTestunit.setText(testRecord.getCov_unit());
         mTestmoudle.setText(testRecord.getTest_Moudle());
-        mTestresult.setText(testRecord.getTestresult());
+
         mJudge.setText(testRecord.getDecisionoutcome());
         mStandnum.setText(testRecord.getStand_num());
+        if (testRecord.getTest_method().equals(MyAppLocation.myAppLocation.getString(R.string.mothod1))||
+                testRecord.getTest_method().equals(MyAppLocation.myAppLocation.getString(R.string.mothod2))){
+            if (testRecord.getControlvalue().equals("-1.0")||testRecord.getControlvalue().equals("-2.0")) {
+                mControvalue.setText("无效");
+                mTestresult.setText("");
+            } else {
+                mControvalue.setText(testRecord.getControlvalue());
+                mTestresult.setText(testRecord.getTestresult());
+            }
+        } else {
+            mControvalue.setText("");
+            mTestresult.setText(testRecord.getTestresult());
+        }
+
+
         mMethodlimit.setText(testRecord.getMethodsDetectionLimit());
         mTestsite.setText(testRecord.getTestsite());
         mLatitudeandlongitude.setText(testRecord.getLatitude() + "," + testRecord.getLongitude());

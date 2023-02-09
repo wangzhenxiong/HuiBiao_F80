@@ -64,8 +64,8 @@ public class SettingLoginActivity extends BaseActivity<SettingLoginPresenter> im
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
        if (BuildConfig.DEBUG){
-           mUsername.setText("admin");
-           mPassword.setText("123456");
+           mUsername.setText("hbadmin");
+           mPassword.setText("hbadmin");
        }
     }
 

@@ -181,6 +181,7 @@ public class BeginAnalyseExam_Back {
             private String createTime;
             private String createUser;
             private String studentAnswer;
+            public boolean check=false;
 
             public String getStudentAnswer() {
                 return studentAnswer == null ? "" : studentAnswer;

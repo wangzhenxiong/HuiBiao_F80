@@ -92,7 +92,7 @@ public class ExamActivity extends BaseActivity<ExamPresenter> implements ExamCon
         mRealname.setText("");
         mCardnumber.setText("");
         if (BuildConfig.DEBUG){
-            mRealname.setText("大飞5");
+            mRealname.setText("测试4");
             mCardnumber.setText("123");
         }
     }

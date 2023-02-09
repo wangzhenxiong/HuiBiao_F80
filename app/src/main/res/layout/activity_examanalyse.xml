@@ -3,67 +3,177 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#f0f1f3"
     android:orientation="vertical">
 
     <include layout="@layout/include_exam_title" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:layout_height="64dp"
+        android:gravity="center"
+        android:paddingLeft="26dp"
+        android:paddingRight="26dp">
 
-        <ScrollView
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
+    <!--
+     <LinearLayout
+           android:id="@+id/item_group"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:gravity="center_vertical"
+           android:orientation="horizontal">
+
+           <Button
+               android:layout_width="140dp"
+               android:layout_height="32dp"
+               android:layout_marginRight="20dp"
+               android:background="#ffffff"
+               android:gravity="center"
+               android:text="第三题(20分)"
+               android:textColor="#c6c6c6"
+               android:textSize="18dp" />
+
+           <Button
+               android:layout_width="140dp"
+               android:layout_height="32dp"
+               android:layout_marginRight="20dp"
+               android:background="#476bfc"
+               android:gravity="center"
+               android:text="第三题(20分)"
+               android:textColor="#ffffff"
+               android:textSize="18dp" />
+
+
+       </LinearLayout>-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#f0f1f3"
+        android:orientation="horizontal"
+        android:paddingLeft="26dp"
+        android:paddingRight="26dp"
+        android:paddingBottom="26dp">
+
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="7"
-            android:background="@color/EXAMBAC01"
+            android:layout_marginRight="5dp"
+            android:layout_weight="550"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:focusable="false"
-                android:id="@+id/exam_title"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-
-
-
-            </LinearLayout>
-
-
-        </ScrollView>
-        <ScrollView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="5">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="20dp">
+                android:layout_height="56dp"
+                android:background="#fafafa">
 
                 <TextView
-                    android:id="@+id/title_answer"
-                    android:textSize="18dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-
-                <EditText
-                    android:id="@+id/ed_answer"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp"
+                    android:text="分析题"
                     android:textColor="@color/black"
                     android:textSize="18dp"
-                    android:text=""
-                    android:background="@null"
-                    android:hint="请在此处作答"
-                    android:gravity="left|top"
-                    android:minHeight="400dp"/>
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="请在右边答题处答题------>"
+                    android:textColor="#c6c6c6" />
+            </RelativeLayout>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#ffffff"
+                android:orientation="vertical">
+
+                <LinearLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:focusable="false"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/itemmessage"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="20dp"
+                        android:text=""
+                        android:textSize="16dp" />
+
+                </LinearLayout>
 
 
-            </LinearLayout>
-        </ScrollView>
+            </ScrollView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="410"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="#fafafa">
+
+                <TextView
+                    android:id="@+id/answer_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp"
+                    android:text="第1题答题处："
+                    android:textColor="@color/black"
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#ffffff">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <EditText
+                        android:id="@+id/ed_answer"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@null"
+                        android:gravity="left|top"
+                        android:hint="请在此处作答......"
+                        android:minHeight="400dp"
+                        android:padding="20dp"
+                        android:text=""
+                        android:textColor="@color/black"
+                        android:textSize="16dp" />
+
+
+                </LinearLayout>
+            </ScrollView>
+
+        </LinearLayout>
 
     </LinearLayout>
 </LinearLayout>

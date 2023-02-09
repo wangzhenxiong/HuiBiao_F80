@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.Html;
@@ -20,22 +22,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.apkfuns.logutils.LogUtils;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.api.back.BeginAnalyseExam_Back;
 import com.dy.huibiao_f80.di.component.DaggerExamAnalyseComponent;
 import com.dy.huibiao_f80.mvp.contract.ExamAnalyseContract;
 import com.dy.huibiao_f80.mvp.presenter.ExamAnalysePresenter;
+import com.dy.huibiao_f80.mvp.ui.adapter.ExamAnalyseAdapter;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -51,6 +55,8 @@ import static com.jess.arms.utils.Preconditions.checkNotNull;
 public class ExamAnalyseActivity extends BaseActivity<ExamAnalysePresenter> implements ExamAnalyseContract.View {
 
 
+    @Inject
+    AlertDialog mSportDialog;
     @BindView(R.id.toolbar_back)
     RelativeLayout mToolbarBack;
     @BindView(R.id.toolbar_title)
@@ -63,20 +69,20 @@ public class ExamAnalyseActivity extends BaseActivity<ExamAnalysePresenter> impl
     Toolbar mToolbar;
     @BindView(R.id.toolbarly)
     AppBarLayout mToolbarly;
-
-    @BindView(R.id.exam_title)
-    LinearLayout mExamTitle;
+    @BindView(R.id.recyclerView)
+    RecyclerView mRecyclerView;
+    @BindView(R.id.answer_title)
+    TextView mAnswerTitle;
     @BindView(R.id.ed_answer)
     EditText mEdAnswer;
-    @BindView(R.id.title_answer)
-    TextView mTitleAnswer;
-    @Inject
-    AlertDialog mSportDialog;
+    @BindView(R.id.itemmessage)
+    TextView mItemmessage;
     private String examinationId;
     private String examinerId;
     private int theoryExamTime;
     private ScheduledThreadPoolExecutor mScheduledThreadPoolExecutor;
     private boolean runflag = true;
+    private ExamAnalyseAdapter examAnalyseAdapter;
 
 
     @Override
@@ -96,11 +102,36 @@ public class ExamAnalyseActivity extends BaseActivity<ExamAnalysePresenter> impl
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        mRecyclerView.setLayoutManager(linearLayoutManager);
+        mRecyclerView.setHasFixedSize(true);
+
         Intent intent = getIntent();
         examinationId = intent.getStringExtra("examinationId");
         examinerId = intent.getStringExtra("examinerId");
         mScheduledThreadPoolExecutor = (ScheduledThreadPoolExecutor) ArmsUtils.obtainAppComponentFromContext(this).executorService();
         mPresenter.beginAnalyseExam(examinationId, examinerId);
+        examAnalyseAdapter = new ExamAnalyseAdapter(R.layout.examanalyseadapter_item_layout, analysePaperList);
+        mRecyclerView.setAdapter(examAnalyseAdapter);
+        examAnalyseAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                LogUtils.d(position+"----");
+                analysePaperList.get(nowCheckedIndex).check = false;
+                BeginAnalyseExam_Back.EntityBean.AnalysePaperListBean analysePaperListBean = analysePaperList.get(position);
+                analysePaperListBean.check = true;
+                nowCheckedIndex = position;
+                initExamCont(analysePaperList.get(nowCheckedIndex));
+                examAnalyseAdapter.notifyDataSetChanged();
+                mAnswerTitle.setText("第"+(nowCheckedIndex+1)+"题答题处：");
+                String content = analysePaperListBean.getContent();
+                content = content.replaceAll("\\\\", "");
+                LogUtils.d(content);
+                CharSequence spanned = Html.fromHtml(content, new URLImageGetter(mItemmessage), null);
+                mItemmessage.setText(spanned);
+            }
+        });
 
     }
 
@@ -163,9 +194,9 @@ public class ExamAnalyseActivity extends BaseActivity<ExamAnalysePresenter> impl
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
 
-        String content = " <font style=\"font-size:16dp\" color=\"#3856FC\">"+"一共"+(analysePaperList.size())
-                +"道题，已经完成"+(analysePaperList.size()-noanswer)+"道，未完成</font>\n" +
-                " <font style=\"font-size:16dp\" color=\"#FF0000\">" +noanswer + "</font>" +
+        String content = " <font style=\"font-size:16dp\" color=\"#3856FC\">" + "一共" + (analysePaperList.size())
+                + "道题，已经完成" + (analysePaperList.size() - noanswer) + "道，未完成</font>\n" +
+                " <font style=\"font-size:16dp\" color=\"#FF0000\">" + noanswer + "</font>" +
                 " <font style=\"font-size:16dp\" color=\"#3856FC\">道，确定要交卷吗？</font>\n";
         //"正在检测...富集倒计时 "+message.num + " 秒！"
         message.setText(Html.fromHtml(content));
@@ -174,7 +205,7 @@ public class ExamAnalyseActivity extends BaseActivity<ExamAnalysePresenter> impl
             @Override
             public void onClick(View v) {
                 alertDialog.dismiss();
-                mPresenter.submit(examinationId, examinerId, beginAnalyseExamBack,true);
+                mPresenter.submit(examinationId, examinerId, beginAnalyseExamBack, true);
             }
         });
 
@@ -211,7 +242,8 @@ public class ExamAnalyseActivity extends BaseActivity<ExamAnalysePresenter> impl
     }
 
     private BeginAnalyseExam_Back beginAnalyseExamBack;
-    private List<BeginAnalyseExam_Back.EntityBean.AnalysePaperListBean> analysePaperList;
+    private List<BeginAnalyseExam_Back.EntityBean.AnalysePaperListBean> analysePaperList = new ArrayList<>();
+    int nowCheckedIndex;
 
     @Override
     public void showExamTitle(BeginAnalyseExam_Back back) {
@@ -238,14 +270,29 @@ public class ExamAnalyseActivity extends BaseActivity<ExamAnalysePresenter> impl
                             }
                         });
                     } else {
-                        mPresenter.submit(examinationId, examinerId, beginAnalyseExamBack,false);
+                        mPresenter.submit(examinationId, examinerId, beginAnalyseExamBack, false);
                         runflag = false;
                     }
                 }
             }
         }, 0, 1000, TimeUnit.MILLISECONDS);
-        analysePaperList = entity.getAnalysePaperList();
-        for (int i = 0; i < analysePaperList.size(); i++) {
+        analysePaperList.clear();
+        analysePaperList.addAll(entity.getAnalysePaperList());
+        if (analysePaperList.size() > 0) {
+
+            BeginAnalyseExam_Back.EntityBean.AnalysePaperListBean analysePaperListBean = analysePaperList.get(0);
+            analysePaperListBean.check = true;
+            nowCheckedIndex = 0;
+            initExamCont(analysePaperList.get(nowCheckedIndex));
+            mAnswerTitle.setText("第"+(nowCheckedIndex+1)+"题答题处：");
+            String content = analysePaperListBean.getContent();
+            content = content.replaceAll("\\\\", "");
+            LogUtils.d(content);
+            CharSequence spanned = Html.fromHtml(content, new URLImageGetter(mItemmessage), null);
+            mItemmessage.setText(spanned);
+        }
+        examAnalyseAdapter.notifyDataSetChanged();
+        /*for (int i = 0; i < analysePaperList.size(); i++) {
             BeginAnalyseExam_Back.EntityBean.AnalysePaperListBean analysePaperListBean = analysePaperList.get(i);
             View inflate = LayoutInflater.from(this).inflate(R.layout.analyse_title_item, null);
             TextView title_number = (TextView) inflate.findViewById(R.id.title_number);
@@ -258,12 +305,9 @@ public class ExamAnalyseActivity extends BaseActivity<ExamAnalysePresenter> impl
             LogUtils.d(content);
             CharSequence spanned = Html.fromHtml(content, new URLImageGetter(viewById), null);
             viewById.setText(spanned);
-
             title_number.setText("第" + (i + 1) + "题" + "(共" + analysePaperListBean.getScore() + "分)");
-            mExamTitle.addView(inflate);
+        }*/
 
-        }
-        initExamCont(analysePaperList.get(0), 0);
     }
 
     @Override
@@ -281,20 +325,12 @@ public class ExamAnalyseActivity extends BaseActivity<ExamAnalysePresenter> impl
         return this;
     }
 
-    private View.OnClickListener chardClick() {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                BeginAnalyseExam_Back.EntityBean.AnalysePaperListBean analysePaperListBean = analysePaperList.get(v.getId());
-                initExamCont(analysePaperListBean,v.getId());
-            }
-        };
-    }
+
 
     BeginAnalyseExam_Back.EntityBean.AnalysePaperListBean nowAnalysePaper;
 
-    private void initExamCont(BeginAnalyseExam_Back.EntityBean.AnalysePaperListBean analysePaperListBean, int id) {
-        mTitleAnswer.setText("第"+(id+1)+"题作答处");
+    private void initExamCont(BeginAnalyseExam_Back.EntityBean.AnalysePaperListBean analysePaperListBean) {
+
         nowAnalysePaper = analysePaperListBean;
         mEdAnswer.removeTextChangedListener(answerWatcher);
         mEdAnswer.setText("");

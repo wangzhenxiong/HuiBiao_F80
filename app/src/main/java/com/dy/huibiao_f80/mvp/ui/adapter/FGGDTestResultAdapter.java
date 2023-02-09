@@ -76,7 +76,9 @@ public class FGGDTestResultAdapter extends BaseQuickAdapter<GalleryBean, BaseVie
                 .setText(R.id.dishu,item1.getDilutionratio()+"")
                 .setText(R.id.testresult,item1.getTestresult()+"")
                 .setText(R.id.jujdger, decisionoutcome +"");
-
+        if (decisionoutcome.equals("无效")){
+           helper.setText(R.id.testresult,"无效");
+        }
         double abs_ = 0;
         double abs_now = 0;
         BaseProjectMessage baseProjectMessage = item.getmProjectMessage();
@@ -103,7 +105,7 @@ public class FGGDTestResultAdapter extends BaseQuickAdapter<GalleryBean, BaseVie
                     break;
             }
 
-           /* int method = baseProjectMessage1.getMethod();
+            /*int method = baseProjectMessage1.getMethod();
             if (method!=0){
                abs_= abs_now;
             }*/
