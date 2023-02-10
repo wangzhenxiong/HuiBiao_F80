@@ -52,11 +52,18 @@ public class TestRecrdAdapter extends BaseQuickAdapter<TestRecord, BaseViewHolde
 
         }
         if (item.getTest_method().equals(MyAppLocation.myAppLocation.getString(R.string.mothod1))||item.getTest_method().equals(MyAppLocation.myAppLocation.getString(R.string.mothod2))){
-            if (item.getControlvalue().equals("-1.0")||item.getControlvalue().equals("-2.0")||item.getControlvalue().equals("0.0")) {
-                helper.setText(R.id.controvalue, "无效")
-                        .setText(R.id.testresult, "");
+            String controlvalue = item.getControlvalue();
+            if (item.getDecisionoutcome().equals("无效")) {
+                if (!controlvalue.equals("-1")&&!controlvalue.equals("-2")){
+                    helper.setText(R.id.controvalue, controlvalue)
+                            .setText(R.id.testresult, "");
+                }else {
+                    helper.setText(R.id.controvalue, "无效")
+                            .setText(R.id.testresult, "");
+                }
+
             } else {
-                helper.setText(R.id.controvalue, item.getControlvalue())
+                helper.setText(R.id.controvalue, controlvalue)
                         .setText(R.id.testresult, item.getTestresult() + item.getCov_unit());
 
             }

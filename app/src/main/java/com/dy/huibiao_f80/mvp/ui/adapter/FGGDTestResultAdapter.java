@@ -77,7 +77,7 @@ public class FGGDTestResultAdapter extends BaseQuickAdapter<GalleryBean, BaseVie
                 .setText(R.id.testresult,item1.getTestresult()+"")
                 .setText(R.id.jujdger, decisionoutcome +"");
         if (decisionoutcome.equals("无效")){
-           helper.setText(R.id.testresult,"无效");
+           helper.setText(R.id.testresult,"");
         }
         double abs_ = 0;
         double abs_now = 0;
