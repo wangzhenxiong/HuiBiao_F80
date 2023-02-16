@@ -21,6 +21,9 @@ import com.dy.huibiao_f80.app.utils.DataUtils;
 import com.dy.huibiao_f80.app.utils.NetworkUtils;
 import com.dy.huibiao_f80.bean.ReportBean;
 import com.dy.huibiao_f80.bean.eventBusBean.NetWorkState;
+import com.dy.huibiao_f80.greendao.DBHelper;
+import com.dy.huibiao_f80.greendao.TestRecord;
+import com.dy.huibiao_f80.greendao.daos.TestRecordDao;
 import com.dy.huibiao_f80.mvp.ui.activity.ExamStateActivity;
 import com.google.gson.Gson;
 import com.jess.arms.base.BaseService;
@@ -111,7 +114,7 @@ public class ExamOperationService extends BaseService {
      * @param examTime
      */
     public void startExamOperation(int examTime) {
-        LogUtils.d(isStartExamOperation+"  "+operationExamTime);
+        LogUtils.d(isStartExamOperation + "  " + operationExamTime);
         isStartExamOperation = true;
         operationExamTime = examTime;
     }
@@ -121,7 +124,7 @@ public class ExamOperationService extends BaseService {
         @Override
         public void run() {
             //LogUtils.d(operationExamTime+"  "+isStartExamOperation);
-            if (operationExamTime>=0&&isStartExamOperation){
+            if (operationExamTime >= 0 && isStartExamOperation) {
                 int i = operationExamTime / 60;
                 int i1 = operationExamTime % 60;
                 ExamOperationServiceEventBean event = new ExamOperationServiceEventBean();
@@ -147,9 +150,9 @@ public class ExamOperationService extends BaseService {
     Runnable commandisTeacherSubmit = new Runnable() {
         @Override
         public void run() {
-            if (!isTeacherSubmit&&isStartExamOperation) {
-                if (!NetworkUtils.getNetworkType()){
-                   return;
+            if (!isTeacherSubmit && isStartExamOperation) {
+                if (!NetworkUtils.getNetworkType()) {
+                    return;
                 }
                 RetrofitUrlManager.getInstance().putDomain("xxx", Constants.URL);
                 ArmsUtils.obtainAppComponentFromContext(ExamOperationService.this)
@@ -180,7 +183,7 @@ public class ExamOperationService extends BaseService {
      * 结束考试
      */
     public void finishOperationExam() {
-        operationExamTime=-1;
+        operationExamTime = -1;
         isStartExamOperation = false;
         isTeacherSubmit = false;
         beginOperationExam_back = null;
@@ -227,16 +230,19 @@ public class ExamOperationService extends BaseService {
         mScheduledThreadPoolExecutor.scheduleAtFixedRate(commandisTeacherSubmit, 0, 5000, TimeUnit.MILLISECONDS);
 
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(NetWorkState tags) {
         if (tags.isLinkstate()) {
-            if (mWaiteDialog!=null&&mWaiteDialog.isShowing()){
+            if (mWaiteDialog != null && mWaiteDialog.isShowing()) {
                 mWaiteDialog.dismiss();
                 forceUploadReport();
             }
         }
     }
+
     Activity currentActivity;
+
     private void makeDialog() {
         currentActivity = ArmsUtils.obtainAppComponentFromContext(MyAppLocation.myAppLocation).appManager().getCurrentActivity();
         currentActivity.runOnUiThread(new Runnable() {
@@ -332,13 +338,19 @@ public class ExamOperationService extends BaseService {
                                 isStartExamOperation = false;
                                 Activity topActivity = ArmsUtils.obtainAppComponentFromContext(ExamOperationService.this).appManager().getTopActivity();
                                 Intent content = new Intent(topActivity, ExamStateActivity.class);
-                               // content.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
+                                // content.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
                                 content.putExtra("examinationId", examinationId);
                                 content.putExtra("examinerId", examinerId);
                                 ArmsUtils.startActivity(content);
 
                                 finishOperationExam();
                                 ArmsUtils.snackbarText("考试已结束");
+                                // TODO: 2/15/23 删除考试 产生的记录
+
+                                List<TestRecord> list = DBHelper.getTestRecordDao().queryBuilder()
+                                        .where(TestRecordDao.Properties.ExaminerId.eq(MyAppLocation.myAppLocation.mExamOperationService.getExaminerId()))
+                                        .where(TestRecordDao.Properties.ExaminationId.eq(MyAppLocation.myAppLocation.mExamOperationService.getExaminationId())).list();
+                                DBHelper.getTestRecordDao().deleteInTx(list);
 
                                /* ExamOperationService.ExamOperationServiceEventBean event = new ExamOperationService.ExamOperationServiceEventBean();
                                 event.state = -1;

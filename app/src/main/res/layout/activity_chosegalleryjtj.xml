@@ -57,7 +57,8 @@
                             <CheckBox
                                 android:id="@+id/checkbox1"
                                 style="@style/chosegallery_checkbox"
-                                android:text="通道1" />
+                                android:text="通道1"
+                                android:checked="true"/>
                         </LinearLayout>
 
                         <LinearLayout
@@ -68,7 +69,8 @@
                             <CheckBox
                                 android:id="@+id/checkbox2"
                                 style="@style/chosegallery_checkbox"
-                                android:text="通道2" />
+                                android:text="通道2"
+                                android:checked="true"/>
                         </LinearLayout>
                         <LinearLayout
                             android:visibility="gone"
@@ -78,7 +80,8 @@
                             <CheckBox
                                 android:id="@+id/checkbox3"
                                 style="@style/chosegallery_checkbox"
-                                android:text="通道3" />
+                                android:text="通道3"
+                                android:checked="true"/>
                         </LinearLayout>
                         <LinearLayout
                             android:visibility="gone"
@@ -88,7 +91,8 @@
                             <CheckBox
                                 android:id="@+id/checkbox4"
                                 style="@style/chosegallery_checkbox"
-                                android:text="通道4" />
+                                android:text="通道4"
+                                android:checked="true"/>
                         </LinearLayout>
 
 

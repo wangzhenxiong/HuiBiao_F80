@@ -116,6 +116,8 @@ android {
     lintOptions {
         disable 'InvalidPackage'
         disable "ResourceType"
+        checkReleaseBuilds false
+        //true 错误发生后停止构建
         abortOnError false
     }
     sourceSets {

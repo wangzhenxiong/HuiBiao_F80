@@ -50,23 +50,33 @@ public class RecordModel extends BaseModel implements RecordContract.Model {
     }
 
     @Override
-    public Observable<List<TestRecord>> load(String examinationId,String examinerId,String examId) {
+    public Observable<List<TestRecord>> load(boolean start,String examinationId,String examinerId,String examId) {
         return Observable.create(new ObservableOnSubscribe<List<TestRecord>>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<TestRecord>> emitter) throws Exception {
                 QueryBuilder<TestRecord> testRecordQueryBuilder = DBHelper.getTestRecordDao().queryBuilder();
-                if (!examinationId.isEmpty()) {
+                if (start){
+                    if (!examinationId.isEmpty()) {
+                        testRecordQueryBuilder= testRecordQueryBuilder
+                                .where(TestRecordDao.Properties.ExaminationId.eq(examinationId));
+                    }
+                    if (!examinerId.isEmpty()) {
+                        testRecordQueryBuilder= testRecordQueryBuilder
+                                .where(TestRecordDao.Properties.ExaminerId.eq(examinerId));
+                    }
+                    if (!examId.isEmpty()) {
+                        testRecordQueryBuilder= testRecordQueryBuilder
+                                .where(TestRecordDao.Properties.Exam_id.eq(examId));
+                    }
+                }else {
                     testRecordQueryBuilder= testRecordQueryBuilder
-                            .where(TestRecordDao.Properties.ExaminationId.eq(examinationId));
-                }
-                if (!examinerId.isEmpty()) {
+                            .where(TestRecordDao.Properties.ExaminationId.eq(""));
                     testRecordQueryBuilder= testRecordQueryBuilder
-                            .where(TestRecordDao.Properties.ExaminerId.eq(examinerId));
-                }
-                if (!examId.isEmpty()) {
+                            .where(TestRecordDao.Properties.ExaminerId.eq(""));
                     testRecordQueryBuilder= testRecordQueryBuilder
-                            .where(TestRecordDao.Properties.Exam_id.eq(examId));
+                            .where(TestRecordDao.Properties.ExaminerId.eq(""));
                 }
+
                 List<TestRecord> list = testRecordQueryBuilder.orderDesc(TestRecordDao.Properties.Testingtime).list();
                 emitter.onNext(list);
                 emitter.onComplete();

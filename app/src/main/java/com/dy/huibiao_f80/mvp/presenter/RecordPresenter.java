@@ -10,6 +10,7 @@ import android.widget.EditText;
 
 import com.apkfuns.logutils.LogUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.dy.huibiao_f80.MyAppLocation;
 import com.dy.huibiao_f80.R;
 import com.dy.huibiao_f80.greendao.TestRecord;
 import com.dy.huibiao_f80.mvp.contract.RecordContract;
@@ -66,7 +67,7 @@ public class RecordPresenter extends BasePresenter<RecordContract.Model, RecordC
 
 
     public void load(String examinationId,String examinerId,String examId) {
-        mModel.load(examinationId,examinerId,examId)
+        mModel.load(MyAppLocation.myAppLocation.mExamOperationService.isStartExamOperation(),examinationId,examinerId,examId)
                 .subscribeOn(Schedulers.io())
                 .doOnSubscribe(disposable -> {
                     mRootView.showLoading();

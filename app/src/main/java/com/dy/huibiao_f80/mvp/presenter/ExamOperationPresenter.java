@@ -17,6 +17,9 @@ import com.dy.huibiao_f80.api.back.GetTestForm_Back;
 import com.dy.huibiao_f80.api.back.TestFormSubmit_Back;
 import com.dy.huibiao_f80.app.utils.NetworkUtils;
 import com.dy.huibiao_f80.bean.ReportBean;
+import com.dy.huibiao_f80.greendao.DBHelper;
+import com.dy.huibiao_f80.greendao.TestRecord;
+import com.dy.huibiao_f80.greendao.daos.TestRecordDao;
 import com.dy.huibiao_f80.mvp.contract.ExamOperationContract;
 import com.jess.arms.di.scope.ActivityScope;
 import com.jess.arms.http.imageloader.ImageLoader;
@@ -145,7 +148,6 @@ public class ExamOperationPresenter extends BasePresenter<ExamOperationContract.
         Map<String, GetTestForm_Back> getTestForm_backMap = MyAppLocation.myAppLocation.mExamOperationService.getGetTestForm_backMap();
         Set<String> strings = getTestForm_backMap.keySet();
         for (String string : strings) {
-            GetTestForm_Back getTestForm_back = getTestForm_backMap.get(string);
             submitone(string);
         }
 
@@ -172,6 +174,13 @@ public class ExamOperationPresenter extends BasePresenter<ExamOperationContract.
                             if (getTestForm_backMap.keySet().size()==0){
                                 mRootView.submitSuccess();
                                 ArmsUtils.snackbarText("考试已结束");
+                                //删除考试产生的记录
+                                // TODO: 2/15/23
+                                List<TestRecord> list = DBHelper.getTestRecordDao().queryBuilder()
+                                        .where(TestRecordDao.Properties.ExaminerId.eq(MyAppLocation.myAppLocation.mExamOperationService.getExaminerId()))
+                                        .where(TestRecordDao.Properties.ExaminationId.eq(MyAppLocation.myAppLocation.mExamOperationService.getExaminationId())).list();
+                                DBHelper.getTestRecordDao().deleteInTx(list);
+
                             }
 
 
