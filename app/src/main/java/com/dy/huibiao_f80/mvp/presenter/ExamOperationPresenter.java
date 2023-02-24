@@ -87,9 +87,11 @@ public class ExamOperationPresenter extends BasePresenter<ExamOperationContract.
 
     private void getAllReportMessage(BeginOperationExam_Back back) {
         List<BeginOperationExam_Back.EntityBean.OperationPaperListBean> operationPaperList = back.getEntity().getOperationPaperList();
+        LogUtils.d(back);
         for (int i = 0; i < operationPaperList.size(); i++) {
             BeginOperationExam_Back.EntityBean.OperationPaperListBean operationPaperListBean = operationPaperList.get(i);
             String id = operationPaperListBean.getId();
+            LogUtils.d(id);
             getReportMessage(id);
         }
     }

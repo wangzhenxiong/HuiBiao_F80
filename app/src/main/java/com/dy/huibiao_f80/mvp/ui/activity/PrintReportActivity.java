@@ -13,7 +13,9 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +34,6 @@ import com.dy.huibiao_f80.bean.ReportBean;
 import com.dy.huibiao_f80.di.component.DaggerPrintReportComponent;
 import com.dy.huibiao_f80.mvp.contract.PrintReportContract;
 import com.dy.huibiao_f80.mvp.presenter.PrintReportPresenter;
-import com.google.gson.Gson;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.utils.ArmsUtils;
@@ -53,7 +54,7 @@ import butterknife.OnClick;
 
 import static com.jess.arms.utils.Preconditions.checkNotNull;
 
-public class PrintReportActivity extends BaseActivity<PrintReportPresenter> implements PrintReportContract.View {
+public class PrintReportActivity extends BaseActivity<PrintReportPresenter> implements PrintReportContract.View, TextWatcher {
 
 
     @BindView(R.id.toolbar_back)
@@ -207,6 +208,7 @@ public class PrintReportActivity extends BaseActivity<PrintReportPresenter> impl
                 TextInputLayout textInputLayout = (TextInputLayout) inflate.findViewById(R.id.answerlayout);
                 AutoCompleteTextView child = (AutoCompleteTextView) inflate.findViewById(R.id.answer1);
 
+
                 textInputLayout.setTag(testFormDetailListBean.getTestFormId());
                 textInputLayout.setHint(testFormDetailListBean.getFieldName());
                 textInputLayout.setLayoutParams(params);
@@ -222,6 +224,7 @@ public class PrintReportActivity extends BaseActivity<PrintReportPresenter> impl
                     }
                 }
                 linearLayout1.addView(inflate);
+                child.addTextChangedListener(this);
             }
 
 
@@ -237,7 +240,7 @@ public class PrintReportActivity extends BaseActivity<PrintReportPresenter> impl
         finish();
     }*/
 
-    private void saveReport() {
+    private void saveReport(boolean finish) {
         ReportBean reportBean = new ReportBean();
         reportBean.setCreateTime(DataUtils.getNowtimeyyymmddhhmmss());
         reportBean.setExaminationId(examinationId);
@@ -245,25 +248,19 @@ public class PrintReportActivity extends BaseActivity<PrintReportPresenter> impl
         reportBean.setOperationPaperId(operationPaperId);
         ArrayList<ReportBean.TestFormDetail> testFormDetailList = new ArrayList<>();
         int childCount = mParentLl.getChildCount();
-        LogUtils.d(childCount);
         for (int i = 0; i < childCount; i++) {
 
             View childAt = mParentLl.getChildAt(i);
             LinearLayout childAt1 = (LinearLayout) childAt;
             int childCount1 = childAt1.getChildCount();
-            LogUtils.d(childCount1);
             for (int i1 = 0; i1 < childCount1; i1++) {
                 View childAt2 = childAt1.getChildAt(i1);
-                LogUtils.d(childAt2);
                 Object tag = childAt2.getTag();
                 if (null != tag) {
                     TextInputLayout answerlayout = (TextInputLayout) childAt2.findViewById(R.id.answerlayout);
                     AutoCompleteTextView answer = (AutoCompleteTextView) childAt2.findViewById(R.id.answer1);
-                    LogUtils.d(answerlayout);
-                    LogUtils.d(answer);
                     String testFormId = (String) answerlayout.getTag();
                     String fieldName = answerlayout.getHint().toString();
-                    LogUtils.d(fieldName);
                     String answers = answer.getText().toString();
                     String testFormDetailId = (String) answer.getTag();
                     ReportBean.TestFormDetail bean = new ReportBean.TestFormDetail();
@@ -271,7 +268,6 @@ public class PrintReportActivity extends BaseActivity<PrintReportPresenter> impl
                     bean.setFieldName(fieldName);
                     bean.setTestFormId(testFormId);
                     bean.setTestFormDetailId(testFormDetailId);
-                    LogUtils.d(testFormId + " " + testFormDetailId + " " + fieldName + " " + answer);
                     testFormDetailList.add(bean);
 
                 }
@@ -280,10 +276,10 @@ public class PrintReportActivity extends BaseActivity<PrintReportPresenter> impl
 
         }
         reportBean.setTestFormDetailList(testFormDetailList);
-        String s = new Gson().toJson(reportBean);
-        LogUtils.d(s);
         MyAppLocation.myAppLocation.mExamOperationService.addReportBeanMap(operationPaperId,reportBean);
-        killMyself();
+        if (finish){
+            killMyself();
+        }
     }
 
     @Override
@@ -309,8 +305,23 @@ public class PrintReportActivity extends BaseActivity<PrintReportPresenter> impl
 
     @Override
     public void onBackPressed() {
-       saveReport();
+       saveReport(true);
         //super.onBackPressed();
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+       LogUtils.d("CharSequence:"+s+" start:"+start+" count:"+count+" after:"+after);
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        LogUtils.d("CharSequence:"+s+" start:"+start+" count:"+count+" before:"+before);
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+         saveReport(false);
     }
 
     /*private void makeDialog() {

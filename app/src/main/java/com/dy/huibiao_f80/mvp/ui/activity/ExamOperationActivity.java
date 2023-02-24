@@ -214,7 +214,7 @@ public class ExamOperationActivity extends BaseActivity<ExamOperationPresenter> 
         MyAppLocation.myAppLocation.mExamOperationService.setExaminationId(examinationId);
         MyAppLocation.myAppLocation.mExamOperationService.setExaminerId(examinerId);
         if (BuildConfig.DEBUG){
-            MyAppLocation.myAppLocation.mExamOperationService.startExamOperation(600);
+            MyAppLocation.myAppLocation.mExamOperationService.startExamOperation(60);
         }else {
             MyAppLocation.myAppLocation.mExamOperationService.startExamOperation(operationExamTime);
         }

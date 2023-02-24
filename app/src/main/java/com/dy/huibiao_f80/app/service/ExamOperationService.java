@@ -37,7 +37,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -274,14 +273,15 @@ public class ExamOperationService extends BaseService {
             makeDialog();
             return;
         }
+        
+        LogUtils.d(getTestForm_backMap.keySet());
+        while (getTestForm_backMap.keySet().iterator().hasNext()){
+            String next = getTestForm_backMap.keySet().iterator().next();
+            LogUtils.d(next);
 
-        Set<String> strings = getTestForm_backMap.keySet();
-        for (int i = 0; i < strings.size(); i++) {
-            if (strings.iterator().hasNext()) {
-                String next = strings.iterator().next();
-                uploadReport(next);
-            }
+            uploadReport(next);
         }
+        
 
 
     }
@@ -289,8 +289,11 @@ public class ExamOperationService extends BaseService {
     private void uploadReport(String next) {
         RequestBody requestBody;
         ReportBean reportBean = MyAppLocation.myAppLocation.mExamOperationService.getReportBeanByID(next);
+        LogUtils.d(reportBean);
         if (null == reportBean) {
+            LogUtils.d(MyAppLocation.myAppLocation.mExamOperationService.getTestForm_backMap);
             GetTestForm_Back beginTestForm_back = MyAppLocation.myAppLocation.mExamOperationService.getGetTestFormByID(next);
+            LogUtils.d(beginTestForm_back);
             ReportBean bean = new ReportBean();
             bean.setExaminerId(MyAppLocation.myAppLocation.mExamOperationService.getExaminerId());
             bean.setExaminationId(MyAppLocation.myAppLocation.mExamOperationService.getExaminationId());
@@ -320,7 +323,7 @@ public class ExamOperationService extends BaseService {
             LogUtils.d(content);
             requestBody = RequestBody.create(MediaType.parse("application/json"), content);
         }
-
+        getTestForm_backMap.remove(next);
         RetrofitUrlManager.getInstance().putDomain("xxx", Constants.URL);
         ArmsUtils.obtainAppComponentFromContext(ExamOperationService.this)
                 .repositoryManager().obtainRetrofitService(HuiBiaoService.class)
@@ -333,7 +336,7 @@ public class ExamOperationService extends BaseService {
                     public void onNext(@NonNull TestFormSubmit_Back back) {
                         if (null != back) {
                             //isTeacherSubmit = back.isSuccess();
-                            getTestForm_backMap.remove(next);
+
                             if (getTestForm_backMap.keySet().size() == 0) {
                                 isStartExamOperation = false;
                                 Activity topActivity = ArmsUtils.obtainAppComponentFromContext(ExamOperationService.this).appManager().getTopActivity();
@@ -358,6 +361,7 @@ public class ExamOperationService extends BaseService {
                                 //ArmsUtils.startActivity(ExamStateActivity.class);
                             }
                         } else {
+                            LogUtils.d(next);
                             uploadReport(next);
                         }
                     }
