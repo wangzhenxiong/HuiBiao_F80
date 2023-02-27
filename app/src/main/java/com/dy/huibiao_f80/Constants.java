@@ -45,7 +45,7 @@ import static com.dy.huibiao_f80.app.utils.CRC8Util.FindCRC;
  */
 public class Constants {
 
-    public static String URL = "https://devadmin.huibiaoyun.com";
+    public static String URL = "https://hbyadmin.huibiaoyun.com";
     public static String URL_TRAINING = "https://www.huibiaoyun.com";
     public static final String KEY_URL = "KEY_URL";
     /**
