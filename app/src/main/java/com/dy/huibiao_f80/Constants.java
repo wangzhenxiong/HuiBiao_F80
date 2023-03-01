@@ -952,7 +952,7 @@ public class Constants {
      * @param application
      */
     public static void init(Application application) {
-        Constants.URL= (String) SPUtils.get(application, Constants.KEY_URL, "https://devadmin.huibiaoyun.com");
+        Constants.URL= (String) SPUtils.get(application, Constants.KEY_URL, Constants.URL);
 
         Constants.JTJLINK = (String) SPUtils.get(application, Constants.KEY_JTJLINK, "");
         Constants.FGITEMLINK = (String) SPUtils.get(application, Constants.KEY_FGITEMLINK, "");
