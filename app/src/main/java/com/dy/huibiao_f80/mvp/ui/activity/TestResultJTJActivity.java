@@ -177,15 +177,17 @@ public class TestResultJTJActivity extends BaseActivity<TestResultJTJPresenter> 
                 } else if (galleryBean.getGalleryNum() == 2) {
                     mGallery2.setVisibility(View.VISIBLE);
                 }
+                MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(i).getJTJRWHelper().stopReadData_P();
                 galleryBean.setJTJResultReciverListener(this);
-
                 galleryBean.checkData_P();
-                galleryBean.cardOut();
+                //galleryBean.cardOut();
                 pjName = galleryBean.getmProjectMessage().getPjName();
                 mToolbarTitle.setText("胶体金检测——" + pjName);
 
             }
         }
+
+
 
         for (int i = 0; i < mJTJGalleryBeanList.size(); i++) {
             GalleryBean galleryBean = mJTJGalleryBeanList.get(i);
@@ -199,6 +201,8 @@ public class TestResultJTJActivity extends BaseActivity<TestResultJTJPresenter> 
         //showLoading();
 
     }
+
+
 
     @Override
     public void showLoading() {
@@ -277,6 +281,7 @@ public class TestResultJTJActivity extends BaseActivity<TestResultJTJPresenter> 
 
     private void retest() {
         for (int i = 0; i < checklist.size(); i++) {
+            checklist.get(i).getJTJRWHelper().stopReadData_P();
             checklist.get(i).setCheckd(true);
             checklist.get(i).cardGet_Argmen();
             checklist.get(i).cardInNotScan();
@@ -319,6 +324,7 @@ public class TestResultJTJActivity extends BaseActivity<TestResultJTJPresenter> 
         } else {
             mTcValue1.setVisibility(View.VISIBLE);
         }
+        galleryBean.cardOut();
         mSamplename1.setText(((TestRecord) galleryBean).getSamplename());
         mSampleserial1.setText(((TestRecord) galleryBean).getSamplenum());
         LineData data = getData(userfuldata, mChartview1, ((Double) datas[0]).intValue(), ((Double) datas[2]).intValue());
@@ -339,6 +345,7 @@ public class TestResultJTJActivity extends BaseActivity<TestResultJTJPresenter> 
             galleryBean = MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(1);
 
         }
+        galleryBean.cardOut();
         mResult2.setText(((TestRecord) galleryBean).getDecisionoutcome());
         if (galleryBean.getmProjectMessage().getMethod_sp() == 0) {
 

@@ -267,11 +267,18 @@ public class UsbReadWriteHelper {
                     }
                     byte[] mybuffer = new byte[endpoint_in.getMaxPacketSize()];
                     int datalength = 0;
-                    while (datalength != -1 && READFLAG) {
+                    while (datalength != -1 ) {
                         datalength = connection.bulkTransfer(endpoint_in, mybuffer, mybuffer.length, 300);
                         for (int i = 0; i < datalength; i++) {
-                            bytes.add(mybuffer[i]);
+                            if (READFLAG){
+                                bytes.add(mybuffer[i]);
+                            }else {
+
+                            }
                         }
+                    }
+                    if (!READFLAG){
+                        continue;
                     }
                     if (bytes.size() < 10) {
                         LogUtils.d(bytes);

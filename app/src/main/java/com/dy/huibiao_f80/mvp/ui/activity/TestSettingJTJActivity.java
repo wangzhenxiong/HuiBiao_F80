@@ -457,7 +457,6 @@ public class TestSettingJTJActivity extends BaseActivity<TestSettingTJPresenter>
                 MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(1).getJTJRWHelper().vertical = 1;
                 break;
             case R.id.btn_cardout1:
-
                 MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(0).getJTJRWHelper().stopReadData_P();
                 MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(0).cardOut();
                 break;
@@ -466,7 +465,6 @@ public class TestSettingJTJActivity extends BaseActivity<TestSettingTJPresenter>
                 MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(0).cardInNotScan();
                 MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(0).getJTJRWHelper().stratReadData_P(4000, true);
                 break;
-
             case R.id.btn_cardout2:
                 MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(1).getJTJRWHelper().stopReadData_P();
                 MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(1).cardOut();
@@ -476,7 +474,6 @@ public class TestSettingJTJActivity extends BaseActivity<TestSettingTJPresenter>
                 MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(1).cardInNotScan();
                 MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.get(1).getJTJRWHelper().stratReadData_P(4000, true);
                 break;
-
             case R.id.btn_starttest:
 
                 for (int i = 0; i < MyAppLocation.myAppLocation.mSerialDataService.mJTJGalleryBeanList.size(); i++) {
