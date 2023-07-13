@@ -74,8 +74,13 @@ public class FGGDTestResultAdapter extends BaseQuickAdapter<GalleryBean, BaseVie
                 .setText(R.id.samplename,item1.getSamplename())
                 .setText(R.id.sampleserial,item1.getSamplenum())
                 .setText(R.id.dishu,item1.getDilutionratio()+"")
-                .setText(R.id.testresult,item1.getTestresult()+"")
                 .setText(R.id.jujdger, decisionoutcome +"");
+        if (item1.getTest_project().equals("有机磷和氨基甲酸酯类农药")||item1.getTest_project().equals("农药残留")||
+                item1.getTest_project().equals("农药残留（农标）")){
+              helper.setText(R.id.testresult,item1.getTestresult()+"%");
+        }else {
+            helper.setText(R.id.testresult,item1.getTestresult()+"");
+        }
         if (decisionoutcome.equals("无效")){
            helper.setText(R.id.testresult,"");
         }

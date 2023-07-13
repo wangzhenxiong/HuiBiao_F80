@@ -140,8 +140,10 @@ public class ChoseGalleryFGGDActivity extends BaseActivity<ChoseGalleryFGGDPrese
 
     private int nowCheckId = R.id.background1;
     private int nowCheckindex = 1;
+    private int nowCheckindex_c = -1;
     private TestRecord nowCheckGallery;
     private String projectname;
+    private boolean isChoseControl = false;
 
     @Override
     public boolean useEventBus() {
@@ -192,11 +194,18 @@ public class ChoseGalleryFGGDActivity extends BaseActivity<ChoseGalleryFGGDPrese
         return R.layout.activity_chosegalleryfggd; //如果你不需要框架帮你设置 setContentView(id) 需要自行设置,请返回 0
     }
 
+
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
 
         for (int i = 0; i < MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.size(); i++) {
             GalleryBean galleryBean = MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(i);
+            if (i == 0) {
+                galleryBean.setDowhat(2);
+                nowCheckindex_c = 1;
+                isChoseControl=true;
+                mCheckbox1.setText("1（对照）");
+            }
             ((TestRecord) galleryBean).setSamplename(null);
             ((TestRecord) galleryBean).setSamplenum(null);
             ((TestRecord) galleryBean).setDilutionratio(1);
@@ -220,7 +229,7 @@ public class ChoseGalleryFGGDActivity extends BaseActivity<ChoseGalleryFGGDPrese
                 check02(checked);
             }
         });
-        
+
         mCheckboxDuizhao.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -229,7 +238,18 @@ public class ChoseGalleryFGGDActivity extends BaseActivity<ChoseGalleryFGGDPrese
                 } else {
                     nowCheckGallery.setDowhat(1);
                 }
-
+                if (isChecked){
+                    nowCheckindex_c=nowCheckGallery.getGallery();
+                    isChoseControl=true;
+                }
+                //取消选择对照
+                if (!isChecked){
+                   //取消选择对照通道
+                    if (nowCheckindex_c==nowCheckGallery.getGallery()){
+                      isChoseControl=false;
+                    }
+                }
+                addControlText(nowCheckGallery.getGallery(),isChecked);
             }
         });
         mSampleserial.addTextChangedListener(new TextWatcher() {
@@ -289,6 +309,90 @@ public class ChoseGalleryFGGDActivity extends BaseActivity<ChoseGalleryFGGDPrese
             mFGGDGalleryBeanList.get(i).setCheckd(false);
         }
         initCheckBox();
+
+    }
+
+    private void addControlText(int nowCheckindex_c, boolean isChecked) {
+       /* if (nowCheckindex_c == -1) {
+            return;
+        }*/
+        /*for (int i = 0; i < MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.size(); i++) {
+            GalleryBean galleryBean = MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(i);
+            if (i + 1 == nowCheckindex_c) {
+                galleryBean.setDowhat(2);
+            } else {
+                galleryBean.setDowhat(1);
+            }
+        }*/
+      /*  mCheckbox1.setText("1");
+        mCheckbox2.setText("2");
+        mCheckbox3.setText("3");
+        mCheckbox4.setText("4");
+        mCheckbox5.setText("5");
+        mCheckbox6.setText("6");
+        mCheckbox7.setText("7");
+        mCheckbox8.setText("8");
+        mCheckbox9.setText("9");
+        mCheckbox10.setText("10");
+        mCheckbox11.setText("11");
+        mCheckbox12.setText("12");
+        mCheckbox13.setText("13");
+        mCheckbox14.setText("14");
+        mCheckbox15.setText("15");
+        mCheckbox16.setText("16");*/
+        switch (nowCheckindex_c) {
+            case 1:
+                mCheckbox1.setText(isChecked?"1(对照)":"1");
+                break;
+            case 2:
+                mCheckbox2.setText(isChecked?"2(对照)":"2");
+                break;
+            case 3:
+                mCheckbox3.setText(isChecked?"3(对照)":"3");
+                break;
+            case 4:
+                mCheckbox4.setText(isChecked?"4(对照)":"4");
+                break;
+            case 5:
+                mCheckbox5.setText(isChecked?"5(对照)":"5");
+                break;
+            case 6:
+                mCheckbox6.setText(isChecked?"6(对照)":"6");
+                break;
+            case 7:
+                mCheckbox7.setText(isChecked?"7(对照)":"7");
+                break;
+            case 8:
+                mCheckbox8.setText(isChecked?"8(对照)":"8");
+                break;
+            case 9:
+                mCheckbox9.setText(isChecked?"9(对照)":"9");
+                break;
+            case 10:
+                mCheckbox10.setText(isChecked?"10(对照)":"10");
+                break;
+            case 11:
+                mCheckbox11.setText(isChecked?"11(对照)":"11");
+                break;
+            case 12:
+                mCheckbox12.setText(isChecked?"12(对照)":"12");
+                break;
+            case 13:
+                mCheckbox13.setText(isChecked?"13(对照)":"13");
+                break;
+            case 14:
+                mCheckbox14.setText(isChecked?"14(对照)":"14");
+                break;
+            case 15:
+                mCheckbox15.setText(isChecked?"15(对照)":"15");
+                break;
+            case 16:
+                mCheckbox16.setText(isChecked?"16(对照)":"16");
+                break;
+
+        }
+
+
     }
 
     private void initCheckBox() {
@@ -321,7 +425,7 @@ public class ChoseGalleryFGGDActivity extends BaseActivity<ChoseGalleryFGGDPrese
             case R.id.checkbox6:
             case R.id.checkbox7:
             case R.id.checkbox8:
-                if (!isChecked){
+                if (!isChecked) {
                     if (mCheckall1.isChecked()) {
                         mCheckall1.setChecked(false);
                     }
@@ -335,7 +439,7 @@ public class ChoseGalleryFGGDActivity extends BaseActivity<ChoseGalleryFGGDPrese
             case R.id.checkbox14:
             case R.id.checkbox15:
             case R.id.checkbox16:
-                if (!isChecked){
+                if (!isChecked) {
                     if (mCheckall2.isChecked()) {
                         mCheckall2.setChecked(false);
                     }
@@ -486,15 +590,15 @@ public class ChoseGalleryFGGDActivity extends BaseActivity<ChoseGalleryFGGDPrese
             GalleryBean galleryBean = MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(i);
             if (galleryBean.isCheckd()) {
                 check = true;
-                if (galleryBean.getDowhat()==2){
-                    check_contro=true;
+                if (galleryBean.getDowhat() == 2) {
+                    check_contro = true;
                     break;
                 }
             }
         }
 
         if (check) {
-            if (!check_contro){
+            if (!check_contro) {
                 ArmsUtils.snackbarText("请选择对照组");
                 return;
             }
@@ -504,7 +608,6 @@ public class ChoseGalleryFGGDActivity extends BaseActivity<ChoseGalleryFGGDPrese
         } else {
             ArmsUtils.snackbarText("请选择通道");
         }
-
 
 
     }
@@ -528,7 +631,16 @@ public class ChoseGalleryFGGDActivity extends BaseActivity<ChoseGalleryFGGDPrese
         mSampleserial.setText(nowCheckGallery.getSamplenum());
         mSamplename.setText(nowCheckGallery.getSamplename());
         mDr.setText(nowCheckGallery.getDilutionratio() + "");
+        if (isChoseControl){
+            mCheckboxDuizhao.setEnabled(false);
+            if (nowCheckindex_c==i){
+                mCheckboxDuizhao.setEnabled(true);
+            }
+        }else {
+            mCheckboxDuizhao.setEnabled(true);
+        }
         mCheckboxDuizhao.setChecked(nowCheckGallery.getDowhat() == 2 ? true : false);
+
     }
 
 

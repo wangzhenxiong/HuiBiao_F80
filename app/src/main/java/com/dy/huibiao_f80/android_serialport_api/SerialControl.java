@@ -49,6 +49,7 @@ public class SerialControl extends SerialHelper {
     }
     //串口发送
     public void sendPortData(SerialHelper ComPort, String sOut) {
+        LogUtils.d(sOut);
         if (ComPort != null && ComPort.isOpen()) {
             ComPort.sendTxt(sOut);
         }

@@ -5,8 +5,8 @@ buildscript {
         kotlin_version = '1.3.72'
     }*/
     repositories {
-        google()
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        google()
         jcenter()
     }
     dependencies {
@@ -26,8 +26,8 @@ buildscript {
 allprojects {
     repositories {
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
-        google()
         maven { url "https://jitpack.io" }
+        google()
 
         jcenter()
     }

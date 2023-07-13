@@ -38,7 +38,7 @@
         <item name="android:layout_width">150dp</item>
         <item name="android:layout_height">46dp</item>
         <item name="android:orientation">horizontal</item>
-        <item name="android:gravity">center</item>
+        <item name="android:gravity">center_vertical</item>
         <item name="android:background">@drawable/background_item_gray</item>
         <item name="android:layout_marginTop">10dp</item>
         <!--<item name="android:textColorHint">#FC0000</item>-->
@@ -48,6 +48,8 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingLeft">4dp</item>
+        <item name="android:layout_marginLeft">20dp</item>
+
         <!--<item name="android:textColorHint">#FC0000</item>-->
     </style>
 

@@ -161,17 +161,21 @@ public class PrintTask_Multiple implements Itask {
             CharUtils.splitLine180(control, string);
         }
         String method = nc1.getTest_method();
-        if ("0".equals(method)) {
-            control.sendPortData(control, MyAppLocation.myAppLocation.getString(R.string.print_mothed1) + "\r");
-        } else if ("1".equals(method)) {
-            control.sendPortData(control, MyAppLocation.myAppLocation.getString(R.string.print_mothed2) + "\r");
-        } else if ("2".equals(method)) {
-            control.sendPortData(control, MyAppLocation.myAppLocation.getString(R.string.print_mothed3) + "\r");
-        } else if ("3".equals(method)) {
-            control.sendPortData(control, MyAppLocation.myAppLocation.getString(R.string.print_mothed4) + "\r");
-        } else {
-            CharUtils.splitLine180(control, MyAppLocation.myAppLocation.getString(R.string.print_mothed) + method, 31, 32);
-        }
+        LogUtils.d(method);
+        String test_moudle = nc1.getTest_Moudle();
+        LogUtils.d(test_moudle);
+            if ("0".equals(method)) {
+                control.sendPortData(control, MyAppLocation.myAppLocation.getString(R.string.print_mothed1) + "\r");
+            } else if ("1".equals(method)) {
+                control.sendPortData(control, MyAppLocation.myAppLocation.getString(R.string.print_mothed2) + "\r");
+            } else if ("2".equals(method)) {
+                control.sendPortData(control, MyAppLocation.myAppLocation.getString(R.string.print_mothed3) + "\r");
+            } else if ("3".equals(method)) {
+                control.sendPortData(control, MyAppLocation.myAppLocation.getString(R.string.print_mothed4) + "\r");
+            } else {
+                CharUtils.splitLine180(control, MyAppLocation.myAppLocation.getString(R.string.print_mothed) + method, 31, 32);
+            }
+
 
         String out = "判定依据：" + nc1.getStand_num();
         CharUtils.splitLine180(control, out,31,32);
@@ -191,7 +195,7 @@ public class PrintTask_Multiple implements Itask {
 
         control.sendPortData(control, resulttitle);
         control.sendPortData(control, "--------------------------------");
-        fgNcList = SortBySearinumber180(fgNcList);
+        //fgNcList = SortBySearinumber180(fgNcList);
         for (int i = 0; i < fgNcList.size(); i++) {
 
             TestRecord nc = fgNcList.get(i);
@@ -199,8 +203,17 @@ public class PrintTask_Multiple implements Itask {
             LogUtils.d(samplename);
             String decisionoutcome = nc.getDecisionoutcomePrint(6);
             String testresult = nc.getTestresultPrint(5);
-            String s = (nc.getSamplenum().equals("")?nc.getGalleryNum()+"":nc.getSamplenum() + " " + ("".equals(samplename) ? "--" : samplename)
-                    + " " + testresult + " " + ("".equals(decisionoutcome) ? "--" : decisionoutcome));
+            String samplenum = nc.getSamplenum();
+            int galleryNum = nc.getGalleryNum();
+
+            LogUtils.d(samplename);
+            LogUtils.d(decisionoutcome);
+            LogUtils.d(testresult);
+            LogUtils.d(samplenum);
+            LogUtils.d(galleryNum);
+
+            String s = (samplenum.equals("")? galleryNum +"": samplenum) + " " + ("".equals(samplename) ? "--" : samplename)
+                    + " " + testresult + " " + ("".equals(decisionoutcome) ? "--" : decisionoutcome);
 
 
             CharUtils.splitLine180(control, s, 33, 34);
@@ -268,7 +281,7 @@ public class PrintTask_Multiple implements Itask {
 
 
         String method = nc1.getTest_method();
-
+         LogUtils.d(method);
 
         if ("抑制率法".equals(method) || "0".equals(method)) {
             control.sendPortData(control, "对照值：△A=".trim() + NumberUtils.four(Double.parseDouble(nc1.getControlvalue())) + "\r");
@@ -279,7 +292,7 @@ public class PrintTask_Multiple implements Itask {
             control.sendPortData(control, "反应液滴数：△A=".trim() + nc1.getEveryresponse() + "\r");
         }
         control.sendPortData(control, "--------------------------------");
-        fgNcList = SortBySearinumber(fgNcList);
+        //fgNcList = SortBySearinumber(fgNcList);
         for (int i = 0; i < fgNcList.size(); i++) {
             TestRecord nc = fgNcList.get(i);
             LogUtils.d(nc);
@@ -288,8 +301,15 @@ public class PrintTask_Multiple implements Itask {
 
             String decisionoutcome = nc.getDecisionoutcomePrint(6);
             String testresult = nc.getTestresultPrint(5);
-            String s = (nc.getSamplenum().equals("")?nc.getGalleryNum()+"":nc.getSamplenum() + " " + ("".equals(samplename) ? "--" : samplename)
-                    + " " + testresult + " " + ("".equals(decisionoutcome) ? "--" : decisionoutcome));
+            String samplenum = nc.getSamplenum();
+            int galleryNum = nc.getGalleryNum();
+            LogUtils.d(samplename);
+            LogUtils.d(decisionoutcome);
+            LogUtils.d(testresult);
+            LogUtils.d(samplenum);
+            LogUtils.d(galleryNum);
+            String s = (samplenum.equals("")? galleryNum +"": samplenum )+ " " + ("".equals(samplename) ? "--" : samplename)
+                    + " " + testresult + " " + ("".equals(decisionoutcome) ? "--" : decisionoutcome);
 
             CharUtils.splitLine(control, s, 31, 32);
 
@@ -318,7 +338,8 @@ public class PrintTask_Multiple implements Itask {
         String out = "判定依据：" + nc1.getStand_num();
         CharUtils.splitLine(control, out, 31, 32);
 
-        if (nc1.getTest_Moudle().equals("分光光度")){
+        String test_moudle = nc1.getTest_Moudle();
+        LogUtils.d(test_moudle);
             if ("0".equals(method)) {
                 control.sendPortData(control, MyAppLocation.myAppLocation.getString(R.string.print_mothed1) + "\r");
             } else if ("1".equals(method)) {
@@ -330,13 +351,7 @@ public class PrintTask_Multiple implements Itask {
             } else {
                 CharUtils.splitLine180(control, MyAppLocation.myAppLocation.getString(R.string.print_mothed) + method, 31, 32);
             }
-        }else if (nc1.getTest_Moudle().equals("胶体金")){
-            if ("0".equals(method)) {
-                control.sendPortData(control, MyAppLocation.myAppLocation.getString(R.string.print_xiaoxian) + "\r");
-            } else if ("1".equals(method)) {
-                control.sendPortData(control, MyAppLocation.myAppLocation.getString(R.string.print_bise) + "\r");
-            }
-        }
+
         
         if (checkPrintMessage.isCheckBox_device()){
             String string = MyAppLocation.myAppLocation.getString(R.string.print_devicename) + ArmsUtils.getString(MyAppLocation.myAppLocation, R.string.my_app_name);

@@ -96,7 +96,6 @@ public class PrintTask_Single implements Itask {
             CharUtils.splitLine180(control, string);
         }
 
-        if (q.getTest_Moudle().equals("分光光度")) {
             if ("0".equals(method)) {
                 control.sendPortData(control, MyAppLocation.myAppLocation.getString(R.string.print_mothed1) + "\r");
             } else if ("1".equals(method)) {
@@ -108,13 +107,7 @@ public class PrintTask_Single implements Itask {
             } else {
                 CharUtils.splitLine180(control, MyAppLocation.myAppLocation.getString(R.string.print_mothed) + method, 31, 32);
             }
-        } else if (q.getTest_Moudle().equals("胶体金")) {
-            if ("0".equals(method)) {
-                control.sendPortData(control, MyAppLocation.myAppLocation.getString(R.string.print_xiaoxian) + "\r");
-            } else if ("1".equals(method)) {
-                control.sendPortData(control, MyAppLocation.myAppLocation.getString(R.string.print_bise) + "\r");
-            }
-        }
+
 
 
         String out = "判定依据：" + q.getStand_num();
@@ -139,11 +132,15 @@ public class PrintTask_Single implements Itask {
         String decisionoutcome = q.getDecisionoutcomePrint(6);
         String testresult = q.getTestresultPrint(5);
         String s = null;
-        //String decisionoutcome_11 = "".equals(decisionoutcome) ? "--" : decisionoutcome.equals("合格") ? "阴性" : "阳性";
-
-
-        s = (q.getSamplenum().equals("")?q.getGalleryNum()+"":q.getSamplenum() + " " + ("".equals(samplename) ? "--" : samplename)
-                + " " + testresult + " " + ("".equals(decisionoutcome) ? "--" : decisionoutcome));
+        int galleryNum = q.getGalleryNum();
+        String samplenum = q.getSamplenum();
+        LogUtils.d(samplename);
+        LogUtils.d(decisionoutcome);
+        LogUtils.d(testresult);
+        LogUtils.d(samplenum);
+        LogUtils.d(galleryNum);
+        s = (samplenum.equals("")? galleryNum +"": samplenum) + " " + ("".equals(samplename) ? "--" : samplename)
+                + " " + testresult + " " + ("".equals(decisionoutcome) ? "--" : decisionoutcome);
 
         CharUtils.splitLine180(control, s, 33, 34);
         control.sendPortData(control, "--------------------------------");
@@ -223,12 +220,18 @@ public class PrintTask_Single implements Itask {
 
 
         String samplename = q.getSamplenamePrint(10);
-        LogUtils.d(samplename);
         String decisionoutcome = q.getDecisionoutcomePrint(6);
         String testresult = q.getTestresultPrint(5);
 
-        String s = (q.getSamplenum().equals("")?q.getGalleryNum()+"":q.getSamplenum() + " " + ("".equals(samplename) ? "--" : samplename)
-                + " " + testresult + " " + ("".equals(decisionoutcome) ? "--" : decisionoutcome));
+        String samplenum = q.getSamplenum();
+        int galleryNum = q.getGalleryNum();
+        LogUtils.d(samplename);
+        LogUtils.d(decisionoutcome);
+        LogUtils.d(testresult);
+        LogUtils.d(samplenum);
+        LogUtils.d(galleryNum);
+        String s = (samplenum.equals("")? galleryNum +"": samplenum) + " " + ("".equals(samplename) ? "--" : samplename)
+                + " " + testresult + " " + ("".equals(decisionoutcome) ? "--" : decisionoutcome);
 
         CharUtils.splitLine(control, s, 31, 32);
 

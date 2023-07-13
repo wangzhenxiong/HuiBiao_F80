@@ -1,6 +1,5 @@
 ext {
 
-    //V2.0.5 胶体金老模块会出现检测后不出结果不出卡情况（修改UsbReadWriteHelper 读写共用一个线程池，并且将核心线程改为1）
     android = [
             compileSdkVersion: 28, // 项目依赖的SDK版本
             buildToolsVersion: "28.0.3", // 构建版本
@@ -10,20 +9,7 @@ ext {
             versionName      : "V1.0.0" , //版本名称
             greendaoVersion  : 1   //数据库版本号
 
-            //205-206 镇江平台问题，兼容https问题
-            //206-207 合格证打印模板修改，增加一个模板，改为可选
-            //207-208 甲骨文洪江版本 修改 批次信息（不需要保留上次批次信息）
-            //208-209 胶体金匹配本地与平台的检测项目问题，默认选择了扫描模块的检测项目，会导致摄像头模块检测不出阳性结果，需要升级的平台版本 5，11，12，25，27，29
-            //209-210 4000P实达打印机上传后打印的产品数量参数引用错误
-            //210-211 山东农业局4000P实达打印机修改打印模板
-            //211-212 山东菜市场版本修改数据导出功能，选了数选择的情况下只导出已经选择的，没有选择导出全部
-            //212-213 江西农业农村局上传的样品编号改成 yyMMdd-流水号 打印小票检测方法添加换行
-            //213-214 山东农业局版本修改仿造假功能，去掉中间一个判断，只留开始和结束的判断
-            //214-215 干式农残模块计算检测结果时对照值和样品值一样会出现卡异常，应该是合格才对
-            //215-216 山东农业局版本不想看到无效卡，干式农残无效卡给固定值0.1
-            //216-217 镇江版本复检检测项目匹配失败导致不能正常复检
-            //217-218 打印单挑数据小票时间+时分秒 搜索检测项目 等功能
-            //218-219 镇江昆山验收 强制自动上传
+
     ]
     version = [
             MPAndroidChartVersion               : "v3.1.0",
@@ -48,13 +34,7 @@ ext {
 
 
     dependencies = [
-            //compile 'com.inuker.bluetooth:library:1.4.0'
-            //"bluetooth"                    : "com.inuker.bluetooth:library:1.4.0",
-            /*compile 'com.android.support:recyclerview-v7:21.0.0'
-    compile 'com.android.support:support-v4:20.+'
-    compile "com.daimajia.swipelayout:library:1.2.0@aar"*/
-            //'com.aill:AndroidSerialPort:1.0.8'
-            //compile 'me.kaelaela:verticalviewpager:1.0.0@aar'
+           
             "verticalviewpager"            : "me.kaelaela:verticalviewpager:1.0.0@aar",
             "AndroidSerialPort"            : "com.aill:AndroidSerialPort:${version["AndroidSerialPortversion"]}",
             "swipelayout"                  : "com.daimajia.swipelayout:library:1.2.0@aar",
