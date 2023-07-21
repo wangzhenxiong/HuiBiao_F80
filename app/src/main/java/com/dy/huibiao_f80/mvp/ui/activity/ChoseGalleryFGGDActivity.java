@@ -200,12 +200,12 @@ public class ChoseGalleryFGGDActivity extends BaseActivity<ChoseGalleryFGGDPrese
 
         for (int i = 0; i < MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.size(); i++) {
             GalleryBean galleryBean = MyAppLocation.myAppLocation.mSerialDataService.mFGGDGalleryBeanList.get(i);
-            if (i == 0) {
+           /* if (i == 0) {
                 galleryBean.setDowhat(2);
                 nowCheckindex_c = 1;
                 isChoseControl=true;
                 mCheckbox1.setText("1（对照）");
-            }
+            }*/
             ((TestRecord) galleryBean).setSamplename(null);
             ((TestRecord) galleryBean).setSamplenum(null);
             ((TestRecord) galleryBean).setDilutionratio(1);
