@@ -22,8 +22,6 @@ import android.support.v4.app.FragmentManager;
 
 import com.dy.huibiao_f80.BuildConfig;
 import com.dy.huibiao_f80.app.jsonFactory.FastJsonConverterFactory;
-import com.dy.huibiao_f80.app.jsonFactory.LenientGsonConverterFactory;
-import com.dy.huibiao_f80.app.jsonFactory.ScalarsConverterFactory;
 import com.dy.huibiao_f80.app.utils.DyUtils;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -153,77 +151,44 @@ public final class GlobalConfiguration implements ConfigModule {
                             .enableComplexMapKeySerialization();//支持将序列化 key 为 Object 的 Map, 默认只能序列化 key 为 String 的 Map
                 })
                 .retrofitConfiguration((context1, retrofitBuilder) -> {//这里可以自己自定义配置 Retrofit 的参数, 甚至您可以替换框架配置好的 OkHttpClient 对象 (但是不建议这样做, 这样做您将损失框架提供的很多功能)
-                    if (BuildConfig.FLAVOR.equals("productFlavor_LZ4000P_ShanDongNYJ_JingWei")) {
-                        try {
 
-                            // 解决android 4.4没有启用TLSv1.1 和 TLSv1.2 传输层安全协议
+                    try {
+                        // 解决android 4.4没有启用TLSv1.1 和 TLSv1.2 传输层安全协议
 
-                            ProviderInstaller.installIfNeeded(context1);
+                        ProviderInstaller.installIfNeeded(context1);
 
-                            SSLContext sslContext;
+                        SSLContext sslContext;
 
-                            sslContext = SSLContext.getInstance("TLSv1.1");
+                        sslContext = SSLContext.getInstance("TLSv1.2");
 
-                            sslContext.init(null, null, null);
+                        sslContext.init(null, null, null);
 
-                            sslContext.createSSLEngine();
+                        sslContext.createSSLEngine();
 
-                        } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException
+                    } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException
 
-                                | NoSuchAlgorithmException | KeyManagementException e) {
+                            | NoSuchAlgorithmException | KeyManagementException e) {
 
-                            e.printStackTrace();
+                        e.printStackTrace();
 
-                        }
                     }
-                    if (BuildConfig.DEFAULT_PLATFORM_TAG == 3) {
-                        //处理gson返回不规范，不是gson字符串问题
-                        retrofitBuilder.addConverterFactory(LenientGsonConverterFactory.create());
-                    } else if (BuildConfig.DEFAULT_PLATFORM_TAG == 5
-                            || BuildConfig.DEFAULT_PLATFORM_TAG == 6
-                            || BuildConfig.DEFAULT_PLATFORM_TAG == 12
-                            || BuildConfig.DEFAULT_PLATFORM_TAG == 13
-                            || BuildConfig.DEFAULT_PLATFORM_TAG == 16
-                            || BuildConfig.DEFAULT_PLATFORM_TAG == 21
-                            || BuildConfig.DEFAULT_PLATFORM_TAG == 25
-                            || BuildConfig.DEFAULT_PLATFORM_TAG == 26
-                            || BuildConfig.DEFAULT_PLATFORM_TAG == 27
-                            || BuildConfig.DEFAULT_PLATFORM_TAG == 28
-                            || BuildConfig.DEFAULT_PLATFORM_TAG == 32
-                            || BuildConfig.DEFAULT_PLATFORM_TAG == 33
-                    ) {
-                        retrofitBuilder.addConverterFactory(ScalarsConverterFactory.create());
-                    } else {
-                        retrofitBuilder.addConverterFactory(FastJsonConverterFactory.create());//使用 FastJson 替代 Gson
-                    }
+
+                    retrofitBuilder.addConverterFactory(FastJsonConverterFactory.create());//使用 FastJson 替代 Gson
+
                 })
                 .okhttpConfiguration((context1, okhttpBuilder) -> {//这里可以自己自定义配置 Okhttp 的参数
 //                    okhttpBuilder.sslSocketFactory(); //支持 Https, 详情请百度
                     okhttpBuilder.connectTimeout(10, TimeUnit.SECONDS);
-                    if (BuildConfig.DEFAULT_PLATFORM_TAG == 5) {
-                        //下载经营户时服务器反应时间太长 60秒左右
-                        okhttpBuilder.writeTimeout(2, TimeUnit.MINUTES);
-                        okhttpBuilder.connectTimeout(2, TimeUnit.MINUTES);
-                        okhttpBuilder.readTimeout(2, TimeUnit.MINUTES);
-                    }
+
 
                     //使用一行代码监听 Retrofit／Okhttp 上传下载进度监听,以及 Glide 加载进度监听, 详细使用方法请查看 https://github.com/JessYanCoding/ProgressManager
                     ProgressManager.getInstance().with(okhttpBuilder);
                     //让 Retrofit 同时支持多个 BaseUrl 以及动态改变 BaseUrl, 详细使用方法请查看 https://github.com/JessYanCoding/RetrofitUrlManager
                     RetrofitUrlManager.getInstance().with(okhttpBuilder);
-                    if (BuildConfig.DEFAULT_PLATFORM_TAG == 5
-                            || BuildConfig.DEFAULT_PLATFORM_TAG == 6
-                            || BuildConfig.DEFAULT_PLATFORM_TAG == 13
-                            || BuildConfig.DEFAULT_PLATFORM_TAG == 15
-                            || BuildConfig.DEFAULT_PLATFORM_TAG == 42
-                            || BuildConfig.DEFAULT_PLATFORM_TAG == 43
-                    ) {
-                        okhttpBuilder.sslSocketFactory(SSLSocketClient.getSSLSocketFactory());
-                        okhttpBuilder.hostnameVerifier(SSLSocketClient.getHostnameVerifier());
-
-                    }
 
 
+                    okhttpBuilder.sslSocketFactory(SSLSocketClient.getSSLSocketFactory());
+                    okhttpBuilder.hostnameVerifier(SSLSocketClient.getHostnameVerifier());
                 })
                 .rxCacheConfiguration((context1, rxCacheBuilder) -> {//这里可以自己自定义配置 RxCache 的参数
                     rxCacheBuilder.useExpiredDataIfLoaderNotAvailable(true);

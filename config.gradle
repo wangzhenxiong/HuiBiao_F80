@@ -5,8 +5,8 @@ ext {
             buildToolsVersion: "28.0.3", // 构建版本
             minSdkVersion    : 19,   //最低运行版本
             targetSdkVersion : 28,   //最高
-            versionCode      : 101,   //版本号
-            versionName      : "V1.0.1" , //版本名称
+            versionCode      : 102,   //版本号
+            versionName      : "V1.0.2" , //版本名称
             greendaoVersion  : 1   //数据库版本号
 
 
